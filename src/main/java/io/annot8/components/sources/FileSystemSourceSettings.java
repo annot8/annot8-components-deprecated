@@ -2,15 +2,15 @@ package io.annot8.components.sources;
 
 import io.annot8.core.settings.Settings;
 
-public class DirectorySourceSettings implements Settings {
+public class FileSystemSourceSettings implements Settings {
 
   private String rootFolder = ".";
 
-  public DirectorySourceSettings() {
+  public FileSystemSourceSettings() {
     // Do nothing
   }
 
-  public DirectorySourceSettings(final String rootFolder) {
+  public FileSystemSourceSettings(final String rootFolder) {
     this.rootFolder = rootFolder;
   }
 
