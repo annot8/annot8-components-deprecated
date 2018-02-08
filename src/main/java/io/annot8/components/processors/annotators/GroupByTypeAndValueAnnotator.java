@@ -1,4 +1,4 @@
-package io.annot8.components.processors;
+package io.annot8.components.processors.annotators;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;

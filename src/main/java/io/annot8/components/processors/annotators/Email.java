@@ -1,4 +1,4 @@
-package io.annot8.components.processors;
+package io.annot8.components.processors.annotators;
 
 import io.annot8.common.bounds.SpanBounds;
 import io.annot8.common.content.Text;
@@ -11,22 +11,27 @@ import io.annot8.defaultimpl.data.SimpleCapabilities.Builder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class HashTag extends AbstractTextAnnotator {
+public class Email extends AbstractTextAnnotator {
 
-  private static final Pattern HASHTAG = Pattern.compile("#[a-z0-9]+", Pattern.CASE_INSENSITIVE);
+  private static final Pattern EMAIL =
+      Pattern.compile("[A-Z0-9._%+-]+@([A-Z0-9.-]+[.][A-Z]{2,6})", Pattern.CASE_INSENSITIVE);
 
-  private static final String TYPE = "hashtag";
+
+  private static final String TYPE = "email";
 
   @Override
   protected void process(final Item item, final Text content) throws Annot8Exception {
+
     AnnotationStore annotationStore = content.getAnnotations();
 
-    final Matcher matcher = HASHTAG.matcher(content.getData());
+    final Matcher matcher = EMAIL.matcher(content.getData());
     while (matcher.find()) {
+
       annotationStore.create()
-          .withBounds(new SpanBounds(matcher.start(), matcher.end()))
           .withType(TYPE)
+          .withBounds(new SpanBounds(matcher.start(), matcher.end()))
           .save();
+
     }
   }
 

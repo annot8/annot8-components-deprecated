@@ -1,4 +1,4 @@
-package io.annot8.components.processors;
+package io.annot8.components.processors.outputs;
 
 
 import io.annot8.common.bounds.SpanBounds;
