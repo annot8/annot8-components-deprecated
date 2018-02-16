@@ -12,7 +12,6 @@ import io.annot8.defaultimpl.data.SimpleCapabilities;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-// TODO: can we get at this? (ie does it come through onto the inherited classes?)
 @SettingsClass(ContentAnnotatorSettings.class)
 public abstract class AbstractContentAnnotator extends AbstractAnnotator {
 
