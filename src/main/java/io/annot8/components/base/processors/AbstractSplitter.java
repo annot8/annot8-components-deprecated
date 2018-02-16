@@ -6,7 +6,7 @@ import io.annot8.core.data.Item;
 import io.annot8.core.exceptions.ProcessingException;
 import java.util.stream.Stream;
 
-public abstract class AbstractSpiltter implements Processor {
+public abstract class AbstractSplitter implements Processor {
 
   @Override
   public final ProcessorResponse process(final Item item) throws ProcessingException {
