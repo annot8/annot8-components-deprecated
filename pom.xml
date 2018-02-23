@@ -60,12 +60,17 @@
     </dependency>
     <dependency>
       <groupId>io.annot8</groupId>
-      <artifactId>annot8-common</artifactId>
+      <artifactId>common</artifactId>
       <version>${annot8.version}</version>
     </dependency>
     <dependency>
       <groupId>io.annot8</groupId>
       <artifactId>default-impl</artifactId>
+      <version>${annot8.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.annot8</groupId>
+      <artifactId>annot8-standard-types</artifactId>
       <version>${annot8.version}</version>
     </dependency>
 
