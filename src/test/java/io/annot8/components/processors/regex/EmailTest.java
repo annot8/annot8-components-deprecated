@@ -57,5 +57,6 @@ public class EmailTest {
     assertEquals(AnnotationTypes.ANNOTATION_TYPE_EMAIL, a.getType());
     assertEquals(content.getName(), a.getContentName());
     assertEquals("sally@example.com", a.getBounds().getData(content).get());
+    assertEquals(0, a.getProperties().getAll().size());
   }
 }

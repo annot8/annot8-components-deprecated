@@ -50,5 +50,6 @@ public class HashTagTest {
     assertEquals(AnnotationTypes.ANNOTATION_TYPE_HASHTAG, a.getType());
     assertEquals(content.getName(), a.getContentName());
     assertEquals("#latestnews", a.getBounds().getData(content).get());
+    assertEquals(0, a.getProperties().getAll().size());
   }
 }

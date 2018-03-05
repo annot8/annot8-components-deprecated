@@ -39,14 +39,27 @@ public class RegexTest {
     p.configure(context);
 
     Item item = new SimpleItem(itemFactory, contentBuilderFactoryRegistry);
-    item.create(Text.class).withName("test").withData("37 + 5 = 42").save();
+    Text content = item.create(Text.class).withName("test").withData("x + 12 = 42").save();
 
     p.process(item);
 
     AnnotationStore store = item.getContent("test").get().getAnnotations();
 
     List<Annotation> annotations = store.getAll().collect(Collectors.toList());
-    assertEquals(3, annotations.size());
+    assertEquals(2, annotations.size());
+
+    //TODO: Order is not guaranteed, so we shouldn't use explicit indices
+    Annotation a1 = annotations.get(0);
+    assertEquals("number", a1.getType());
+    assertEquals(content.getName(), a1.getContentName());
+    assertEquals("42", a1.getBounds().getData(content).get());
+    assertEquals(0, a1.getProperties().getAll().size());
+
+    Annotation a2 = annotations.get(1);
+    assertEquals("number", a2.getType());
+    assertEquals(content.getName(), a2.getContentName());
+    assertEquals("12", a2.getBounds().getData(content).get());
+
   }
 
 }
