@@ -66,8 +66,11 @@ public class Regex extends AbstractTextAnnotator {  //TODO: Are there functions 
 
     Matcher m = regex.matcher(content.getData());
     while(m.find()){
+      if(!acceptMatch(m))
+        continue;
+
       try {
-        Properties properties = getProperties();
+        Properties properties = getAnnotationProperties();
 
         annotationStore.create()
             .withType(type)
@@ -80,8 +83,12 @@ public class Regex extends AbstractTextAnnotator {  //TODO: Are there functions 
     }
   }
 
-  protected Properties getProperties(){
+  protected Properties getAnnotationProperties(){
     return EmptyImmutableProperties.getInstance();
+  }
+
+  protected boolean acceptMatch(final Matcher m){
+    return true;
   }
 
   public static class RegexSettings extends ContentAnnotatorSettings{

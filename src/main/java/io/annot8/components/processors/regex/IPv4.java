@@ -17,7 +17,7 @@ public class IPv4 extends AbstractSuppliedRegex {
   }
 
   @Override
-  protected Properties getProperties() {
+  protected Properties getAnnotationProperties() {
     MutableProperties properties = new SimpleMutableProperties();
     properties.set(PropertyKeys.PROPERTY_KEY_VERSION, 4);
 
