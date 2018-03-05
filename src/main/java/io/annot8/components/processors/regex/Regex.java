@@ -2,6 +2,7 @@ package io.annot8.components.processors.regex;
 
 import io.annot8.common.bounds.SpanBounds;
 import io.annot8.common.content.Text;
+import io.annot8.common.properties.EmptyImmutableProperties;
 import io.annot8.components.base.processors.AbstractTextAnnotator;
 import io.annot8.components.base.processors.ContentAnnotatorSettings;
 import io.annot8.components.processors.regex.Regex.RegexSettings;
@@ -12,6 +13,7 @@ import io.annot8.core.exceptions.Annot8Exception;
 import io.annot8.core.exceptions.BadConfigurationException;
 import io.annot8.core.exceptions.MissingResourceException;
 import io.annot8.core.exceptions.ProcessingException;
+import io.annot8.core.properties.Properties;
 import io.annot8.core.settings.SettingsClass;
 import io.annot8.core.stores.AnnotationStore;
 import io.annot8.defaultimpl.data.SimpleCapabilities;
@@ -65,14 +67,21 @@ public class Regex extends AbstractTextAnnotator {  //TODO: Are there functions 
     Matcher m = regex.matcher(content.getData());
     while(m.find()){
       try {
+        Properties properties = getProperties();
+
         annotationStore.create()
             .withType(type)
             .withBounds(new SpanBounds(m.start(group), m.end(group)))
+            .withProperties(properties)
             .save();
       }catch (IndexOutOfBoundsException e){
         throw new ProcessingException("Invalid group", e);
       }
     }
+  }
+
+  protected Properties getProperties(){
+    return EmptyImmutableProperties.getInstance();
   }
 
   public static class RegexSettings extends ContentAnnotatorSettings{
