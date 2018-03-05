@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 @SettingsClass(RegexSettings.class)
 public class Regex extends AbstractTextAnnotator {  //TODO: Are there functions in AbstractTextAnnotator we ought to be implementing?
 
-  protected Pattern regex = null;
+  protected Pattern regex = null; //TODO: Should we provide a default Pattern to avoid NPEs?
   protected int group = 0;
   protected String type = "";
 
