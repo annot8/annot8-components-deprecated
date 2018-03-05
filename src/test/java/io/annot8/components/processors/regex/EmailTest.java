@@ -10,7 +10,8 @@ import io.annot8.core.components.Processor;
 import io.annot8.core.context.Context;
 import io.annot8.core.data.Item;
 import io.annot8.core.exceptions.Annot8Exception;
-import io.annot8.core.settings.DefaultSettings;
+import io.annot8.core.settings.EmptySettings;
+import io.annot8.core.settings.SettingsClass;
 import io.annot8.core.stores.AnnotationStore;
 import io.annot8.defaultimpl.content.SimpleText;
 import io.annot8.defaultimpl.context.SimpleContext;
@@ -23,6 +24,12 @@ import org.junit.jupiter.api.Test;
 
 public class EmailTest {
   @Test
+  public void testSettings() {
+    SettingsClass annotation = Email.class.getAnnotation(SettingsClass.class);
+    assertEquals(EmptySettings.class, annotation.value());
+  }
+
+  @Test
   public void testEmail() throws Annot8Exception {
     Processor p = new Email();
 
@@ -31,7 +38,7 @@ public class EmailTest {
     SimpleContentBuilderFactoryRegistry contentBuilderFactoryRegistry = new SimpleContentBuilderFactoryRegistry();
     contentBuilderFactoryRegistry.register(Text.class, new SimpleText.BuilderFactory());
     ItemFactory itemFactory = new SimpleItemFactory(contentBuilderFactoryRegistry);
-    Context context = new SimpleContext(itemFactory, new DefaultSettings());  //TODO: DefaultSettings should be a singleton?
+    Context context = new SimpleContext(itemFactory, EmptySettings.getInstance());
 
     p.configure(context);
 
