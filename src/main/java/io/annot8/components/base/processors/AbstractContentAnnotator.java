@@ -6,7 +6,6 @@ import io.annot8.core.data.Item;
 import io.annot8.core.exceptions.Annot8Exception;
 import io.annot8.core.exceptions.BadConfigurationException;
 import io.annot8.core.exceptions.MissingResourceException;
-import io.annot8.core.settings.Settings;
 import io.annot8.core.settings.SettingsClass;
 import io.annot8.defaultimpl.data.SimpleCapabilities;
 import java.util.Optional;
@@ -30,7 +29,7 @@ public abstract class AbstractContentAnnotator extends AbstractAnnotator {
 
     Stream<Content<?>> contentToProcess;
     // Did we limit the views?
-    if (settings.getContent() == null || settings.getContent().isEmpty()) {
+    if (settings == null || settings.getContent() == null || settings.getContent().isEmpty()) {
       contentToProcess = item.getContents();
     } else {
       contentToProcess = settings.getContent().stream().map(item::getContent)
@@ -58,11 +57,8 @@ public abstract class AbstractContentAnnotator extends AbstractAnnotator {
   protected abstract void processContent(final Item item, final Content<?> content)
       throws Annot8Exception;
 
-  protected void buildCapabilities(Settings settings, SimpleCapabilities.Builder builder) {
-    if (settings instanceof ContentAnnotatorSettings) {
-      ContentAnnotatorSettings cas = (ContentAnnotatorSettings) settings;
-      builder.acceptsTags(cas.getTags());
-    }
+  protected void buildCapabilities(SimpleCapabilities.Builder builder) {
+    
   }
 
 }

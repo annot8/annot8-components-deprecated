@@ -3,7 +3,6 @@ package io.annot8.components.base.processors;
 import io.annot8.core.data.Content;
 import io.annot8.core.data.Item;
 import io.annot8.core.exceptions.Annot8Exception;
-import io.annot8.core.settings.Settings;
 import io.annot8.defaultimpl.data.SimpleCapabilities.Builder;
 
 public abstract class AbstractContentClassAnnotator<T extends Content<?>>
@@ -30,8 +29,8 @@ public abstract class AbstractContentClassAnnotator<T extends Content<?>>
   protected abstract void process(final Item item, final T content) throws Annot8Exception;
 
   @Override
-  protected void buildCapabilities(Settings settings, Builder builder) {
-    super.buildCapabilities(settings, builder);
+  protected void buildCapabilities(Builder builder) {
+    super.buildCapabilities(builder);
     builder.requiresContent(contentClazz);
   }
 }

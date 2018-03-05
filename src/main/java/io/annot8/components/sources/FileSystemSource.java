@@ -1,13 +1,13 @@
 package io.annot8.components.sources;
 
 import io.annot8.common.content.FileContent;
+import io.annot8.common.factories.ItemFactory;
 import io.annot8.core.components.Capabilities;
 import io.annot8.core.components.Source;
 import io.annot8.core.components.responses.SourceResponse;
 import io.annot8.core.context.Context;
 import io.annot8.core.data.Item;
 import io.annot8.core.exceptions.Annot8Exception;
-import io.annot8.core.settings.Settings;
 import io.annot8.core.settings.SettingsClass;
 import io.annot8.defaultimpl.data.SimpleCapabilities;
 import java.io.IOException;
@@ -25,18 +25,21 @@ import java.util.stream.Stream;
 public abstract class FileSystemSource implements Source {
 
   private Path rootFolder;
-  private Context context;
+  private ItemFactory itemFactory;
+
+  public FileSystemSource(ItemFactory itemFactory){
+    this.itemFactory = itemFactory;
+  }
 
   @Override
   public void configure(final Context context) {
     final FileSystemSourceSettings settings =
         context.getSettings(FileSystemSourceSettings.class);
     rootFolder = Paths.get(settings.getRootFolder());
-    this.context = context;
   }
 
   protected Item createItem() {
-    return context.createItem();
+    return itemFactory.create();
   }
 
   @Override
@@ -80,7 +83,7 @@ public abstract class FileSystemSource implements Source {
   }
 
   @Override
-  public Capabilities getCapabilities(Settings settings) {
+  public Capabilities getCapabilities() {
     return new SimpleCapabilities.Builder()
         .createsContent(FileContent.class)
         .save();

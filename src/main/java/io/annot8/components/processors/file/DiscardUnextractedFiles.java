@@ -7,7 +7,6 @@ import io.annot8.core.components.responses.ProcessorResponse;
 import io.annot8.core.data.Content;
 import io.annot8.core.data.Item;
 import io.annot8.core.exceptions.Annot8Exception;
-import io.annot8.core.settings.Settings;
 import io.annot8.defaultimpl.data.SimpleCapabilities;
 
 // This is more like premature optimisation... really but I guess it's sensible to clean up
@@ -31,7 +30,7 @@ public class DiscardUnextractedFiles implements Processor {
   }
 
   @Override
-  public Capabilities getCapabilities(Settings settings) {
+  public Capabilities getCapabilities() {
     return new SimpleCapabilities.Builder()
         .requiresContent(FileContent.class)
         .save();

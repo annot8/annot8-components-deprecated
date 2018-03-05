@@ -7,7 +7,6 @@ import io.annot8.core.components.Processor;
 import io.annot8.core.components.responses.ProcessorResponse;
 import io.annot8.core.data.Item;
 import io.annot8.core.exceptions.Annot8Exception;
-import io.annot8.core.settings.Settings;
 import io.annot8.defaultimpl.data.SimpleCapabilities;
 import java.io.File;
 import java.nio.charset.Charset;
@@ -45,7 +44,7 @@ public class TxtFileExtractor implements Processor {
   }
 
   @Override
-  public Capabilities getCapabilities(Settings settings) {
+  public Capabilities getCapabilities() {
     return new SimpleCapabilities.Builder()
         .createsContent(Text.class)
         .requiresContent(FileContent.class)

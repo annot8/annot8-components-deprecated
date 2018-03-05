@@ -9,7 +9,6 @@ import io.annot8.core.annotations.Group;
 import io.annot8.core.data.Item;
 import io.annot8.core.exceptions.Annot8Exception;
 import io.annot8.core.exceptions.IncompleteException;
-import io.annot8.core.settings.Settings;
 import io.annot8.core.stores.GroupStore;
 import io.annot8.defaultimpl.data.SimpleCapabilities.Builder;
 import java.util.Optional;
@@ -60,8 +59,8 @@ public class GroupByTypeAndValueAnnotator extends AbstractTextAnnotator {
   }
 
   @Override
-  protected void buildCapabilities(Settings settings, Builder builder) {
-    super.buildCapabilities(settings, builder);
+  protected void buildCapabilities(Builder builder) {
+    super.buildCapabilities(builder);
 
     // TODO: no such thing has outputsGroup(type)...
   }
