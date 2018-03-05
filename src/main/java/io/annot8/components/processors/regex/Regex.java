@@ -3,17 +3,20 @@ package io.annot8.components.processors.regex;
 import io.annot8.common.bounds.SpanBounds;
 import io.annot8.common.content.Text;
 import io.annot8.components.base.processors.AbstractTextAnnotator;
+import io.annot8.components.base.processors.ContentAnnotatorSettings;
 import io.annot8.components.processors.regex.Regex.RegexSettings;
 import io.annot8.core.components.Capabilities;
 import io.annot8.core.context.Context;
 import io.annot8.core.data.Item;
 import io.annot8.core.exceptions.Annot8Exception;
 import io.annot8.core.exceptions.BadConfigurationException;
+import io.annot8.core.exceptions.MissingResourceException;
 import io.annot8.core.exceptions.ProcessingException;
-import io.annot8.core.settings.Settings;
 import io.annot8.core.settings.SettingsClass;
 import io.annot8.core.stores.AnnotationStore;
 import io.annot8.defaultimpl.data.SimpleCapabilities;
+import java.util.Collections;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,7 +38,9 @@ public class Regex extends AbstractTextAnnotator {  //TODO: Are there functions 
   }
 
   @Override
-  public void configure(Context context) {
+  public void configure(Context context) throws BadConfigurationException, MissingResourceException {
+    super.configure(context);
+
     RegexSettings settings = context.getSettings(RegexSettings.class);
 
     this.regex = settings.getRegex();
@@ -70,12 +75,22 @@ public class Regex extends AbstractTextAnnotator {  //TODO: Are there functions 
     }
   }
 
-  public static class RegexSettings implements Settings{
+  public static class RegexSettings extends ContentAnnotatorSettings{
     private final Pattern regex;
     private final int group;
     private final String type;
 
     public RegexSettings(Pattern regex, int group, String type){
+      super(Collections.emptySet(), Collections.emptySet());
+
+      this.regex = regex;
+      this.group = group;
+      this.type = type;
+    }
+
+    public RegexSettings(Pattern regex, int group, String type, Set<String> tags, Set<String> content){
+      super(tags, content);
+
       this.regex = regex;
       this.group = group;
       this.type = type;

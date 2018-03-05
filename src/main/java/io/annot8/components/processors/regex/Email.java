@@ -1,6 +1,6 @@
 package io.annot8.components.processors.regex;
 
-import io.annot8.standards.AnnotationTypes;
+import io.annot8.conventions.AnnotationTypes;
 import java.util.regex.Pattern;
 
 public class Email extends AbstractSuppliedRegex {
