@@ -30,6 +30,7 @@ public abstract class FileSystemSource implements Source {
   public FileSystemSource(ItemFactory itemFactory){
     this.itemFactory = itemFactory;
   }
+  private boolean called = false;
 
   @Override
   public void configure(final Context context) {
@@ -44,17 +45,24 @@ public abstract class FileSystemSource implements Source {
 
   @Override
   public SourceResponse read() {
+    if(called) {
+      return SourceResponse.done();
+    }
+
     try {
       return SourceResponse
           .ok(readFiles(rootFolder));
     } catch (final IOException ioe) {
       ioe.printStackTrace();
       return SourceResponse.sourceError();
+    } finally {
+      called = true;
     }
   }
 
   protected Stream<Item> readFiles(Path rootFolder) throws IOException {
-    return Files.walk(rootFolder)
+
+    return Files.walk(rootFolder.toAbsolutePath())
         // TODO: in future should just return everything and the pipeline could filter out directories?
         .filter(Files::isRegularFile)
         .map(f -> {
