@@ -16,8 +16,7 @@ public abstract class AbstractAnnotator implements Processor {
       if (acceptsItem(item)) {
         final boolean stop = processItem(item);
         if (!stop) {
-          // Don't allow to continue
-          return ProcessorResponse.itemStop();
+          item.discard();
         }
       }
       return ProcessorResponse.ok();

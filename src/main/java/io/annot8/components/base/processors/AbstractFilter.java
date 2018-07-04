@@ -6,32 +6,21 @@ import io.annot8.core.data.Item;
 import io.annot8.core.exceptions.ProcessingException;
 import java.util.stream.Stream;
 
-public abstract class AbstractSplitter implements Processor {
+public abstract class AbstractFilter implements Processor {
 
   @Override
-  public final ProcessorResponse process(final Item item) throws ProcessingException {
+  public final ProcessorResponse process(final Item item)  {
     try {
-      Stream<Item> split;
-      if (acceptsItem(item)) {
-        boolean discard = split(item);
-
-        if (discard) {
-          item.discard();
-        }
+      if (filter(item)) {
+        item.discard();
       }
 
-
       return ProcessorResponse.ok();
-
     } catch (final Exception e) {
       return ProcessorResponse.itemError();
     }
   }
 
-  protected boolean acceptsItem(final Item item) {
-    return false;
-  }
-
-  protected abstract boolean split(final Item item);
+  protected abstract boolean filter(final Item item);
 
 }

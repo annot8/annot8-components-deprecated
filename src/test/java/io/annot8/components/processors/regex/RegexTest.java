@@ -3,7 +3,7 @@ package io.annot8.components.processors.regex;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import io.annot8.common.content.Text;
-import io.annot8.common.factories.ItemFactory;
+import io.annot8.core.data.ItemFactory;
 import io.annot8.components.processors.regex.Regex.RegexSettings;
 import io.annot8.core.annotations.Annotation;
 import io.annot8.core.components.Processor;
@@ -33,7 +33,7 @@ public class RegexTest {
     //TODO: Provide some abstract test base classes that provide this common functionality
     SimpleContentBuilderFactoryRegistry contentBuilderFactoryRegistry = new SimpleContentBuilderFactoryRegistry();
     contentBuilderFactoryRegistry.register(Text.class, new SimpleText.BuilderFactory());
-    ItemFactory itemFactory = new SimpleItemFactory(contentBuilderFactoryRegistry);
+    ItemFactory itemFactory = new SimpleItemFactory(contentBuilderFactoryRegistry, a -> {});
     Context context = new SimpleContext(itemFactory, rs);
 
     p.configure(context);

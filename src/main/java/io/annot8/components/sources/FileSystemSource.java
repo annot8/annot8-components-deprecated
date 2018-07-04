@@ -1,12 +1,12 @@
 package io.annot8.components.sources;
 
 import io.annot8.common.content.FileContent;
-import io.annot8.common.factories.ItemFactory;
 import io.annot8.core.components.Capabilities;
 import io.annot8.core.components.Source;
 import io.annot8.core.components.responses.SourceResponse;
 import io.annot8.core.context.Context;
 import io.annot8.core.data.Item;
+import io.annot8.core.data.ItemFactory;
 import io.annot8.core.exceptions.Annot8Exception;
 import io.annot8.core.settings.SettingsClass;
 import io.annot8.defaultimpl.data.SimpleCapabilities;
@@ -18,18 +18,13 @@ import java.time.Instant;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-// TODO: This is not a good implementation.. it reads everything in one go
-// which is going to kill the memory.
+// TODO: This is not a good implementation.. lacks monitoring etc
 
 @SettingsClass(FileSystemSourceSettings.class)
-public abstract class FileSystemSource implements Source {
+public class FileSystemSource implements Source {
 
   private Path rootFolder;
-  private ItemFactory itemFactory;
 
-  public FileSystemSource(ItemFactory itemFactory){
-    this.itemFactory = itemFactory;
-  }
   private boolean called = false;
 
   @Override
@@ -39,19 +34,16 @@ public abstract class FileSystemSource implements Source {
     rootFolder = Paths.get(settings.getRootFolder());
   }
 
-  protected Item createItem() {
-    return itemFactory.create();
-  }
-
   @Override
-  public SourceResponse read() {
+  public SourceResponse read(ItemFactory itemFactory) {
     if(called) {
       return SourceResponse.done();
     }
 
     try {
+      readFiles(itemFactory, rootFolder);
       return SourceResponse
-          .ok(readFiles(rootFolder));
+          .ok();
     } catch (final IOException ioe) {
       ioe.printStackTrace();
       return SourceResponse.sourceError();
@@ -60,33 +52,29 @@ public abstract class FileSystemSource implements Source {
     }
   }
 
-  protected Stream<Item> readFiles(Path rootFolder) throws IOException {
+  protected void readFiles(ItemFactory itemFactory, Path rootFolder) throws IOException {
 
-    return Files.walk(rootFolder.toAbsolutePath())
-        // TODO: in future should just return everything and the pipeline could filter out directories?
-        .filter(Files::isRegularFile)
-        .map(f -> {
-          try {
-            return covert(f);
-          } catch (final Annot8Exception e) {
-            e.printStackTrace();
-            return null;
-          }
-        })
-        .filter(Objects::nonNull);
+    try (Stream<Path> paths = Files.walk(rootFolder.toAbsolutePath())) {
+      // TODO: in future should just return everything and the pipeline could filter out directories?
+      paths.filter(Files::isRegularFile)
+          .forEach(f -> convert(itemFactory, f));
+    }
   }
 
 
-  private Item covert(Path p) throws Annot8Exception {
-    final Item item = createItem();
-    item.getProperties().set("source", p);
-    item.getProperties().set("accessedAt", Instant.now().getEpochSecond());
+  private Item convert(ItemFactory itemFactory, Path p)  {
+    final Item item = itemFactory.create();
+    try {
+      item.getProperties().set("source", p);
+      item.getProperties().set("accessedAt", Instant.now().getEpochSecond());
 
-    item.create(FileContent.class)
-        .withName("file")
-        .withData(p.toFile())
-        .save();
-
+      item.create(FileContent.class)
+          .withName("file")
+          .withData(p.toFile())
+          .save();
+    } catch(Annot8Exception e) {
+      item.discard();
+    }
     return item;
   }
 

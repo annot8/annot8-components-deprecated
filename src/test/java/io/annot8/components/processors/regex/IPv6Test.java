@@ -3,7 +3,7 @@ package io.annot8.components.processors.regex;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import io.annot8.common.content.Text;
-import io.annot8.common.factories.ItemFactory;
+import io.annot8.core.data.ItemFactory;
 import io.annot8.conventions.AnnotationTypes;
 import io.annot8.conventions.PropertyKeys;
 import io.annot8.core.annotations.Annotation;

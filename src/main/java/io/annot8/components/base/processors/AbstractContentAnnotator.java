@@ -57,8 +57,5 @@ public abstract class AbstractContentAnnotator extends AbstractAnnotator {
   protected abstract void processContent(final Item item, final Content<?> content)
       throws Annot8Exception;
 
-  protected void buildCapabilities(SimpleCapabilities.Builder builder) {
-    
-  }
 
 }

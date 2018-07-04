@@ -23,10 +23,11 @@ public class DiscardUnextractedFiles implements Processor {
     boolean noOtherContent = item.getContents().count() == 0;
 
     if (noOtherContent) {
-      return ProcessorResponse.itemStop();
-    } else {
-      return ProcessorResponse.ok();
+      item.discard();
     }
+
+    return ProcessorResponse.ok();
+
   }
 
   @Override

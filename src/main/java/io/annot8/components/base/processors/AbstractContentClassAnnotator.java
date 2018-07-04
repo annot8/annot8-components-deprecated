@@ -30,7 +30,6 @@ public abstract class AbstractContentClassAnnotator<T extends Content<?>>
 
   @Override
   protected void buildCapabilities(Builder builder) {
-    super.buildCapabilities(builder);
     builder.requiresContent(contentClazz);
   }
 }
