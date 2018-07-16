@@ -14,30 +14,6 @@
 
   <name>Annot8 Components</name>
   <description>Components for the Annot8 Framework</description>
-  <inceptionYear>2017</inceptionYear>
-  <url>http://annot8.io</url>
-
-  <developers>
-    <developer>
-      <name>James Baker</name>
-      <url>https://github.com/jamesdbaker</url>
-    </developer>
-    <developer>
-      <name>Chris Flatley</name>
-      <url>https://github.com/chrisflatley</url>
-    </developer>
-    <developer>
-      <name>Stuart Hendren</name>
-      <url>https://github.com/stuarthendren</url>
-    </developer>
-  </developers>
-
-  <licenses>
-    <license>
-      <name>Apache Software License 2.0</name>
-      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
-    </license>
-  </licenses>
 
   <issueManagement>
     <url>https://github.com/annot8/components/issues</url>
@@ -54,40 +30,33 @@
     <dependency>
       <groupId>io.annot8</groupId>
       <artifactId>core</artifactId>
-      <version>${annot8.version}</version>
     </dependency>
     <dependency>
       <groupId>io.annot8</groupId>
       <artifactId>common</artifactId>
-      <version>${annot8.version}</version>
     </dependency>
     <dependency>
       <groupId>io.annot8</groupId>
       <artifactId>default-impl</artifactId>
-      <version>${annot8.version}</version>
     </dependency>
     <dependency>
       <groupId>io.annot8</groupId>
       <artifactId>conventions</artifactId>
-      <version>${annot8.version}</version>
     </dependency>
 
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>${guava.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
-      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>${mockito.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
