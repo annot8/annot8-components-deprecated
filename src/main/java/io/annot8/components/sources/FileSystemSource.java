@@ -1,11 +1,26 @@
 package io.annot8.components.sources;
 
+import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
+
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Instant;
-import java.util.stream.Stream;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import io.annot8.common.content.FileContent;
 import io.annot8.core.components.Capabilities;
 import io.annot8.core.components.Source;
@@ -14,73 +29,162 @@ import io.annot8.core.context.Context;
 import io.annot8.core.data.Item;
 import io.annot8.core.data.ItemFactory;
 import io.annot8.core.exceptions.Annot8Exception;
-import io.annot8.core.settings.SettingsClass;
-import io.annot8.defaultimpl.data.SimpleCapabilities;
+import io.annot8.core.exceptions.Annot8RuntimeException;
+import io.annot8.core.exceptions.BadConfigurationException;
 
-// TODO: This is not a good implementation.. lacks monitoring etc
-
-@SettingsClass(FileSystemSourceSettings.class)
 public class FileSystemSource implements Source {
 
-  private Path rootFolder;
+  private final WatchService watchService;
 
-  private boolean called = false;
+  private Set<WatchKey> watchKeys = new HashSet<>();
+
+  private Set<Pattern> acceptedFilePatterns = Collections.emptySet();
+
+  private Set<Path> initialFiles = new HashSet<>();
+
+  public FileSystemSource(){
+    try {
+      watchService = FileSystems.getDefault().newWatchService();
+    } catch (IOException e) {
+      throw new Annot8RuntimeException("Unable to initialize WatchService", e);
+    }
+  }
 
   @Override
-  public void configure(final Context context) {
-    final FileSystemSourceSettings settings =
-        context.getSettings(FileSystemSourceSettings.class);
-    rootFolder = Paths.get(settings.getRootFolder());
+  public void configure(final Context context) throws BadConfigurationException {
+    final FileSystemSourceSettings settings = context.getSettings(FileSystemSourceSettings.class);
+    acceptedFilePatterns = settings.getAcceptedFileNamePatterns();
+
+    //Unregister existing watchers
+    watchKeys.forEach(WatchKey::cancel);
+    watchKeys.clear();
+
+    initialFiles.clear();
+
+    try {
+      Path p = settings.getRootFolder();
+
+      if (settings.isRecursive()) {
+        Files.walkFileTree(
+            p,
+            new SimpleFileVisitor<>() {
+              @Override
+              public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attr)
+                  throws IOException {
+                registerDirectory(settings, dir);
+                return FileVisitResult.CONTINUE;
+              }
+            });
+      } else {
+        registerDirectory(settings, p);
+      }
+
+      addFilesFromDir(settings, p.toFile());
+    } catch (IOException ioe) {
+      throw new BadConfigurationException("Unable to register folder or sub-folder with watch service", ioe);
+    }
+  }
+
+  private void registerDirectory(FileSystemSourceSettings settings, Path path) throws IOException {
+    WatchKey key;
+    if (settings.isReprocessOnModify()) {
+      key = path.register(watchService, ENTRY_CREATE, ENTRY_MODIFY);
+    } else {
+      key = path.register(watchService, ENTRY_CREATE);
+    }
+
+    watchKeys.add(key);
+  }
+
+  private void addFilesFromDir(FileSystemSourceSettings settings, File dir) {
+    File[] files = dir.listFiles();
+
+    if (files == null) {
+      return;
+    }
+
+    for (File file : files) {
+      if (!file.isDirectory()) {
+        Path path = file.toPath();
+
+        if (acceptedFilePatterns.isEmpty()) {
+          initialFiles.add(path);
+        } else {
+          for (Pattern p : acceptedFilePatterns) {
+            Matcher m = p.matcher(path.getFileName().toString());
+            if (m.matches()) {
+              initialFiles.add(path);
+              break;
+            }
+          }
+        }
+      } else if (settings.isRecursive()) {
+        addFilesFromDir(settings, file);
+      }
+    }
+  }
+
+  private boolean createItem(ItemFactory itemFactory, Path path) {
+    boolean include = false;
+
+    if (acceptedFilePatterns.isEmpty()) {
+      include = true;
+    } else {
+      for (Pattern p : acceptedFilePatterns) {
+        Matcher m = p.matcher(path.getFileName().toString());
+        if (m.matches()) {
+          include = true;
+          break;
+        }
+      }
+    }
+
+    if(include){
+      final Item item = itemFactory.create();
+      try {
+        item.getProperties().set("source", path);
+        item.getProperties().set("accessedAt", Instant.now().getEpochSecond());
+
+        item.create(FileContent.class)
+            .withName("file")
+            .withData(path.toFile())
+            .save();
+
+        return true;
+      } catch(Annot8Exception e) {
+        item.discard();
+      }
+    }
+
+    return false;
   }
 
   @Override
   public SourceResponse read(ItemFactory itemFactory) {
-    if(called) {
-      return SourceResponse.done();
+    if(!initialFiles.isEmpty()){
+      initialFiles.forEach(path -> createItem(itemFactory, path));
+      initialFiles.clear();
     }
 
-    try {
-      readFiles(itemFactory, rootFolder);
-      return SourceResponse
-          .ok();
-    } catch (final IOException ioe) {
-      ioe.printStackTrace();
-      return SourceResponse.sourceError();
-    } finally {
-      called = true;
+    boolean read = false;
+    WatchKey key;
+    while ((key = watchService.poll()) != null) {
+      for (WatchEvent<?> event : key.pollEvents()) {
+        if(createItem(itemFactory, ((WatchEvent<Path>)event).context()))
+          read = true;
+      }
+
+      key.reset();
     }
-  }
 
-  protected void readFiles(ItemFactory itemFactory, Path rootFolder) throws IOException {
+    if(read)
+      return SourceResponse.ok();
 
-    try (Stream<Path> paths = Files.walk(rootFolder.toAbsolutePath())) {
-      // TODO: in future should just return everything and the pipeline could filter out directories?
-      paths.filter(Files::isRegularFile)
-          .forEach(f -> convert(itemFactory, f));
-    }
-  }
-
-
-  private Item convert(ItemFactory itemFactory, Path p)  {
-    final Item item = itemFactory.create();
-    try {
-      item.getProperties().set("source", p);
-      item.getProperties().set("accessedAt", Instant.now().getEpochSecond());
-
-      item.create(FileContent.class)
-          .withName("file")
-          .withData(p.toFile())
-          .save();
-    } catch(Annot8Exception e) {
-      item.discard();
-    }
-    return item;
+    return SourceResponse.empty();
   }
 
   @Override
   public Capabilities getCapabilities() {
-    return new SimpleCapabilities.Builder()
-        .createsContent(FileContent.class)
-        .save();
+    return null;
   }
 }
