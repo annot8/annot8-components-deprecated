@@ -12,4 +12,5 @@ open module io.annot8.components {
   exports io.annot8.components.sources;
   
   requires slf4j.api;
+  requires micrometer.core;
 }
