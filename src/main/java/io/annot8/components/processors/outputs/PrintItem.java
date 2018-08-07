@@ -1,7 +1,6 @@
 package io.annot8.components.processors.outputs;
 
 import static java.util.stream.Collectors.toList;
-
 import com.google.common.base.Joiner;
 import io.annot8.core.annotations.Annotation;
 import io.annot8.core.components.Capabilities;
@@ -11,8 +10,6 @@ import io.annot8.core.data.Content;
 import io.annot8.core.data.Item;
 import io.annot8.core.data.Tags;
 import io.annot8.core.exceptions.Annot8Exception;
-import io.annot8.core.properties.ImmutableProperties;
-import io.annot8.core.properties.MutableProperties;
 import io.annot8.core.properties.Properties;
 import io.annot8.core.stores.AnnotationStore;
 

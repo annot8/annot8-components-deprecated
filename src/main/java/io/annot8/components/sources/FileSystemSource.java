@@ -1,5 +1,11 @@
 package io.annot8.components.sources;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.Instant;
+import java.util.stream.Stream;
 import io.annot8.common.content.FileContent;
 import io.annot8.core.components.Capabilities;
 import io.annot8.core.components.Source;
@@ -10,13 +16,6 @@ import io.annot8.core.data.ItemFactory;
 import io.annot8.core.exceptions.Annot8Exception;
 import io.annot8.core.settings.SettingsClass;
 import io.annot8.defaultimpl.data.SimpleCapabilities;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.Instant;
-import java.util.Objects;
-import java.util.stream.Stream;
 
 // TODO: This is not a good implementation.. lacks monitoring etc
 

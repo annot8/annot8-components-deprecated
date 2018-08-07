@@ -4,14 +4,12 @@ import io.annot8.core.components.Processor;
 import io.annot8.core.components.responses.ProcessorResponse;
 import io.annot8.core.data.Item;
 import io.annot8.core.exceptions.ProcessingException;
-import java.util.stream.Stream;
 
 public abstract class AbstractSplitter implements Processor {
 
   @Override
   public final ProcessorResponse process(final Item item) throws ProcessingException {
     try {
-      Stream<Item> split;
       if (acceptsItem(item)) {
         boolean discard = split(item);
 

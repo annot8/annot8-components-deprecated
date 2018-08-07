@@ -3,13 +3,11 @@ package io.annot8.components.base.processors;
 import io.annot8.core.components.Processor;
 import io.annot8.core.components.responses.ProcessorResponse;
 import io.annot8.core.data.Item;
-import io.annot8.core.exceptions.ProcessingException;
-import java.util.stream.Stream;
 
 public abstract class AbstractFilter implements Processor {
 
   @Override
-  public final ProcessorResponse process(final Item item)  {
+  public final ProcessorResponse process(final Item item) {
     try {
       if (filter(item)) {
         item.discard();
