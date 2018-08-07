@@ -97,15 +97,15 @@ public class Regex extends AbstractTextAnnotator {  //TODO: Are there functions 
     private final String type;
 
     public RegexSettings(Pattern regex, int group, String type){
-      super(Collections.emptySet(), Collections.emptySet());
+      super(Collections.emptySet());
 
       this.regex = regex;
       this.group = group;
       this.type = type;
     }
 
-    public RegexSettings(Pattern regex, int group, String type, Set<String> tags, Set<String> content){
-      super(tags, content);
+    public RegexSettings(Pattern regex, int group, String type, Set<String> content){
+      super(content);
 
       this.regex = regex;
       this.group = group;
