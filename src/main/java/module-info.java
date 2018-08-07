@@ -10,4 +10,6 @@ open module io.annot8.components {
   exports io.annot8.components.processors.outputs;
   exports io.annot8.components.processors.regex;
   exports io.annot8.components.sources;
+  
+  requires slf4j.api;
 }
