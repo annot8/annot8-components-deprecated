@@ -6,7 +6,7 @@ import io.annot8.common.properties.EmptyImmutableProperties;
 import io.annot8.components.base.processors.AbstractTextAnnotator;
 import io.annot8.components.base.processors.ContentAnnotatorSettings;
 import io.annot8.components.processors.regex.Regex.RegexSettings;
-import io.annot8.core.components.Capabilities;
+import io.annot8.core.capabilities.Capabilities.Builder;
 import io.annot8.core.context.Context;
 import io.annot8.core.data.Item;
 import io.annot8.core.exceptions.Annot8Exception;
@@ -16,7 +16,6 @@ import io.annot8.core.exceptions.ProcessingException;
 import io.annot8.core.properties.Properties;
 import io.annot8.core.settings.SettingsClass;
 import io.annot8.core.stores.AnnotationStore;
-import io.annot8.defaultimpl.data.SimpleCapabilities;
 import java.util.Collections;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -51,11 +50,13 @@ public class Regex extends AbstractTextAnnotator {  //TODO: Are there functions 
   }
 
   @Override
-  public Capabilities getCapabilities() {
-    return new SimpleCapabilities.Builder()
-        .outputsAnnotation(type)
-        .save();
+  public void buildCapabilities(Builder builder) {
+    super.buildCapabilities(builder);
+
+    builder.createsAnnotation(type);
+    builder.createsBounds(SpanBounds.class);
   }
+
 
   @Override
   protected void process(Item item, Text content) throws Annot8Exception {

@@ -22,7 +22,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import io.annot8.common.content.FileContent;
-import io.annot8.core.components.Capabilities;
+import io.annot8.components.base.components.AbstractComponent;
+import io.annot8.core.capabilities.Capabilities;
+import io.annot8.core.capabilities.CreatesContent;
 import io.annot8.core.components.Source;
 import io.annot8.core.components.responses.SourceResponse;
 import io.annot8.core.context.Context;
@@ -32,7 +34,8 @@ import io.annot8.core.exceptions.Annot8Exception;
 import io.annot8.core.exceptions.Annot8RuntimeException;
 import io.annot8.core.exceptions.BadConfigurationException;
 
-public class FileSystemSource implements Source {
+@CreatesContent(FileContent.class)
+public class FileSystemSource extends AbstractComponent implements Source {
 
   private final WatchService watchService;
 
@@ -183,8 +186,4 @@ public class FileSystemSource implements Source {
     return SourceResponse.empty();
   }
 
-  @Override
-  public Capabilities getCapabilities() {
-    return null;
-  }
 }

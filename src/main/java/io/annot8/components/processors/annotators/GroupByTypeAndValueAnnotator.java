@@ -6,16 +6,17 @@ import io.annot8.common.content.Text;
 import io.annot8.components.base.processors.AbstractTextAnnotator;
 import io.annot8.core.annotations.Annotation;
 import io.annot8.core.annotations.Group;
+import io.annot8.core.capabilities.CreatesGroup;
 import io.annot8.core.data.Item;
 import io.annot8.core.exceptions.Annot8Exception;
 import io.annot8.core.exceptions.IncompleteException;
 import io.annot8.core.stores.GroupStore;
-import io.annot8.defaultimpl.data.SimpleCapabilities.Builder;
 import java.util.Optional;
 
+@CreatesGroup(GroupByTypeAndValueAnnotator.TYPE)
 public class GroupByTypeAndValueAnnotator extends AbstractTextAnnotator {
 
-  private static final String TYPE = "exactMatches";
+  public static final String TYPE = "exactMatches";
   private static final String ROLE = "as";
 
 
@@ -58,10 +59,4 @@ public class GroupByTypeAndValueAnnotator extends AbstractTextAnnotator {
     return type + ":" + covered;
   }
 
-  @Override
-  protected void buildCapabilities(Builder builder) {
-    super.buildCapabilities(builder);
-
-    // TODO: no such thing has outputsGroup(type)...
-  }
 }

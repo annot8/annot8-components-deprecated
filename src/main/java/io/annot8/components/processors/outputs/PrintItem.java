@@ -1,7 +1,8 @@
 package io.annot8.components.processors.outputs;
 
+import io.annot8.components.base.components.AbstractComponent;
 import io.annot8.core.annotations.Annotation;
-import io.annot8.core.components.Capabilities;
+import io.annot8.core.capabilities.Capabilities;
 import io.annot8.core.components.Processor;
 import io.annot8.core.components.responses.ProcessorResponse;
 import io.annot8.core.data.Content;
@@ -10,7 +11,7 @@ import io.annot8.core.exceptions.Annot8Exception;
 import io.annot8.core.properties.Properties;
 import io.annot8.core.stores.AnnotationStore;
 
-public class PrintItem implements Processor {
+public class PrintItem extends AbstractComponent implements Processor {
 
   @Override
   public ProcessorResponse process(Item item) throws Annot8Exception {
@@ -59,8 +60,4 @@ public class PrintItem implements Processor {
     System.out.println(sb.toString());
   }
 
-  @Override
-  public Capabilities getCapabilities() {
-    return null;
-  }
 }
