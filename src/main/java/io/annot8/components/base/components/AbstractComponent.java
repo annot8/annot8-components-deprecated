@@ -14,7 +14,7 @@ import io.annot8.core.context.Context;
 import io.annot8.core.exceptions.BadConfigurationException;
 import io.annot8.core.exceptions.MissingResourceException;
 
-public class AbstractComponent implements Annot8Component {
+public abstract class AbstractComponent implements Annot8Component {
 
 	private Logger logger;
 	
