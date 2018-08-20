@@ -30,5 +30,8 @@
 
   <modules>
     <module>annot8-components-basic</module>
+    <module>annot8-resources-monitor</module>
+    <module>annot8-components-base</module>
+    <module>annot8-components-files</module>
   </modules>
 </project>

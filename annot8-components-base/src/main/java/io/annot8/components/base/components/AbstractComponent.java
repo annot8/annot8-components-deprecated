@@ -1,14 +1,15 @@
 package io.annot8.components.base.components;
 
+import io.annot8.components.resources.monitor.Logging;
+import io.annot8.components.resources.monitor.Metering;
+import io.annot8.components.resources.monitor.metering.Metrics;
+import io.annot8.components.resources.monitor.metering.NoOpMetrics;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.helpers.NOPLogger;
 
-import io.annot8.components.resources.Logging;
-import io.annot8.components.resources.Metering;
-import io.annot8.components.resources.metering.Metrics;
-import io.annot8.components.resources.metering.NoOpMetrics;
+
 import io.annot8.core.components.Annot8Component;
 import io.annot8.core.context.Context;
 import io.annot8.core.exceptions.BadConfigurationException;

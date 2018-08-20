@@ -1,10 +1,8 @@
 package io.annot8.components.processors.outputs;
 
-
-import io.annot8.common.bounds.SpanBounds;
-import io.annot8.common.content.Text;
+import io.annot8.common.data.bounds.SpanBounds;
+import io.annot8.common.data.content.Text;
 import io.annot8.components.base.processors.AbstractTextAnnotator;
-import io.annot8.core.capabilities.CreatesContent;
 import io.annot8.core.data.Item;
 import io.annot8.core.exceptions.Annot8Exception;
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package io.annot8.components.resources.metering;
+package io.annot8.components.resources.monitor.metering;
 
 import java.util.Collection;
 import java.util.Map;

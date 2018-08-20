@@ -1,20 +1,11 @@
-package io.annot8.components.resources;
+package io.annot8.components.resources.monitor;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.function.ToDoubleFunction;
-
-import io.annot8.components.base.components.AbstractComponent;
-import io.annot8.components.resources.metering.Metrics;
-import io.annot8.components.resources.metering.NamedMetrics;
+import io.annot8.components.resources.monitor.metering.Metrics;
+import io.annot8.components.resources.monitor.metering.NamedMetrics;
+import io.annot8.core.components.Annot8Component;
 import io.annot8.core.components.Resource;
-import io.micrometer.core.instrument.Counter;
-import io.micrometer.core.instrument.DistributionSummary;
 import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Tag;
-import io.micrometer.core.instrument.Timer;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
-import io.micrometer.core.lang.Nullable;
 
 public final class Metering implements Resource {
 
@@ -32,7 +23,7 @@ public final class Metering implements Resource {
 		}
 	}
 	
-	public Metrics getMetrics(Class<? extends AbstractComponent> clazz) {
+	public Metrics getMetrics(Class<? extends Annot8Component> clazz) {
 		return new NamedMetrics(meterRegistry, clazz);
 	}
 

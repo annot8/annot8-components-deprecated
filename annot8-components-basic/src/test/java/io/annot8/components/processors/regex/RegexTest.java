@@ -2,12 +2,16 @@ package io.annot8.components.processors.regex;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
+
+import io.annot8.common.data.bounds.SpanBounds;
+import io.annot8.common.data.content.Text;
+import io.annot8.test.TestContext;
+import io.annot8.test.TestItem;
+import io.annot8.test.content.TestStringContent;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
-import io.annot8.common.bounds.SpanBounds;
-import io.annot8.common.content.Text;
 import io.annot8.components.processors.regex.Regex.RegexSettings;
 import io.annot8.core.annotations.Annotation;
 import io.annot8.core.components.Processor;
@@ -16,11 +20,6 @@ import io.annot8.core.data.Item;
 import io.annot8.core.data.ItemFactory;
 import io.annot8.core.exceptions.Annot8Exception;
 import io.annot8.core.stores.AnnotationStore;
-import io.annot8.defaultimpl.content.SimpleText;
-import io.annot8.defaultimpl.context.SimpleContext;
-import io.annot8.defaultimpl.data.SimpleItem;
-import io.annot8.defaultimpl.factories.SimpleContentBuilderFactoryRegistry;
-import io.annot8.defaultimpl.factories.SimpleItemFactory;
 
 public class RegexTest {
 
@@ -32,17 +31,20 @@ public class RegexTest {
 
     // TODO: These should be replaced by Test* rather than using Simple*
     // TODO: Provide some abstract test base classes that provide this common functionality
-    SimpleContentBuilderFactoryRegistry contentBuilderFactoryRegistry =
-        new SimpleContentBuilderFactoryRegistry();
-    contentBuilderFactoryRegistry.register(Text.class, new SimpleText.BuilderFactory());
-    ItemFactory itemFactory = new SimpleItemFactory(contentBuilderFactoryRegistry, a -> {
-    });
-    Context context = new SimpleContext(itemFactory, rs);
+//    SimpleContentBuilderFactoryRegistry contentBuilderFactoryRegistry =
+//        new SimpleContentBuilderFactoryRegistry();
+//    contentBuilderFactoryRegistry.register(Text.class, new SimpleText.BuilderFactory());
+//    ItemFactory itemFactory = new SimpleItemFactory(contentBuilderFactoryRegistry, a -> {
+//    });
+//    Context context = new SimpleContext(itemFactory, rs);
+
+    Item item = new TestItem();
+    Context context = new TestContext(rs);
 
     p.configure(context);
 
-    Item item = new SimpleItem(itemFactory, contentBuilderFactoryRegistry);
-    Text content = item.create(Text.class).withName("test").withData("x + 12 = 42").save();
+//    Item item = new SimpleItem(itemFactory, contentBuilderFactoryRegistry);
+    Text content = item.create(TestStringContent.class).withName("test").withData("x + 12 = 42").save();
 
     p.process(item);
 

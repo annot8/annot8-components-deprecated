@@ -1,4 +1,4 @@
-package io.annot8.components.sources;
+package io.annot8.components.files.sources;
 
 import io.annot8.core.settings.Settings;
 

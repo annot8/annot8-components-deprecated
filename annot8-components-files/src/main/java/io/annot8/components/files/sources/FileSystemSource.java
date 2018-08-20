@@ -1,8 +1,9 @@
-package io.annot8.components.sources;
+package io.annot8.components.files.sources;
 
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 
+import io.annot8.common.data.content.FileContent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -21,9 +22,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import io.annot8.common.content.FileContent;
 import io.annot8.components.base.components.AbstractComponent;
-import io.annot8.core.capabilities.Capabilities;
 import io.annot8.core.capabilities.CreatesContent;
 import io.annot8.core.components.Source;
 import io.annot8.core.components.responses.SourceResponse;

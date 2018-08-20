@@ -1,4 +1,4 @@
-package io.annot8.components.resources.metering;
+package io.annot8.components.resources.monitor.metering;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;

@@ -3,9 +3,9 @@ package io.annot8.components.processors.regex;
 import com.google.common.net.InetAddresses;
 import io.annot8.conventions.AnnotationTypes;
 import io.annot8.conventions.PropertyKeys;
+import io.annot8.core.annotations.Annotation.Builder;
 import io.annot8.core.properties.MutableProperties;
 import io.annot8.core.properties.Properties;
-import io.annot8.defaultimpl.properties.SimpleMutableProperties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,10 +24,9 @@ public class IPv6 extends AbstractSuppliedRegex {
   }
 
   @Override
-  protected Properties getAnnotationProperties() {
-    MutableProperties properties = new SimpleMutableProperties();
-    properties.set(PropertyKeys.PROPERTY_KEY_VERSION, 6);
-
-    return properties;
+  protected void addProperties(Builder builder) {
+    super.addProperties(builder);
+    builder.withProperty(PropertyKeys.PROPERTY_KEY_VERSION, 6);
   }
+
 }

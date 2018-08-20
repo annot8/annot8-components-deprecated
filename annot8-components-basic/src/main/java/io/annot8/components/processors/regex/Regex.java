@@ -1,11 +1,12 @@
 package io.annot8.components.processors.regex;
 
-import io.annot8.common.bounds.SpanBounds;
-import io.annot8.common.content.Text;
-import io.annot8.common.properties.EmptyImmutableProperties;
+
+import io.annot8.common.data.bounds.SpanBounds;
+import io.annot8.common.data.content.Text;
 import io.annot8.components.base.processors.AbstractTextAnnotator;
 import io.annot8.components.base.processors.ContentAnnotatorSettings;
 import io.annot8.components.processors.regex.Regex.RegexSettings;
+import io.annot8.core.annotations.Annotation;
 import io.annot8.core.capabilities.Capabilities.Builder;
 import io.annot8.core.context.Context;
 import io.annot8.core.data.Item;
@@ -70,12 +71,13 @@ public class Regex extends AbstractTextAnnotator {  //TODO: Are there functions 
         continue;
 
       try {
-        Properties properties = getAnnotationProperties();
 
-        annotationStore.create()
+        Annotation.Builder builder = annotationStore.create();
+        addProperties(builder);
+
+        builder
             .withType(type)
             .withBounds(new SpanBounds(m.start(group), m.end(group)))
-            .withProperties(properties)
             .save();
       }catch (IndexOutOfBoundsException e){
         throw new ProcessingException("Invalid group", e);
@@ -83,8 +85,8 @@ public class Regex extends AbstractTextAnnotator {  //TODO: Are there functions 
     }
   }
 
-  protected Properties getAnnotationProperties(){
-    return EmptyImmutableProperties.getInstance();
+  protected void addProperties(Annotation.Builder builder){
+    // Do nothing
   }
 
   protected boolean acceptMatch(final Matcher m){

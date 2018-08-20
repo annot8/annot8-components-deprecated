@@ -8,3 +8,6 @@
 *.iml
 .sts4-cache
 annot8-components-basic/target
+annot8-resources-monitor/target
+annot8-components-base/target
+annot8-components-files/target

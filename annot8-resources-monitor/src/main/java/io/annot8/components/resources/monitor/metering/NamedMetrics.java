@@ -1,10 +1,10 @@
-package io.annot8.components.resources.metering;
+package io.annot8.components.resources.monitor.metering;
 
+import io.annot8.core.components.Annot8Component;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.ToDoubleFunction;
 
-import io.annot8.components.base.components.AbstractComponent;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.DistributionSummary;
 import io.micrometer.core.instrument.MeterRegistry;
@@ -16,7 +16,7 @@ public class NamedMetrics implements Metrics {
 	private final MeterRegistry meterRegistry;
 	private final String prefix;
 
-	public NamedMetrics(MeterRegistry meterRegistry, Class<? extends AbstractComponent> clazz) {
+	public NamedMetrics(MeterRegistry meterRegistry, Class<? extends Annot8Component> clazz) {
 		this(meterRegistry, clazz.getName());
 	}
 

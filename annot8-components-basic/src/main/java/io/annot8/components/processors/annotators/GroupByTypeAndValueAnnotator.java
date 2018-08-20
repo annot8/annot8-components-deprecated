@@ -2,7 +2,7 @@ package io.annot8.components.processors.annotators;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
-import io.annot8.common.content.Text;
+import io.annot8.common.data.content.Text;
 import io.annot8.components.base.processors.AbstractTextAnnotator;
 import io.annot8.core.annotations.Annotation;
 import io.annot8.core.annotations.Group;

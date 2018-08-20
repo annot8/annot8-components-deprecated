@@ -1,17 +1,15 @@
-package io.annot8.components.processors.file;
+package io.annot8.components.files.processors;
 
-import io.annot8.common.content.FileContent;
-import io.annot8.common.content.Text;
+
+import io.annot8.common.data.content.FileContent;
+import io.annot8.common.data.content.Text;
 import io.annot8.components.base.components.AbstractComponent;
-import io.annot8.core.capabilities.Capabilities;
-import io.annot8.core.capabilities.Capabilities.Builder;
 import io.annot8.core.capabilities.CreatesContent;
 import io.annot8.core.capabilities.ProcessesContent;
 import io.annot8.core.components.Processor;
 import io.annot8.core.components.responses.ProcessorResponse;
 import io.annot8.core.data.Item;
 import io.annot8.core.exceptions.Annot8Exception;
-import io.annot8.defaultimpl.data.SimpleCapabilities;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
