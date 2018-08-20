@@ -1,6 +1,6 @@
 open module io.annot8.components {
   requires transitive io.annot8.defaultimpl;
-  requires io.annot8.common;
+  requires io.annot8.common.components;
   requires io.annot8.conventions;
   requires com.google.common;
 
