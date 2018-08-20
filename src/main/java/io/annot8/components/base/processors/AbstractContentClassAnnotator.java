@@ -32,6 +32,6 @@ public abstract class AbstractContentClassAnnotator<T extends Content<?>>
   public void buildCapabilities(Capabilities.Builder builder) {
     super.buildCapabilities(builder);
 
-    builder.requiresContent(contentClazz);
+    builder.processesContent(contentClazz, false);
   }
 }

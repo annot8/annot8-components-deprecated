@@ -53,8 +53,7 @@ public class Regex extends AbstractTextAnnotator {  //TODO: Are there functions 
   public void buildCapabilities(Builder builder) {
     super.buildCapabilities(builder);
 
-    builder.createsAnnotation(type);
-    builder.createsBounds(SpanBounds.class);
+    builder.createsAnnotation(type, SpanBounds.class);
   }
 
 
