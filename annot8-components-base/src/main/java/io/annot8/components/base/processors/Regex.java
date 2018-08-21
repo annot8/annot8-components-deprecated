@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 public class Regex extends
     AbstractTextAnnotator {  //TODO: Are there functions in AbstractTextAnnotator we ought to be implementing?
 
-  protected Pattern regex = null; //TODO: Should we provide a default Pattern to avoid NPEs?
+  protected Pattern pattern = null; //TODO: Should we provide a default Pattern to avoid NPEs?
   protected int group = 0;
   protected String type = "";
 
@@ -31,8 +31,8 @@ public class Regex extends
     //Do nothing
   }
 
-  public Regex(Pattern regex, int group, String type) {
-    this.regex = regex;
+  public Regex(Pattern pattern, int group, String type) {
+    this.pattern = pattern;
     this.group = group;
     this.type = type;
   }
@@ -44,7 +44,7 @@ public class Regex extends
 
     RegexSettings settings = context.getSettings(RegexSettings.class);
 
-    this.regex = settings.getRegex();
+    this.pattern = settings.getRegex();
     this.group = settings.getGroup();
     this.type = settings.getType();
   }
@@ -59,13 +59,13 @@ public class Regex extends
 
   @Override
   protected void process(Item item, Text content) throws Annot8Exception {
-    if (regex == null) {
-      throw new BadConfigurationException("Parameter 'regex' must not be null");
+    if (pattern == null) {
+      throw new BadConfigurationException("Parameter 'pattern' must not be null");
     }
 
     AnnotationStore annotationStore = content.getAnnotations();
 
-    Matcher m = regex.matcher(content.getData());
+    Matcher m = pattern.matcher(content.getData());
     while (m.find()) {
       if (!acceptMatch(m)) {
         continue;

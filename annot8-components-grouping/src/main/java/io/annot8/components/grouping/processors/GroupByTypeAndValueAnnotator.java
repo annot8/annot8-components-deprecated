@@ -50,6 +50,7 @@ public class GroupByTypeAndValueAnnotator extends AbstractTextAnnotator {
         builder.save();
       } catch (IncompleteException e) {
         e.printStackTrace();
+        log().error("Unable to build group", e);
       }
     });
   }
