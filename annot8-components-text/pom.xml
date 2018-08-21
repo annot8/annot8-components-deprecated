@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns="http://maven.apache.org/POM/4.0.0"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <artifactId>annot8-components</artifactId>
@@ -9,35 +9,21 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>annot8-components-base</artifactId>
-  <name>Annot8 Base Components</name>
-  <description>Concrete fundamental components and support for building new components</description>
+  <artifactId>annot8-components-text</artifactId>
+  <name>Annot8 Text Components</name>
+  <description>Components to process and manipulate text</description>
 
   <dependencies>
-
     <dependency>
       <groupId>io.annot8</groupId>
-      <artifactId>annot8-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.annot8</groupId>
-      <artifactId>annot8-conventions</artifactId>
+      <artifactId>annot8-components-base</artifactId>
     </dependency>
 
-    <dependency>
-      <groupId>io.annot8</groupId>
-      <artifactId>annot8-resources-monitor</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.annot8</groupId>
-      <artifactId>annot8-common-data</artifactId>
-    </dependency>
     <dependency>
       <groupId>io.annot8</groupId>
       <artifactId>annot8-test-impl</artifactId>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
@@ -48,8 +34,6 @@
       <artifactId>mockito-core</artifactId>
       <scope>test</scope>
     </dependency>
-
   </dependencies>
-
 
 </project>

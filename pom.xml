@@ -29,9 +29,13 @@
   </scm>
 
   <modules>
-    <module>annot8-components-basic</module>
-    <module>annot8-resources-monitor</module>
     <module>annot8-components-base</module>
+    <module>annot8-components-cyber</module>
     <module>annot8-components-files</module>
+    <module>annot8-components-grouping</module>
+    <module>annot8-components-print</module>
+    <module>annot8-components-social</module>
+    <module>annot8-components-text</module>
+    <module>annot8-resources-monitor</module>
   </modules>
 </project>
