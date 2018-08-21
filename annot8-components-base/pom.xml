@@ -26,7 +26,7 @@
 
     <dependency>
       <groupId>io.annot8</groupId>
-      <artifactId>annot8-resources-monitor</artifactId>
+      <artifactId>annot8-components-monitor</artifactId>
     </dependency>
     <dependency>
       <groupId>io.annot8</groupId>

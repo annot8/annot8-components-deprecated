@@ -9,7 +9,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>annot8-resources-monitor</artifactId>
+  <artifactId>annot8-components-monitor</artifactId>
   <name>Annot8 Monitoring Components</name>
   <description>Resources for logging and monitoring</description>
 
