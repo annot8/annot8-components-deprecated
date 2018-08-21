@@ -20,37 +20,31 @@ import org.junit.jupiter.api.Test;
 public class IPv6Test {
 
   private void doTest(String content, String expectedMatch) throws Annot8Exception {
-    Processor p = new IPv6();
+    try(
+        Processor p = new IPv6()
+    ) {
+      Item item = new TestItem();
+      Context context = new TestContext();
 
-    //TODO: These should be replaced by Test* rather than using Simple*
-    //TODO: Provide some abstract test base classes that provide this common functionality
-//    SimpleContentBuilderFactoryRegistry contentBuilderFactoryRegistry = new SimpleContentBuilderFactoryRegistry();
-//    contentBuilderFactoryRegistry.register(Text.class, new SimpleText.BuilderFactory());
-//    ItemFactory itemFactory = new SimpleItemFactory(contentBuilderFactoryRegistry);
-//    Context context = new SimpleContext(itemFactory, EmptySettings.getInstance());
+      p.configure(context);
 
-    Item item = new TestItem();
-    Context context = new TestContext();
+      Text c = item.create(TestStringContent.class).withName("test")
+          .withData(content).save();
 
-    p.configure(context);
+      p.process(item);
 
-//    Item item = new SimpleItem(itemFactory, contentBuilderFactoryRegistry);
-    Text c = item.create(TestStringContent.class).withName("test")
-        .withData(content).save();
+      AnnotationStore store = item.getContent("test").get().getAnnotations();
 
-    p.process(item);
+      List<Annotation> annotations = store.getAll().collect(Collectors.toList());
+      Assertions.assertEquals(1, annotations.size());
 
-    AnnotationStore store = item.getContent("test").get().getAnnotations();
-
-    List<Annotation> annotations = store.getAll().collect(Collectors.toList());
-    Assertions.assertEquals(1, annotations.size());
-
-    Annotation a = annotations.get(0);
-    Assertions.assertEquals(AnnotationTypes.ANNOTATION_TYPE_IPADDRESS, a.getType());
-    Assertions.assertEquals(c.getName(), a.getContentName());
-    Assertions.assertEquals(expectedMatch, a.getBounds().getData(c).get());
-    Assertions.assertEquals(1, a.getProperties().getAll().size());
-    Assertions.assertEquals(6, a.getProperties().get(PropertyKeys.PROPERTY_KEY_VERSION).get());
+      Annotation a = annotations.get(0);
+      Assertions.assertEquals(AnnotationTypes.ANNOTATION_TYPE_IPADDRESS, a.getType());
+      Assertions.assertEquals(c.getName(), a.getContentName());
+      Assertions.assertEquals(expectedMatch, a.getBounds().getData(c).get());
+      Assertions.assertEquals(1, a.getProperties().getAll().size());
+      Assertions.assertEquals(6, a.getProperties().get(PropertyKeys.PROPERTY_KEY_VERSION).get());
+    }
   }
 
 
