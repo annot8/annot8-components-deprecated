@@ -10,11 +10,15 @@ import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
  */
 public final class NoOpMetrics {
 
-  private final static MeterRegistry METER_REGISTRY = new SimpleMeterRegistry();
+  private static final MeterRegistry METER_REGISTRY = new SimpleMeterRegistry();
 
-  private final static Metrics INSTANCE = new NamedMetrics(METER_REGISTRY, "noop");
+  private static final Metrics INSTANCE = new NamedMetrics(METER_REGISTRY, "noop");
 
   public static Metrics instance() {
     return INSTANCE;
+  }
+
+  private NoOpMetrics() {
+    // Singleton
   }
 }

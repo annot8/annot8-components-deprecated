@@ -42,6 +42,7 @@ public abstract class AbstractContentAnnotator extends AbstractAnnotator {
             processContent(item, c);
           } catch (Annot8Exception e) {
             e.printStackTrace();
+            log().warn("Unable to process content {}", c.getName(), e);
           }
         });
 
