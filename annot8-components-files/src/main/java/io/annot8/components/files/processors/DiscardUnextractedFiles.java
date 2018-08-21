@@ -7,7 +7,6 @@ import io.annot8.core.components.Processor;
 import io.annot8.core.components.responses.ProcessorResponse;
 import io.annot8.core.data.Content;
 import io.annot8.core.data.Item;
-import io.annot8.core.exceptions.Annot8Exception;
 
 // This is more like premature optimisation... really but I guess it's sensible to clean up
 // the pipeline as we go.
@@ -15,7 +14,7 @@ import io.annot8.core.exceptions.Annot8Exception;
 public class DiscardUnextractedFiles extends AbstractComponent implements Processor {
 
   @Override
-  public ProcessorResponse process(Item item) throws Annot8Exception {
+  public ProcessorResponse process(Item item) {
 
     item.getContents(FileContent.class)
         .map(Content::getName)

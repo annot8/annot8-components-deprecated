@@ -3,7 +3,6 @@ package io.annot8.components.processors.regex;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import io.annot8.common.data.content.Text;
-
 import io.annot8.conventions.AnnotationTypes;
 import io.annot8.conventions.PropertyKeys;
 import io.annot8.core.annotations.Annotation;
@@ -21,7 +20,7 @@ import org.junit.jupiter.api.Test;
 
 public class IPv6Test {
 
-  private void doTest(String content, String expectedMatch) throws Annot8Exception{
+  private void doTest(String content, String expectedMatch) throws Annot8Exception {
     Processor p = new IPv6();
 
     //TODO: These should be replaced by Test* rather than using Simple*
@@ -57,25 +56,26 @@ public class IPv6Test {
 
 
   @Test
-  public void testFull() throws Exception{
-    doTest("Here's a full IPv6 address fe80:0000:0000:0000:0204:61ff:fe9d:f156 and some text after it",
+  public void testFull() throws Exception {
+    doTest(
+        "Here's a full IPv6 address fe80:0000:0000:0000:0204:61ff:fe9d:f156 and some text after it",
         "fe80:0000:0000:0000:0204:61ff:fe9d:f156");
   }
 
   @Test
-  public void testDropLeadingZeroes() throws Exception{
+  public void testDropLeadingZeroes() throws Exception {
     doTest("Here's an IPv6 address with leading zeroes dropped: fe80:0:0:0:204:61ff:fe9d:f156.",
         "fe80:0:0:0:204:61ff:fe9d:f156");
   }
 
   @Test
-  public void testCollapseLeadingZeroes() throws Exception{
+  public void testCollapseLeadingZeroes() throws Exception {
     doTest("Here's an IPv6 address with collapsed leading zeroes: (fe80::204:61ff:fe9d:f156)",
         "fe80::204:61ff:fe9d:f156");
   }
 
   @Test
-  public void testLocalhost() throws Exception{
+  public void testLocalhost() throws Exception {
     doTest("Here's the localhost IPv6 address: ::1",
         "::1");
   }

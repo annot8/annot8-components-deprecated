@@ -3,7 +3,6 @@ package io.annot8.components.processors.regex;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import io.annot8.common.data.content.Text;
-import io.annot8.core.data.ItemFactory;
 import io.annot8.conventions.AnnotationTypes;
 import io.annot8.core.annotations.Annotation;
 import io.annot8.core.components.Processor;
@@ -21,6 +20,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
 public class EmailTest {
+
   @Test
   public void testSettings() {
     SettingsClass annotation = Email.class.getAnnotation(SettingsClass.class);

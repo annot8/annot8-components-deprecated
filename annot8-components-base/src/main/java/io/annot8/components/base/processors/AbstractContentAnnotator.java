@@ -1,7 +1,5 @@
 package io.annot8.components.base.processors;
 
-import java.util.Optional;
-import java.util.stream.Stream;
 import io.annot8.core.context.Context;
 import io.annot8.core.data.Content;
 import io.annot8.core.data.Item;
@@ -9,6 +7,8 @@ import io.annot8.core.exceptions.Annot8Exception;
 import io.annot8.core.exceptions.BadConfigurationException;
 import io.annot8.core.exceptions.MissingResourceException;
 import io.annot8.core.settings.SettingsClass;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 @SettingsClass(ContentAnnotatorSettings.class)
 public abstract class AbstractContentAnnotator extends AbstractAnnotator {

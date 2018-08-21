@@ -4,14 +4,13 @@ import io.annot8.common.data.bounds.SpanBounds;
 import io.annot8.common.data.content.Text;
 import io.annot8.components.base.processors.AbstractTextAnnotator;
 import io.annot8.core.data.Item;
-import io.annot8.core.exceptions.Annot8Exception;
 import java.util.Optional;
 
 public class PrintSpans extends AbstractTextAnnotator {
 
 
   @Override
-  protected void process(final Item item, final Text content) throws Annot8Exception {
+  protected void process(final Item item, final Text content) {
 
     content.getAnnotations().getByBounds(SpanBounds.class)
         .forEach(a -> {

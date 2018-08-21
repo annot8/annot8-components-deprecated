@@ -4,68 +4,66 @@ import io.annot8.components.resources.monitor.Logging;
 import io.annot8.components.resources.monitor.Metering;
 import io.annot8.components.resources.monitor.metering.Metrics;
 import io.annot8.components.resources.monitor.metering.NoOpMetrics;
-import java.util.Optional;
-
-import org.slf4j.Logger;
-import org.slf4j.helpers.NOPLogger;
-
-
 import io.annot8.core.components.Annot8Component;
 import io.annot8.core.context.Context;
 import io.annot8.core.exceptions.BadConfigurationException;
 import io.annot8.core.exceptions.MissingResourceException;
+import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.helpers.NOPLogger;
 
 public abstract class AbstractComponent implements Annot8Component {
 
-	private Logger logger;
-	
-	private Metrics metrics;
+  private Logger logger;
 
-	@Override
-	public void configure(Context context) throws BadConfigurationException, MissingResourceException {
-		Annot8Component.super.configure(context);
+  private Metrics metrics;
 
-		// Look if we have a logging resource and crate a logger from it is possible
-		Optional<Logging> logging = context.getResource(Logging.class);
-		if (logging.isPresent()) {
-			logger = logging.get().getLogger(getClass());
-		} else {
-			createNopLogger();
-		}
-		
-		// Get Metrics
-		Optional<Metering> metering = context.getResource(Metering.class);
-		if (metering.isPresent()) {
-			metrics = metering.get().getMetrics(getClass());
-		} else {
-			createNopMetrics();
-		}
-	}
+  @Override
+  public void configure(Context context)
+      throws BadConfigurationException, MissingResourceException {
+    Annot8Component.super.configure(context);
 
-	protected Logger log() {
-		// if configure has not been called we might not have a logger, so check and create is necessary
-		if (logger == null) {
-			createNopLogger();
-		}
+    // Look if we have a logging resource and crate a logger from it is possible
+    Optional<Logging> logging = context.getResource(Logging.class);
+    if (logging.isPresent()) {
+      logger = logging.get().getLogger(getClass());
+    } else {
+      createNopLogger();
+    }
 
-		return logger;
-	}
-	
-	protected Metrics metrics() {
-		// if configure has not been called we might not have a metrics, so check and create is necessary
-		if (metrics == null) {
-			createNopMetrics();
-		}
+    // Get Metrics
+    Optional<Metering> metering = context.getResource(Metering.class);
+    if (metering.isPresent()) {
+      metrics = metering.get().getMetrics(getClass());
+    } else {
+      createNopMetrics();
+    }
+  }
 
-		return metrics;
-	}
+  protected Logger log() {
+    // if configure has not been called we might not have a logger, so check and create is necessary
+    if (logger == null) {
+      createNopLogger();
+    }
 
-	private void createNopLogger() {
-		logger = NOPLogger.NOP_LOGGER;
-	}
-	
-	private void createNopMetrics() {
-		metrics = NoOpMetrics.instance();
-		
-	}
+    return logger;
+  }
+
+  protected Metrics metrics() {
+    // if configure has not been called we might not have a metrics, so check and create is necessary
+    if (metrics == null) {
+      createNopMetrics();
+    }
+
+    return metrics;
+  }
+
+  private void createNopLogger() {
+    logger = NOPLogger.NOP_LOGGER;
+  }
+
+  private void createNopMetrics() {
+    metrics = NoOpMetrics.instance();
+
+  }
 }

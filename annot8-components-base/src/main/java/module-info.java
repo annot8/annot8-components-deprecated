@@ -13,7 +13,6 @@
 open module io.annot8.components.base {
   requires transitive io.annot8.core;
   requires io.annot8.components.resources.monitor;
-  requires micrometer.core;
   requires slf4j.api;
   requires io.annot8.common.data;
 

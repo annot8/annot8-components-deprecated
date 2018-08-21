@@ -4,6 +4,16 @@ import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 
 import io.annot8.common.data.content.FileContent;
+import io.annot8.components.base.components.AbstractComponent;
+import io.annot8.core.capabilities.CreatesContent;
+import io.annot8.core.components.Source;
+import io.annot8.core.components.responses.SourceResponse;
+import io.annot8.core.context.Context;
+import io.annot8.core.data.Item;
+import io.annot8.core.data.ItemFactory;
+import io.annot8.core.exceptions.Annot8Exception;
+import io.annot8.core.exceptions.Annot8RuntimeException;
+import io.annot8.core.exceptions.BadConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -22,29 +32,18 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import io.annot8.components.base.components.AbstractComponent;
-import io.annot8.core.capabilities.CreatesContent;
-import io.annot8.core.components.Source;
-import io.annot8.core.components.responses.SourceResponse;
-import io.annot8.core.context.Context;
-import io.annot8.core.data.Item;
-import io.annot8.core.data.ItemFactory;
-import io.annot8.core.exceptions.Annot8Exception;
-import io.annot8.core.exceptions.Annot8RuntimeException;
-import io.annot8.core.exceptions.BadConfigurationException;
-
 @CreatesContent(FileContent.class)
 public class FileSystemSource extends AbstractComponent implements Source {
 
   private final WatchService watchService;
 
-  private Set<WatchKey> watchKeys = new HashSet<>();
+  private final Set<WatchKey> watchKeys = new HashSet<>();
 
   private Set<Pattern> acceptedFilePatterns = Collections.emptySet();
 
-  private Set<Path> initialFiles = new HashSet<>();
+  private final Set<Path> initialFiles = new HashSet<>();
 
-  public FileSystemSource(){
+  public FileSystemSource() {
     try {
       watchService = FileSystems.getDefault().newWatchService();
     } catch (IOException e) {
@@ -83,7 +82,8 @@ public class FileSystemSource extends AbstractComponent implements Source {
 
       addFilesFromDir(settings, p.toFile());
     } catch (IOException ioe) {
-      throw new BadConfigurationException("Unable to register folder or sub-folder with watch service", ioe);
+      throw new BadConfigurationException(
+          "Unable to register folder or sub-folder with watch service", ioe);
     }
   }
 
@@ -141,7 +141,7 @@ public class FileSystemSource extends AbstractComponent implements Source {
       }
     }
 
-    if(include){
+    if (include) {
       final Item item = itemFactory.create();
       try {
         item.getProperties().set("source", path);
@@ -153,7 +153,7 @@ public class FileSystemSource extends AbstractComponent implements Source {
             .save();
 
         return true;
-      } catch(Annot8Exception e) {
+      } catch (Annot8Exception e) {
         item.discard();
       }
     }
@@ -163,7 +163,7 @@ public class FileSystemSource extends AbstractComponent implements Source {
 
   @Override
   public SourceResponse read(ItemFactory itemFactory) {
-    if(!initialFiles.isEmpty()){
+    if (!initialFiles.isEmpty()) {
       initialFiles.forEach(path -> createItem(itemFactory, path));
       initialFiles.clear();
     }
@@ -172,15 +172,17 @@ public class FileSystemSource extends AbstractComponent implements Source {
     WatchKey key;
     while ((key = watchService.poll()) != null) {
       for (WatchEvent<?> event : key.pollEvents()) {
-        if(createItem(itemFactory, ((WatchEvent<Path>)event).context()))
+        if (createItem(itemFactory, ((WatchEvent<Path>) event).context())) {
           read = true;
+        }
       }
 
       key.reset();
     }
 
-    if(read)
+    if (read) {
       return SourceResponse.ok();
+    }
 
     return SourceResponse.empty();
   }

@@ -6,13 +6,12 @@ import io.annot8.core.capabilities.Capabilities.Builder;
 import io.annot8.core.context.Context;
 import io.annot8.core.settings.EmptySettings;
 import io.annot8.core.settings.SettingsClass;
-
 import java.util.regex.Pattern;
 
 @SettingsClass(EmptySettings.class)
 public abstract class AbstractSuppliedRegex extends Regex {
 
-  public AbstractSuppliedRegex(Pattern regex, int group, String type){
+  public AbstractSuppliedRegex(Pattern regex, int group, String type) {
     super(regex, group, type);
   }
 

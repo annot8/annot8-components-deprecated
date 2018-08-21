@@ -5,6 +5,13 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import io.annot8.common.data.bounds.SpanBounds;
 import io.annot8.common.data.content.Text;
+import io.annot8.components.processors.regex.Regex.RegexSettings;
+import io.annot8.core.annotations.Annotation;
+import io.annot8.core.components.Processor;
+import io.annot8.core.context.Context;
+import io.annot8.core.data.Item;
+import io.annot8.core.exceptions.Annot8Exception;
+import io.annot8.core.stores.AnnotationStore;
 import io.annot8.test.TestContext;
 import io.annot8.test.TestItem;
 import io.annot8.test.content.TestStringContent;
@@ -12,14 +19,6 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
-import io.annot8.components.processors.regex.Regex.RegexSettings;
-import io.annot8.core.annotations.Annotation;
-import io.annot8.core.components.Processor;
-import io.annot8.core.context.Context;
-import io.annot8.core.data.Item;
-import io.annot8.core.data.ItemFactory;
-import io.annot8.core.exceptions.Annot8Exception;
-import io.annot8.core.stores.AnnotationStore;
 
 public class RegexTest {
 
@@ -44,7 +43,8 @@ public class RegexTest {
     p.configure(context);
 
 //    Item item = new SimpleItem(itemFactory, contentBuilderFactoryRegistry);
-    Text content = item.create(TestStringContent.class).withName("test").withData("x + 12 = 42").save();
+    Text content = item.create(TestStringContent.class).withName("test").withData("x + 12 = 42")
+        .save();
 
     p.process(item);
 
@@ -59,14 +59,18 @@ public class RegexTest {
       SpanBounds bounds = annotation.getBounds(SpanBounds.class).get();
       String value = bounds.getData(content).get();
       // Basic impl to handle order not being guaranteed
-      if (value.equals("42")) {
-        assertEquals(9, bounds.getBegin());
-        assertEquals(11, bounds.getEnd());
-      } else if (value.equals("12")) {
-        assertEquals(4, bounds.getBegin());
-        assertEquals(6, bounds.getEnd());
-      } else {
-        fail("Unexpected value " + value + " detected");
+      switch (value) {
+        case "42":
+          assertEquals(9, bounds.getBegin());
+          assertEquals(11, bounds.getEnd());
+          break;
+        case "12":
+          assertEquals(4, bounds.getBegin());
+          assertEquals(6, bounds.getEnd());
+          break;
+        default:
+          fail("Unexpected value " + value + " detected");
+          break;
       }
     }
 

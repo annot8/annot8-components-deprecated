@@ -4,12 +4,11 @@ import io.annot8.components.base.components.AbstractComponent;
 import io.annot8.core.components.Processor;
 import io.annot8.core.components.responses.ProcessorResponse;
 import io.annot8.core.data.Item;
-import io.annot8.core.exceptions.ProcessingException;
 
 public abstract class AbstractSplitter extends AbstractComponent implements Processor {
 
   @Override
-  public final ProcessorResponse process(final Item item) throws ProcessingException {
+  public final ProcessorResponse process(final Item item) {
     try {
       if (acceptsItem(item)) {
         boolean discard = split(item);
@@ -18,7 +17,6 @@ public abstract class AbstractSplitter extends AbstractComponent implements Proc
           item.discard();
         }
       }
-
 
       return ProcessorResponse.ok();
 

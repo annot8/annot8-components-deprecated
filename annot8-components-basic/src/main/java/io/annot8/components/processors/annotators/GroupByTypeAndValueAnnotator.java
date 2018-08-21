@@ -8,7 +8,6 @@ import io.annot8.core.annotations.Annotation;
 import io.annot8.core.annotations.Group;
 import io.annot8.core.capabilities.CreatesGroup;
 import io.annot8.core.data.Item;
-import io.annot8.core.exceptions.Annot8Exception;
 import io.annot8.core.exceptions.IncompleteException;
 import io.annot8.core.stores.GroupStore;
 import java.util.Optional;
@@ -21,7 +20,7 @@ public class GroupByTypeAndValueAnnotator extends AbstractTextAnnotator {
 
 
   @Override
-  protected void process(Item item, Text content) throws Annot8Exception {
+  protected void process(Item item, Text content) {
 
     SetMultimap<String, Annotation> map = HashMultimap.create();
 

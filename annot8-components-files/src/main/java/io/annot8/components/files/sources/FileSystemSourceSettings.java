@@ -1,7 +1,6 @@
 package io.annot8.components.files.sources;
 
 import io.annot8.core.settings.Settings;
-
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashSet;
@@ -55,7 +54,7 @@ public class FileSystemSourceSettings implements Settings {
     this.acceptedFileNamePatterns = acceptedFileNamePatterns;
   }
 
-  public void addAcceptedFilePattern(Pattern acceptedFilePattern){
+  public void addAcceptedFilePattern(Pattern acceptedFilePattern) {
     this.acceptedFileNamePatterns.add(acceptedFilePattern);
   }
 }

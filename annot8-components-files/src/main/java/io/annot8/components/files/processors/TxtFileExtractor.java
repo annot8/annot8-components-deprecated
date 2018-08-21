@@ -9,7 +9,6 @@ import io.annot8.core.capabilities.ProcessesContent;
 import io.annot8.core.components.Processor;
 import io.annot8.core.components.responses.ProcessorResponse;
 import io.annot8.core.data.Item;
-import io.annot8.core.exceptions.Annot8Exception;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -19,7 +18,7 @@ import java.nio.file.Files;
 public class TxtFileExtractor extends AbstractComponent implements Processor {
 
   @Override
-  public ProcessorResponse process(Item item) throws Annot8Exception {
+  public ProcessorResponse process(Item item) {
 
     item.getContents(FileContent.class)
         .filter(f -> f.getData().getName().endsWith(".txt"))

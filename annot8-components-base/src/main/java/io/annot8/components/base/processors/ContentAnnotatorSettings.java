@@ -4,6 +4,7 @@ import io.annot8.core.settings.Settings;
 import java.util.Set;
 
 public class ContentAnnotatorSettings implements Settings {
+
   // List of view name to consider
   // null/empty implies all
   private Set<String> content;

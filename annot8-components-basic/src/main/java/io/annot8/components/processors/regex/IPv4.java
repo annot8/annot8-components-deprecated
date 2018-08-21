@@ -3,16 +3,16 @@ package io.annot8.components.processors.regex;
 import io.annot8.conventions.AnnotationTypes;
 import io.annot8.conventions.PropertyKeys;
 import io.annot8.core.annotations.Annotation.Builder;
-import io.annot8.core.properties.MutableProperties;
-import io.annot8.core.properties.Properties;
 import java.util.regex.Pattern;
 
 public class IPv4 extends AbstractSuppliedRegex {
-  public IPv4(){
+
+  public IPv4() {
     super(
-      Pattern.compile("\\b(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\\b"),
-      0,
-      AnnotationTypes.ANNOTATION_TYPE_IPADDRESS
+        Pattern.compile(
+            "\\b(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\\b"),
+        0,
+        AnnotationTypes.ANNOTATION_TYPE_IPADDRESS
     );
   }
 
