@@ -17,11 +17,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
-public class HashTagTest {
+public class UsernameTest {
 
   @Test
-  public void testHashtag() throws Annot8Exception {
-    Processor p = new HashTag();
+  public void testUsername() throws Annot8Exception {
+    Processor p = new Username();
 
     //TODO: These should be replaced by Test* rather than using Simple*
     //TODO: Provide some abstract test base classes that provide this common functionality
@@ -36,7 +36,7 @@ public class HashTagTest {
     p.configure(context);
 
     Text content = item.create(TestStringContent.class).withName("test")
-        .withData("Prime Minister making a speech #latestnews").save();
+        .withData("@my-username logged in").save();
 
     p.process(item);
 
@@ -46,9 +46,9 @@ public class HashTagTest {
     assertEquals(1, annotations.size());
 
     Annotation a = annotations.get(0);
-    assertEquals(AnnotationTypes.ANNOTATION_TYPE_HASHTAG, a.getType());
+    assertEquals(AnnotationTypes.ANNOTATION_TYPE_USERNAME, a.getType());
     assertEquals(content.getName(), a.getContentName());
-    assertEquals("#latestnews", a.getBounds().getData(content).get());
+    assertEquals("@my-username", a.getBounds().getData(content).get());
     assertEquals(0, a.getProperties().getAll().size());
   }
 }
