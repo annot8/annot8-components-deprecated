@@ -36,7 +36,9 @@ public class TxtFileExtractor extends AbstractComponent implements Processor {
             item.removeContent(f.getName());
 
           } catch (Exception e) {
-            log().warn("Unable to process file {}", f.getData().getAbsolutePath(), e);
+            log().warn("Unable to process file {}", f.getData().getAbsolutePath());
+            log().debug("Unable to process file", e);
+
           }
 
 
