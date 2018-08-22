@@ -60,10 +60,16 @@ public class MongoSource extends AbstractComponent implements Source {
     }
 
     cursor = connection.getDatabase().getCollection(settings.getCollection()).find().iterator();
+    //TODO: Use change streams (collection.watch()) to pick up new documents
   }
 
   @Override
   public SourceResponse read(ItemFactory itemFactory) {
+    if(cursor == null){
+      log().warn("Cursor is null, has configure been called?");
+      return SourceResponse.sourceError();
+    }
+
     if(!cursor.hasNext()) {
       cursor.close();
       return SourceResponse.done();
