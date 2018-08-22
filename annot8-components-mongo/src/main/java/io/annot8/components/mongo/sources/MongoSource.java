@@ -31,7 +31,6 @@ import org.bson.Document;
 public class MongoSource extends AbstractComponent implements Source {
 
   private MongoSourceSettings settings = null;
-  private Mongo connection = null;
 
   private MongoCursor<Document> cursor = null;
 
@@ -42,6 +41,8 @@ public class MongoSource extends AbstractComponent implements Source {
     settings = context.getSettings(MongoSourceSettings.class);
     if(settings == null)
       throw new BadConfigurationException("No configuration provided");
+
+    Mongo connection;
 
     if(settings.hasConnectionResourceKey()){
       Optional<Mongo> optConnection = context.getResource(settings.getConnectionResourceKey(), Mongo.class);
@@ -93,5 +94,11 @@ public class MongoSource extends AbstractComponent implements Source {
     }
 
     return SourceResponse.ok();
+  }
+
+  @Override
+  public void close() {
+    if(cursor != null)
+      cursor.close();
   }
 }
