@@ -5,6 +5,7 @@ import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 
 import io.annot8.common.data.content.FileContent;
 import io.annot8.components.base.components.AbstractComponent;
+import io.annot8.conventions.PropertyKeys;
 import io.annot8.core.capabilities.CreatesContent;
 import io.annot8.core.components.Source;
 import io.annot8.core.components.responses.SourceResponse;
@@ -144,8 +145,8 @@ public class FileSystemSource extends AbstractComponent implements Source {
     if (include) {
       final Item item = itemFactory.create();
       try {
-        item.getProperties().set("source", path);
-        item.getProperties().set("accessedAt", Instant.now().getEpochSecond());
+        item.getProperties().set(PropertyKeys.PROPERTY_KEY_SOURCE, path);
+        item.getProperties().set(PropertyKeys.PROPERTY_KEY_ACCESSEDAT, Instant.now().getEpochSecond());
 
         item.create(FileContent.class)
             .withName("file")
