@@ -3,7 +3,7 @@ package io.annot8.components.grouping.processors;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
 import io.annot8.common.data.content.Text;
-import io.annot8.components.base.processors.AbstractTextAnnotator;
+import io.annot8.components.base.processors.AbstractTextProcessor;
 import io.annot8.core.annotations.Annotation;
 import io.annot8.core.annotations.Group;
 import io.annot8.core.capabilities.CreatesGroup;
@@ -13,7 +13,7 @@ import io.annot8.core.stores.GroupStore;
 import java.util.Optional;
 
 @CreatesGroup(GroupByTypeAndValueAnnotator.TYPE)
-public class GroupByTypeAndValueAnnotator extends AbstractTextAnnotator {
+public class GroupByTypeAndValueAnnotator extends AbstractTextProcessor {
 
   public static final String TYPE = "exactMatches";
   private static final String ROLE = "as";

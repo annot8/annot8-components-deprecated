@@ -10,8 +10,11 @@ import io.annot8.core.settings.SettingsClass;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+/**
+ * A base class for content processors which limit to content by (configurable name)
+ */
 @SettingsClass(ContentAnnotatorSettings.class)
-public abstract class AbstractContentAnnotator extends AbstractItemProcessor {
+public abstract class AbstractContentProcessor extends AbstractItemProcessor {
 
   private ContentAnnotatorSettings settings;
 
@@ -39,8 +42,10 @@ public abstract class AbstractContentAnnotator extends AbstractItemProcessor {
         .filter(this::acceptsContent)
         .forEach(c -> {
           try {
+            metrics().counter("content.accepted").increment();
             processContent(item, c);
           } catch (Annot8Exception e) {
+            metrics().counter("content.errors").increment();
             log().warn("Unable to process content {}", c.getName(), e);
           }
         });
@@ -49,12 +54,16 @@ public abstract class AbstractContentAnnotator extends AbstractItemProcessor {
     return true;
   }
 
+  /**
+   *
+   * @param content
+   * @return
+   */
   protected boolean acceptsContent(final Content<?> content) {
     return true;
   }
 
   protected abstract void processContent(final Item item, final Content<?> content)
       throws Annot8Exception;
-
 
 }

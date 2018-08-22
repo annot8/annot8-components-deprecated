@@ -5,12 +5,12 @@ import io.annot8.core.data.Content;
 import io.annot8.core.data.Item;
 import io.annot8.core.exceptions.Annot8Exception;
 
-public abstract class AbstractContentClassAnnotator<T extends Content<?>>
-    extends AbstractContentAnnotator {
+public abstract class AbstractContentClassProcessor<T extends Content<?>>
+    extends AbstractContentProcessor {
 
   private final Class<T> contentClazz;
 
-  protected AbstractContentClassAnnotator(final Class<T> contentClazz) {
+  protected AbstractContentClassProcessor(final Class<T> contentClazz) {
     this.contentClazz = contentClazz;
   }
 
