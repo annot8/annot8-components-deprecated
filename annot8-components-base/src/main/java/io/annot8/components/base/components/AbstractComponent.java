@@ -1,9 +1,9 @@
 package io.annot8.components.base.components;
 
-import io.annot8.components.resources.monitor.Logging;
-import io.annot8.components.resources.monitor.Metering;
-import io.annot8.components.resources.monitor.metering.Metrics;
-import io.annot8.components.resources.monitor.metering.NoOpMetrics;
+import io.annot8.components.monitor.resources.Logging;
+import io.annot8.components.monitor.resources.Metering;
+import io.annot8.components.monitor.resources.metering.Metrics;
+import io.annot8.components.monitor.resources.metering.NoOpMetrics;
 import io.annot8.core.components.Annot8Component;
 import io.annot8.core.context.Context;
 import io.annot8.core.exceptions.BadConfigurationException;

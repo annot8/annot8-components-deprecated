@@ -1,7 +1,7 @@
-package io.annot8.components.resources.monitor;
+package io.annot8.components.monitor.resources;
 
-import io.annot8.components.resources.monitor.metering.Metrics;
-import io.annot8.components.resources.monitor.metering.NamedMetrics;
+import io.annot8.components.monitor.resources.metering.Metrics;
+import io.annot8.components.monitor.resources.metering.NamedMetrics;
 import io.annot8.core.components.Annot8Component;
 import io.annot8.core.components.Resource;
 import io.micrometer.core.instrument.MeterRegistry;

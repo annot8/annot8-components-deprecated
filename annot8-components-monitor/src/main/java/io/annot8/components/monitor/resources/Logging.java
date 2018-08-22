@@ -1,4 +1,4 @@
-package io.annot8.components.resources.monitor;
+package io.annot8.components.monitor.resources;
 
 import io.annot8.core.components.Resource;
 import org.slf4j.ILoggerFactory;
