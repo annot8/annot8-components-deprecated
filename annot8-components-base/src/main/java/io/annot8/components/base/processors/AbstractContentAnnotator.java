@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 @SettingsClass(ContentAnnotatorSettings.class)
-public abstract class AbstractContentAnnotator extends AbstractAnnotator {
+public abstract class AbstractContentAnnotator extends AbstractItemProcessor {
 
   private ContentAnnotatorSettings settings;
 

@@ -38,8 +38,17 @@ public abstract class AbstractComponent implements Annot8Component {
     } else {
       createNopMetrics();
     }
+
+    metrics().counter("configure.called").increment();
   }
 
+  /**
+   * Get the (slf4j) logger for this component.
+   *
+   * Ensure you have called configure (ie super.configure()) before using this. Otherwise you will be given a no-op logger.
+   *
+   * @return non-null logger
+   */
   protected Logger log() {
     // if configure has not been called we might not have a logger, so check and create is necessary
     if (logger == null) {
@@ -49,6 +58,13 @@ public abstract class AbstractComponent implements Annot8Component {
     return logger;
   }
 
+  /**
+   * Get the metrics for this component
+   *
+   * Ensure you have called configure (ie super.configure()) before using this. Otherwise you will be given a no-op logger.
+   *
+   * @return non-null metrics
+   */
   protected Metrics metrics() {
     // if configure has not been called we might not have a metrics, so check and create is necessary
     if (metrics == null) {
