@@ -18,7 +18,7 @@ public abstract class AbstractItemProcessor extends AbstractComponent implements
 
 
     try {
-      metrics().counter("processs.called").increment();
+      metrics().counter("process.called").increment();
 
       if (acceptsItem(item)) {
         metrics().counter("items.accepted").increment();

@@ -1,13 +1,16 @@
 package io.annot8.components.base.processors;
 
+import io.annot8.components.base.processors.AbstractContentProcessor.ContentAnnotatorSettings;
 import io.annot8.core.context.Context;
 import io.annot8.core.data.Content;
 import io.annot8.core.data.Item;
 import io.annot8.core.exceptions.Annot8Exception;
 import io.annot8.core.exceptions.BadConfigurationException;
 import io.annot8.core.exceptions.MissingResourceException;
+import io.annot8.core.settings.Settings;
 import io.annot8.core.settings.SettingsClass;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 /**
@@ -55,15 +58,42 @@ public abstract class AbstractContentProcessor extends AbstractItemProcessor {
   }
 
   /**
+   * Check if the content should be passed to processContent
    *
    * @param content
-   * @return
+   * @return true is the content should be processed
    */
   protected boolean acceptsContent(final Content<?> content) {
     return true;
   }
 
+  /**
+   * Process the content
+   * @param item the owning item
+   * @param content the content to provess
+   * @throws Annot8Exception
+   */
   protected abstract void processContent(final Item item, final Content<?> content)
       throws Annot8Exception;
+
+  public static class ContentAnnotatorSettings implements Settings {
+
+    // List of view name to consider
+    // null/empty implies all
+    private Set<String> content;
+
+    public ContentAnnotatorSettings(Set<String> content) {
+      this.content = content;
+    }
+
+    public Set<String> getContent() {
+      return content;
+    }
+
+    public void setContent(Set<String> content) {
+      this.content = content;
+    }
+  }
+
 
 }

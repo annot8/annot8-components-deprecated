@@ -19,6 +19,9 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Base class for regex annotators
+ */
 @SettingsClass(RegexSettings.class)
 public class Regex extends
     AbstractTextProcessor {  //TODO: Are there functions in AbstractTextProcessor we ought to be implementing?
