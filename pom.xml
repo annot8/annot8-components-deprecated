@@ -37,5 +37,6 @@
     <module>annot8-components-social</module>
     <module>annot8-components-text</module>
     <module>annot8-components-monitor</module>
+    <module>annot8-components-financial</module>
   </modules>
 </project>
