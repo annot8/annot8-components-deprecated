@@ -17,8 +17,9 @@ public final class Metering implements Resource {
 
     if (useGlobalMetrics) {
       this.meterRegistry = io.micrometer.core.instrument.Metrics.globalRegistry;
-    } else
+    } else {
       this.meterRegistry = Objects.requireNonNullElseGet(meterRegistry, SimpleMeterRegistry::new);
+    }
   }
 
   public static Metering useGlobalRegistry() {
