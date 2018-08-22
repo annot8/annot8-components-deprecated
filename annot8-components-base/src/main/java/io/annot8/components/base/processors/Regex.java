@@ -24,11 +24,7 @@ import java.util.regex.Pattern;
  */
 @SettingsClass(RegexSettings.class)
 public class Regex extends
-    AbstractTextProcessor {  //TODO: Are there functions in AbstractTextProcessor we ought to be implementing?
-
-  protected Pattern pattern = null; //TODO: Should we provide a default Pattern to avoid NPEs?
-  protected int group = 0;
-  protected String type = "";
+    AbstractRegex{  //TODO: Are there functions in AbstractTextProcessor we ought to be implementing?
 
   public Regex() {
     //Do nothing
@@ -52,50 +48,6 @@ public class Regex extends
     this.type = settings.getType();
   }
 
-  @Override
-  public void buildCapabilities(Builder builder) {
-    super.buildCapabilities(builder);
-
-    builder.createsAnnotation(type, SpanBounds.class);
-  }
-
-
-  @Override
-  protected void process(Item item, Text content) throws Annot8Exception {
-    if (pattern == null) {
-      throw new BadConfigurationException("Parameter 'pattern' must not be null");
-    }
-
-    AnnotationStore annotationStore = content.getAnnotations();
-
-    Matcher m = pattern.matcher(content.getData());
-    while (m.find()) {
-      if (!acceptMatch(m)) {
-        continue;
-      }
-
-      try {
-
-        Annotation.Builder builder = annotationStore.create();
-        addProperties(builder);
-
-        builder
-            .withType(type)
-            .withBounds(new SpanBounds(m.start(group), m.end(group)))
-            .save();
-      } catch (IndexOutOfBoundsException e) {
-        throw new ProcessingException("Invalid group", e);
-      }
-    }
-  }
-
-  protected void addProperties(Annotation.Builder builder) {
-    // Do nothing
-  }
-
-  protected boolean acceptMatch(final Matcher m) {
-    return true;
-  }
 
   public static class RegexSettings extends ContentAnnotatorSettings {
 

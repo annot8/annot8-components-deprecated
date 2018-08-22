@@ -1,12 +1,12 @@
 package io.annot8.components.cyber.processors;
 
-import io.annot8.components.base.processors.AbstractSuppliedRegex;
+import io.annot8.components.base.processors.AbstractRegex;
 import io.annot8.conventions.AnnotationTypes;
 import io.annot8.conventions.PropertyKeys;
 import io.annot8.core.annotations.Annotation.Builder;
 import java.util.regex.Pattern;
 
-public class IPv4 extends AbstractSuppliedRegex {
+public class IPv4 extends AbstractRegex {
 
   public IPv4() {
     super(

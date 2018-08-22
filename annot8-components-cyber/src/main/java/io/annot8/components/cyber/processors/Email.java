@@ -1,10 +1,10 @@
 package io.annot8.components.cyber.processors;
 
-import io.annot8.components.base.processors.AbstractSuppliedRegex;
+import io.annot8.components.base.processors.AbstractRegex;
 import io.annot8.conventions.AnnotationTypes;
 import java.util.regex.Pattern;
 
-public class Email extends AbstractSuppliedRegex {
+public class Email extends AbstractRegex {
 
   public Email() {
     super(
