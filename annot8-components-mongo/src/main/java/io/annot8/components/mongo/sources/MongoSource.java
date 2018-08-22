@@ -82,7 +82,7 @@ public class MongoSource extends AbstractComponent implements Source {
           .withData(doc)
           .save();
     } catch (UnsupportedContentException | IncompleteException e) {
-      //TODO: Ought to log this!
+      log().warn("Couldn't create item", e);
       item.discard();
     }
 

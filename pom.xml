@@ -38,5 +38,6 @@
     <module>annot8-components-text</module>
     <module>annot8-components-monitor</module>
     <module>annot8-components-financial</module>
+    <module>annot8-components-mongo</module>
   </modules>
 </project>

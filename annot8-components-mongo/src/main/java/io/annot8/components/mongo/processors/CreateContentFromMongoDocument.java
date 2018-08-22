@@ -25,7 +25,7 @@ public class CreateContentFromMongoDocument extends AbstractComponent implements
                 .withData(o.toString())
             .save();
           } catch (Annot8Exception e) {
-            //TODO: Log this
+            log().warn("Couldn't create content for field {}", key, e);
           }
         }
 
