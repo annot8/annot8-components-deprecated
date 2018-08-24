@@ -57,8 +57,10 @@ public abstract class AbstractMongoComponent extends AbstractComponent {
         throw new MissingResourceException("Missing MongoFactory needed for Mongo connection");
       }
 
+      MongoConnectionSettings mergedSettings = mongoFactory.get()
+          .mergeWithDefaultSettings(optionalMongoConnection);
       Optional<MongoConnection> optionalConnection = mongoFactory.get()
-          .buildMongo(optionalMongoConnection);
+          .buildMongo(Optional.of(mergedSettings));
 
 
       if(!optionalConnection.isPresent()) {
