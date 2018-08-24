@@ -38,11 +38,13 @@ public class MongoSource extends AbstractComponent implements Source {
   public void configure(Context context) throws BadConfigurationException, MissingResourceException {
     super.configure(context);
 
-    settings = context.getSettings(MongoSourceSettings.class);
-    if(settings == null)
+    Optional<MongoSourceSettings> optionalSettings = context.getSettings(MongoSourceSettings.class);
+    if(!optionalSettings.isPresent())
       throw new BadConfigurationException("No configuration provided");
 
     Mongo connection;
+
+    MongoSourceSettings settings = optionalSettings.get();
 
     if(settings.hasConnectionResourceKey()){
       Optional<Mongo> optConnection = context.getResource(settings.getConnectionResourceKey(), Mongo.class);
