@@ -9,6 +9,7 @@ import io.annot8.core.exceptions.BadConfigurationException;
 import io.annot8.core.exceptions.MissingResourceException;
 import io.annot8.core.settings.Settings;
 import io.annot8.core.settings.SettingsClass;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -26,7 +27,11 @@ public abstract class AbstractContentProcessor extends AbstractItemProcessor {
       throws BadConfigurationException, MissingResourceException {
     super.configure(context);
 
-    settings = context.getSettings(ContentAnnotatorSettings.class);
+    settings = context.getSettings(ContentAnnotatorSettings.class).orElse(null);
+
+    if(settings != null && !settings.validate()) {
+      throw new BadConfigurationException("Invalid content settings");
+    }
   }
 
   @Override
@@ -87,11 +92,16 @@ public abstract class AbstractContentProcessor extends AbstractItemProcessor {
     }
 
     public Set<String> getContent() {
-      return content;
+      return content == null ? Collections.emptySet(): content;
     }
 
     public void setContent(Set<String> content) {
       this.content = content;
+    }
+
+    @Override
+    public boolean validate() {
+      return true;
     }
   }
 

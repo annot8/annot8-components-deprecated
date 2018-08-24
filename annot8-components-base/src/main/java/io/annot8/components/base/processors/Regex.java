@@ -1,8 +1,10 @@
 package io.annot8.components.base.processors;
 
 
+import com.google.common.base.Strings;
 import io.annot8.common.data.bounds.SpanBounds;
 import io.annot8.common.data.content.Text;
+import io.annot8.components.base.processors.AbstractContentProcessor.ContentAnnotatorSettings;
 import io.annot8.components.base.processors.Regex.RegexSettings;
 import io.annot8.core.annotations.Annotation;
 import io.annot8.core.capabilities.Capabilities.Builder;
@@ -12,6 +14,7 @@ import io.annot8.core.exceptions.Annot8Exception;
 import io.annot8.core.exceptions.BadConfigurationException;
 import io.annot8.core.exceptions.MissingResourceException;
 import io.annot8.core.exceptions.ProcessingException;
+import io.annot8.core.settings.Settings;
 import io.annot8.core.settings.SettingsClass;
 import io.annot8.core.stores.AnnotationStore;
 import java.util.Collections;
@@ -41,7 +44,11 @@ public class Regex extends
       throws BadConfigurationException, MissingResourceException {
     super.configure(context);
 
-    RegexSettings settings = context.getSettings(RegexSettings.class);
+    RegexSettings settings = context.getSettings(RegexSettings.class).orElseThrow(() -> new BadConfigurationException("Regex settings are required"));
+
+    if(!settings.validate()) {
+      throw new BadConfigurationException("Regex settings are invalid");
+    }
 
     this.pattern = settings.getRegex();
     this.group = settings.getGroup();
@@ -49,23 +56,13 @@ public class Regex extends
   }
 
 
-  public static class RegexSettings extends ContentAnnotatorSettings {
+  public static class RegexSettings implements Settings {
 
     private final Pattern regex;
     private final int group;
     private final String type;
 
     public RegexSettings(Pattern regex, int group, String type) {
-      super(Collections.emptySet());
-
-      this.regex = regex;
-      this.group = group;
-      this.type = type;
-    }
-
-    public RegexSettings(Pattern regex, int group, String type, Set<String> content) {
-      super(content);
-
       this.regex = regex;
       this.group = group;
       this.type = type;
@@ -81,6 +78,11 @@ public class Regex extends
 
     public String getType() {
       return type;
+    }
+
+    @Override
+    public boolean validate() {
+      return regex != null && group >= 0 && !Strings.isNullOrEmpty(type);
     }
   }
 }
