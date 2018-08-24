@@ -22,11 +22,6 @@ import org.junit.jupiter.api.Test;
 
 public class UrlTest {
 
-  @Test
-  public void testSettings() {
-    SettingsClass annotation = Url.class.getAnnotation(SettingsClass.class);
-    Assertions.assertEquals(EmptySettings.class, annotation.value());
-  }
 
   @Test
   public void testUrl() throws Annot8Exception {

@@ -21,12 +21,6 @@ import org.junit.jupiter.api.Test;
 public class EmailTest {
 
   @Test
-  public void testSettings() {
-    SettingsClass annotation = Email.class.getAnnotation(SettingsClass.class);
-    Assertions.assertEquals(EmptySettings.class, annotation.value());
-  }
-
-  @Test
   public void testEmail() throws Annot8Exception {
     try(
         Processor p = new Email()
