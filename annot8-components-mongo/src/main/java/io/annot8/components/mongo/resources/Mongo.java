@@ -1,38 +1,66 @@
 package io.annot8.components.mongo.resources;
 
-import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import io.annot8.core.components.Resource;
+import io.annot8.components.base.components.AbstractResource;
+import io.annot8.core.context.Context;
+import io.annot8.core.exceptions.BadConfigurationException;
+import io.annot8.core.exceptions.MissingResourceException;
+import java.util.Optional;
+import org.bson.Document;
 
-public class Mongo implements Resource {
+public class Mongo extends AbstractResource implements MongoConnection {
 
-  private final MongoClient client;
-  private final MongoDatabase database;
+  private MongoClient client;
+  private MongoDatabase database;
+  private MongoCollection<Document> collection;
 
-  public Mongo(String connectionString, String database){
-    this.client = MongoClients.create(connectionString);
-    this.database = client.getDatabase(database);
+  @Override
+  public void configure(Context context)
+      throws BadConfigurationException, MissingResourceException {
+    super.configure(context);
+
+    Optional<MongoFactory> mongoFactory = context.getResource(MongoFactory.class);
+    if (!mongoFactory.isPresent()) {
+      throw new MissingResourceException("MongoFactory is required");
+    }
+
+    Optional<MongoConnectionSettings> mongoSettings = context
+        .getSettings(MongoConnectionSettings.class);
+    if (!mongoSettings.isPresent()) {
+      throw new BadConfigurationException("MongoConnectionSettings are required");
+    }
+
+    MongoConnectionSettings mergedSettings = mongoFactory.get().mergeWithDefaultSettings(mongoSettings);
+
+    if (!mergedSettings.validate()) {
+      throw new BadConfigurationException("MongoConnectionSettings are incomplete");
+    }
+
+    client = mongoFactory.get().buildClient(mergedSettings);
+    database = client.getDatabase(mergedSettings.getDatabase());
+    collection = database.getCollection(mergedSettings.getCollection());
   }
 
-  public Mongo(ConnectionString connectionString, String database){
-    this.client = MongoClients.create(connectionString);
-    this.database = client.getDatabase(database);
-  }
-
-  public Mongo(MongoClientSettings settings, String database){
-    this.client = MongoClients.create(settings);
-    this.database = client.getDatabase(database);
-  }
 
   public MongoDatabase getDatabase() {
     return database;
   }
 
+  public MongoCollection getCollection() {
+    return collection;
+  }
+
+  @Override
+  public void disconnect() {
+    // Do nothing - managed by Resource.close
+  }
+
   @Override
   public void close() {
-    client.close();
+    if(client != null) {
+      client.close();
+    }
   }
 }
