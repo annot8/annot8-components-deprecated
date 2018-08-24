@@ -57,4 +57,9 @@ public class FileSystemSourceSettings implements Settings {
   public void addAcceptedFilePattern(Pattern acceptedFilePattern) {
     this.acceptedFileNamePatterns.add(acceptedFilePattern);
   }
+
+  @Override
+  public boolean validate() {
+    return rootFolder != null;
+  }
 }

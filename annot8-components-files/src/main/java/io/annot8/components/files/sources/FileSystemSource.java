@@ -29,6 +29,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -54,7 +55,14 @@ public class FileSystemSource extends AbstractComponent implements Source {
 
   @Override
   public void configure(final Context context) throws BadConfigurationException {
-    final FileSystemSourceSettings settings = context.getSettings(FileSystemSourceSettings.class);
+    final Optional<FileSystemSourceSettings> optional = context.getSettings(FileSystemSourceSettings.class);
+
+    if(!optional.isPresent()) {
+      throw new BadConfigurationException("File system settings are invalid");
+    }
+
+    FileSystemSourceSettings settings = optional.get();
+
     acceptedFilePatterns = settings.getAcceptedFileNamePatterns();
 
     //Unregister existing watchers
