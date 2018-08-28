@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.annot8.common.data.content.FileContent;
+import io.annot8.common.data.content.InputStreamContent;
 import io.annot8.common.data.content.Text;
 import io.annot8.components.monitor.resources.Logging;
 import io.annot8.core.components.Processor;
@@ -13,6 +14,7 @@ import io.annot8.core.context.Context;
 import io.annot8.core.data.Item;
 import io.annot8.core.data.ItemFactory;
 import io.annot8.defaultimpl.content.SimpleFile;
+import io.annot8.defaultimpl.content.SimpleInputStream;
 import io.annot8.defaultimpl.content.SimpleText;
 import io.annot8.defaultimpl.context.SimpleContext;
 import io.annot8.defaultimpl.data.SimpleItem;
@@ -38,8 +40,7 @@ public class EmlFileExtractorTest {
     ) {
       SimpleContentBuilderFactoryRegistry contentBuilderFactoryRegistry = new SimpleContentBuilderFactoryRegistry();
       contentBuilderFactoryRegistry.register(Text.class, new SimpleText.BuilderFactory());
-      //FIXME: https://github.com/annot8/annot8-default-impl/issues/4
-      //contentBuilderFactoryRegistry.register(InputStreamContent.class, new SimpleInputStream.BuilderFactory());
+      contentBuilderFactoryRegistry.register(InputStreamContent.class, new SimpleInputStream.BuilderFactory());
       contentBuilderFactoryRegistry.register(FileContent.class, new SimpleFile.BuilderFactory());
 
       ItemFactory itemFactory = new SimpleItemFactory(contentBuilderFactoryRegistry);
@@ -80,6 +81,18 @@ public class EmlFileExtractorTest {
       assertTrue(text2.getData().contains("Testing Manuel Lemos' MIME E-mail composing and sending PHP class: HTML message"));
 
       //TODO: Test attachments
+      /*Item childItem = ?;
+
+      assertTrue(childItem.hasContent("background.gif"));
+      assertTrue(childItem.hasContent("logo.gif"));
+
+      InputStreamContent inputStreamContent = (InputStreamContent) childItem.getContent("attachment.txt").get();
+      assertNotNull(inputStreamContent);
+      String content = CharStreams.toString(new InputStreamReader(inputStreamContent.getData(), Charsets.ISO_8859_1));
+      assertEquals("VGhpcyBpcyBqdXN0IGEgcGxhaW4gdGV4dCBhdHRhY2htZW50IGZpbGUgbmFtZWQgYXR0YWNobWVu\r\ndC50eHQgLg==", content);
+
+      //TODO: Test headers
+      */
     }
   }
 }

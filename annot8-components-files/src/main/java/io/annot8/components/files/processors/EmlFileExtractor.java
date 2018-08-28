@@ -13,10 +13,13 @@ import io.annot8.core.components.Processor;
 import io.annot8.core.components.responses.ProcessorResponse;
 import io.annot8.core.data.Content.Builder;
 import io.annot8.core.data.Item;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.function.Supplier;
 import org.apache.james.mime4j.dom.BinaryBody;
 import org.apache.james.mime4j.dom.Body;
 import org.apache.james.mime4j.dom.Entity;
@@ -63,8 +66,7 @@ public class EmlFileExtractor extends AbstractComponent implements Processor {
           }
         });
 
-    // Always carry on
-    return ProcessorResponse.ok();
+    return ProcessorResponse.ok();  //TODO: If we weren't able to process successfully, should return an error!
   }
 
   private void processMultipart(Item item, Multipart multipart, String baseName){
@@ -106,7 +108,7 @@ public class EmlFileExtractor extends AbstractComponent implements Processor {
 
         Builder<InputStreamContent, InputStream> builder = item
             .create(InputStreamContent.class)
-            .withData(binaryBody.getInputStream())
+            .withData(createSupplier(binaryBody.getInputStream()))
             .withName(name);
 
         for(String key : headers.keySet()){
@@ -139,7 +141,7 @@ public class EmlFileExtractor extends AbstractComponent implements Processor {
       Builder<InputStreamContent, InputStream> builder = item
           .createChildItem()
           .create(InputStreamContent.class)
-          .withData(inputStream)
+          .withData(createSupplier(inputStream))
           .withName(name);
 
       for(String key : headers.keySet()){
@@ -152,11 +154,26 @@ public class EmlFileExtractor extends AbstractComponent implements Processor {
     }
   }
 
-  private Object unlist(List<String> list){
+  private static Object unlist(List<String> list){
     if(list.size() == 1){
       return list.get(0);
     }
 
     return list;
+  }
+
+  private static Supplier<InputStream> createSupplier(InputStream inputStream) throws IOException{
+    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+    int nRead;
+    byte[] data = new byte[16384];
+
+    while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
+      buffer.write(data, 0, nRead);
+    }
+
+    buffer.flush();
+
+    return () -> new ByteArrayInputStream(buffer.toByteArray());
   }
 }
