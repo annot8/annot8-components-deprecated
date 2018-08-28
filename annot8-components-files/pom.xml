@@ -31,6 +31,11 @@
 
     <dependency>
       <groupId>io.annot8</groupId>
+      <artifactId>annot8-default-impl</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.annot8</groupId>
       <artifactId>annot8-test-impl</artifactId>
       <scope>test</scope>
     </dependency>

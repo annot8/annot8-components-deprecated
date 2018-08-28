@@ -1,20 +1,22 @@
 package io.annot8.components.files.processors;
 
-
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
 import com.google.common.io.CharStreams;
 import io.annot8.common.data.content.FileContent;
 import io.annot8.common.data.content.InputStreamContent;
 import io.annot8.common.data.content.Text;
 import io.annot8.components.base.components.AbstractComponent;
-import io.annot8.conventions.PropertyKeys;
 import io.annot8.core.capabilities.CreatesContent;
 import io.annot8.core.capabilities.ProcessesContent;
 import io.annot8.core.components.Processor;
 import io.annot8.core.components.responses.ProcessorResponse;
+import io.annot8.core.data.Content.Builder;
 import io.annot8.core.data.Item;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import org.apache.james.mime4j.dom.BinaryBody;
 import org.apache.james.mime4j.dom.Body;
 import org.apache.james.mime4j.dom.Entity;
@@ -30,33 +32,26 @@ public class EmlFileExtractor extends AbstractComponent implements Processor {
 
   @Override
   public ProcessorResponse process(Item item) {
-
     item.getContents(FileContent.class)
         .filter(f -> f.getData().getName().endsWith(".eml") || f.getData().getName().endsWith(".msg"))
         .forEach(f -> {
           try {
             Message message = Message.Builder.of(new FileInputStream(f.getData())).build();
 
-            message.getHeader().getFields().forEach(field -> item.getProperties().set(field.getName(), field.getBody()));
+            ListMultimap<String, String> headers = ArrayListMultimap.create();
+            message.getHeader().getFields().forEach(field -> headers.put(field.getName(), field.getBody()));
+
+            for(String key : headers.keySet()){
+              item.getProperties().set(key, unlist(headers.get(key)));
+            }
 
             Body body = message.getBody();
             if (body instanceof SingleBody) {
               // Single body part, so create a new content
-              createContentFromBody(item, body, "body");
+              createContentFromBody(item, body, "body", ArrayListMultimap.create());
             } else if (body instanceof Multipart) {
               // Multi body part - attachments should become children items, other bodies become new content
-              int bodyCount = 0;
-              Multipart multipart = (Multipart) body;
-              for (Entity entity : multipart.getBodyParts()) {
-                if (entity.getFilename() != null) {
-                  // Attachment
-                  createItemFromBody(item, entity.getBody(), entity.getFilename());
-                } else {
-                  // Message
-                  bodyCount++;
-                  createContentFromBody(item, body, "body-" + bodyCount);
-                }
-              }
+              processMultipart(item, (Multipart)body, "body");
             } else {
               log().warn("Unexpected body type {}", body.getClass().getName());
             }
@@ -72,35 +67,66 @@ public class EmlFileExtractor extends AbstractComponent implements Processor {
     return ProcessorResponse.ok();
   }
 
-  private void createContentFromBody(Item item, Body body, String name) {
+  private void processMultipart(Item item, Multipart multipart, String baseName){
+    int bodyCount = 0;
+    for (Entity entity : multipart.getBodyParts()) {
+
+      ListMultimap<String, String> headers = ArrayListMultimap.create();
+      entity.getHeader().getFields().forEach(field -> headers.put(field.getName(), field.getBody()));
+
+      if (entity.getFilename() != null) {
+        // Attachment
+        createItemFromBody(item, entity.getBody(), entity.getFilename(), headers);
+      } else {
+        // Message or nested multipart
+        bodyCount++;
+        createContentFromBody(item, entity.getBody(), baseName + "-" + bodyCount, headers);
+      }
+    }
+  }
+
+  private void createContentFromBody(Item item, Body body, String name, ListMultimap<String, String> headers) {
+    log().debug("Creating content {} from body", name);
     try {
       if (body instanceof TextBody) {
         TextBody textBody = (TextBody) body;
         String text = CharStreams.toString(textBody.getReader());
 
-        item.create(Text.class)
+        Builder<Text, String> builder = item.create(Text.class)
             .withData(text)
-            .withName(name)
-            .withProperty(PropertyKeys.PROPERTY_KEY_CHARSET, textBody.getMimeCharset())
-            .save();
+            .withName(name);
+
+        for(String key : headers.keySet()){
+          builder.withProperty(key, unlist(headers.get(key)));
+        }
+
+        builder.save();
       } else if (body instanceof BinaryBody) {
         BinaryBody binaryBody = (BinaryBody) body;
 
-        item.create(InputStreamContent.class)
+        Builder<InputStreamContent, InputStream> builder = item
+            .create(InputStreamContent.class)
             .withData(binaryBody.getInputStream())
-            .withName(name)
-            .save();
+            .withName(name);
+
+        for(String key : headers.keySet()){
+          builder.withProperty(key, unlist(headers.get(key)));
+        }
+
+        builder.save();
+      }else if (body instanceof Multipart) {
+        processMultipart(item, (Multipart)body, name);
       } else {
         log().warn("Unexpected body type {}", body.getClass().getName());
       }
-
 
     }catch (Exception e){
       log().error("Unable to create content from body", e);
     }
   }
 
-  private void createItemFromBody(Item item, Body body, String name) {
+  private void createItemFromBody(Item item, Body body, String name, ListMultimap<String, String> headers) {
+    log().debug("Creating item {} from body", name);
     try {
       InputStream inputStream;
       if (body instanceof SingleBody) {
@@ -110,13 +136,27 @@ public class EmlFileExtractor extends AbstractComponent implements Processor {
         return;
       }
 
-      item.createChildItem()
-      .create(InputStreamContent.class)
-        .withData(inputStream)
-        .withName(name)
-        .save();
+      Builder<InputStreamContent, InputStream> builder = item
+          .createChildItem()
+          .create(InputStreamContent.class)
+          .withData(inputStream)
+          .withName(name);
+
+      for(String key : headers.keySet()){
+        builder.withProperty(key, unlist(headers.get(key)));
+      }
+
+      builder.save();
     }catch (Exception e){
       log().error("Unable to create new item from body", e);
     }
+  }
+
+  private Object unlist(List<String> list){
+    if(list.size() == 1){
+      return list.get(0);
+    }
+
+    return list;
   }
 }
