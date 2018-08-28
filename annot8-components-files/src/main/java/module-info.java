@@ -8,4 +8,7 @@ module io.annot8.components.files {
   exports io.annot8.components.files.processors;
 
   requires slf4j.api;
+  requires apache.mime4j.dom;
+  requires com.google.common;
+  requires apache.mime4j.core;
 }
