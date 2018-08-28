@@ -1,11 +1,7 @@
 package io.annot8.components.base.processors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
-
 import io.annot8.common.data.bounds.SpanBounds;
 import io.annot8.common.data.content.Text;
-import io.annot8.components.base.processors.Regex;
 import io.annot8.components.base.processors.Regex.RegexSettings;
 import io.annot8.core.annotations.Annotation;
 import io.annot8.core.components.Processor;
@@ -13,9 +9,9 @@ import io.annot8.core.context.Context;
 import io.annot8.core.data.Item;
 import io.annot8.core.exceptions.Annot8Exception;
 import io.annot8.core.stores.AnnotationStore;
-import io.annot8.test.TestContext;
-import io.annot8.test.TestItem;
-import io.annot8.test.content.TestStringContent;
+import io.annot8.testing.testimpl.TestContext;
+import io.annot8.testing.testimpl.TestItem;
+import io.annot8.testing.testimpl.content.TestStringContent;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;

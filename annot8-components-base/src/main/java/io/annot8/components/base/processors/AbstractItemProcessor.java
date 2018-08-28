@@ -3,10 +3,7 @@ package io.annot8.components.base.processors;
 import io.annot8.components.base.components.AbstractComponent;
 import io.annot8.core.components.Processor;
 import io.annot8.core.components.responses.ProcessorResponse;
-import io.annot8.core.context.Context;
 import io.annot8.core.data.Item;
-import io.annot8.core.exceptions.BadConfigurationException;
-import io.annot8.core.exceptions.MissingResourceException;
 
 /**
  * Base class to simplify selectively processing itmem
