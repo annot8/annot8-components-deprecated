@@ -45,7 +45,7 @@ public class IBANTest {
 
       p.process(item);
 
-      AnnotationStore store = item.getContent("test").get().getAnnotations();
+      AnnotationStore store = content.getAnnotations();
 
       List<Annotation> annotations = store.getAll().collect(Collectors.toList());
       Assertions.assertEquals(0, annotations.size());
@@ -67,7 +67,7 @@ public class IBANTest {
 
       p.process(item);
 
-      AnnotationStore store = item.getContent("test").get().getAnnotations();
+      AnnotationStore store = content.getAnnotations();
 
       List<Annotation> annotations = store.getAll().collect(Collectors.toList());
       Assertions.assertEquals(4, annotations.size());
@@ -79,7 +79,7 @@ public class IBANTest {
 
       for(Annotation a : annotations){
         Assertions.assertEquals(AnnotationTypes.ANNOTATION_TYPE_FINANCIALACCOUNT, a.getType());
-        Assertions.assertEquals(content.getName(), a.getContentName());
+        Assertions.assertEquals(content.getId(), a.getContentId());
         Assertions.assertEquals(4, a.getProperties().getAll().size());
 
         String code = a.getBounds().getData(content).get();

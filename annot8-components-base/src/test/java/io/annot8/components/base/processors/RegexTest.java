@@ -26,34 +26,24 @@ public class RegexTest {
 
     RegexSettings rs = new RegexSettings(Pattern.compile("[0-9]+"), 0, "number");
 
-    // TODO: These should be replaced by Test* rather than using Simple*
-    // TODO: Provide some abstract test base classes that provide this common functionality
-//    SimpleContentBuilderFactoryRegistry contentBuilderFactoryRegistry =
-//        new SimpleContentBuilderFactoryRegistry();
-//    contentBuilderFactoryRegistry.register(Text.class, new SimpleText.BuilderFactory());
-//    ItemFactory itemFactory = new SimpleItemFactory(contentBuilderFactoryRegistry, a -> {
-//    });
-//    Context context = new SimpleContext(itemFactory, rs);
-
     Item item = new TestItem();
     Context context = new TestContext(rs);
 
     p.configure(context);
 
-//    Item item = new SimpleItem(itemFactory, contentBuilderFactoryRegistry);
     Text content = item.create(TestStringContent.class).withName("test").withData("x + 12 = 42")
         .save();
 
     p.process(item);
 
-    AnnotationStore store = item.getContent("test").get().getAnnotations();
+    AnnotationStore store = content.getAnnotations();
 
     List<Annotation> annotations = store.getAll().collect(Collectors.toList());
     Assertions.assertEquals(2, annotations.size());
 
     for (Annotation annotation : annotations) {
       Assertions.assertEquals("number", annotation.getType());
-      Assertions.assertEquals(content.getName(), annotation.getContentName());
+      Assertions.assertEquals(content.getId(), annotation.getContentId());
       SpanBounds bounds = annotation.getBounds(SpanBounds.class).get();
       String value = bounds.getData(content).get();
       // Basic impl to handle order not being guaranteed

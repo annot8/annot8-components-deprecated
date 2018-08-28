@@ -42,8 +42,7 @@ public abstract class AbstractContentProcessor extends AbstractItemProcessor {
     if (settings == null || settings.getContent() == null || settings.getContent().isEmpty()) {
       contentToProcess = item.getContents();
     } else {
-      contentToProcess = settings.getContent().stream().map(item::getContent)
-          .filter(Optional::isPresent).map(Optional::get);
+      contentToProcess = settings.getContent().stream().flatMap(item::getContentByName);
     }
 
     contentToProcess

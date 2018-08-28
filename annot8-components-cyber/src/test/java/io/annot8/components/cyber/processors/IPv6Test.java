@@ -33,14 +33,14 @@ public class IPv6Test {
 
       p.process(item);
 
-      AnnotationStore store = item.getContent("test").get().getAnnotations();
+      AnnotationStore store = c.getAnnotations();
 
       List<Annotation> annotations = store.getAll().collect(Collectors.toList());
       Assertions.assertEquals(1, annotations.size());
 
       Annotation a = annotations.get(0);
       Assertions.assertEquals(AnnotationTypes.ANNOTATION_TYPE_IPADDRESS, a.getType());
-      Assertions.assertEquals(c.getName(), a.getContentName());
+      Assertions.assertEquals(c.getId(), a.getContentId());
       Assertions.assertEquals(expectedMatch, a.getBounds().getData(c).get());
       Assertions.assertEquals(1, a.getProperties().getAll().size());
       Assertions.assertEquals(6, a.getProperties().get(PropertyKeys.PROPERTY_KEY_VERSION).get());

@@ -36,7 +36,7 @@ public class UrlTest {
 
       p.process(item);
 
-      AnnotationStore store = item.getContent("test").get().getAnnotations();
+      AnnotationStore store = content.getAnnotations();
 
       List<Annotation> annotations = store.getAll().collect(Collectors.toList());
       Assertions.assertEquals(4, annotations.size());
@@ -48,7 +48,7 @@ public class UrlTest {
 
       for(Annotation a : annotations){
         Assertions.assertEquals(AnnotationTypes.ANNOTATION_TYPE_URL, a.getType());
-        Assertions.assertEquals(content.getName(), a.getContentName());
+        Assertions.assertEquals(content.getId(), a.getContentId());
         Assertions.assertEquals(0, a.getProperties().getAll().size());
 
         Assertions.assertTrue(urls.remove(a.getBounds().getData(content).get()));

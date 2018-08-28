@@ -40,14 +40,14 @@ public class HashTagTest {
 
     p.process(item);
 
-    AnnotationStore store = item.getContent("test").get().getAnnotations();
+    AnnotationStore store = content.getAnnotations();
 
     List<Annotation> annotations = store.getAll().collect(Collectors.toList());
     assertEquals(1, annotations.size());
 
     Annotation a = annotations.get(0);
     assertEquals(AnnotationTypes.ANNOTATION_TYPE_HASHTAG, a.getType());
-    assertEquals(content.getName(), a.getContentName());
+    assertEquals(content.getId(), a.getContentId());
     assertEquals("#latestnews", a.getBounds().getData(content).get());
     assertEquals(0, a.getProperties().getAll().size());
   }

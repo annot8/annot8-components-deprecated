@@ -41,14 +41,14 @@ public class SortCodeTest {
 
       p.process(item);
 
-      AnnotationStore store = item.getContent("test").get().getAnnotations();
+      AnnotationStore store = content.getAnnotations();
 
       List<Annotation> annotations = store.getAll().collect(Collectors.toList());
       Assertions.assertEquals(1, annotations.size());
 
       Annotation a = annotations.get(0);
       Assertions.assertEquals(AnnotationTypes.ANNOTATION_TYPE_FINANCIALACCOUNT, a.getType());
-      Assertions.assertEquals(content.getName(), a.getContentName());
+      Assertions.assertEquals(content.getId(), a.getContentId());
       Assertions.assertEquals("77-49-09", a.getBounds().getData(content).get());
       Assertions.assertEquals(1, a.getProperties().getAll().size());
       Assertions.assertEquals("774909", a.getProperties().get(PropertyKeys.PROPERTY_KEY_BRANCHCODE).get());
