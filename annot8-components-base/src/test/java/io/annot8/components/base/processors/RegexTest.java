@@ -8,6 +8,8 @@ import io.annot8.core.components.Processor;
 import io.annot8.core.context.Context;
 import io.annot8.core.data.Item;
 import io.annot8.core.exceptions.Annot8Exception;
+import io.annot8.core.exceptions.BadConfigurationException;
+import io.annot8.core.exceptions.MissingResourceException;
 import io.annot8.core.stores.AnnotationStore;
 import io.annot8.testing.testimpl.TestContext;
 import io.annot8.testing.testimpl.TestItem;
@@ -18,23 +20,41 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 public class RegexTest {
 
   @Test
-  public void testRegex() throws Annot8Exception {
+  public void testRegexFromConstructor(){
+    Processor p = new Regex(Pattern.compile("[0-9]+"), 0, "number");
+    try {
+      assertProcessorCorrectness(p);
+    } catch (Annot8Exception e) {
+      fail("Error not expected in this test", e);
+    }
+  }
+
+  @Test
+  public void testRegexFromSettings()  {
     Processor p = new Regex();
-
     RegexSettings rs = new RegexSettings(Pattern.compile("[0-9]+"), 0, "number");
-
-    Item item = new TestItem();
     Context context = new TestContext(rs);
 
-    p.configure(context);
+    try {
+      p.configure(context);
+      assertProcessorCorrectness(p);
+    } catch (Annot8Exception e) {
+      fail("Error not expected in this test", e);
+    }
 
+  }
+
+  private void assertProcessorCorrectness(Processor processor) throws Annot8Exception{
+    Item item = new TestItem();
     Text content = item.create(TestStringContent.class).withName("test").withData("x + 12 = 42")
-        .save();
+            .save();
 
-    p.process(item);
+    processor.process(item);
 
     AnnotationStore store = content.getAnnotations();
 
@@ -57,11 +77,10 @@ public class RegexTest {
           Assertions.assertEquals(6, bounds.getEnd());
           break;
         default:
-          Assertions.fail("Unexpected value " + value + " detected");
+          fail("Unexpected value " + value + " detected");
           break;
       }
     }
-
   }
 
 }
