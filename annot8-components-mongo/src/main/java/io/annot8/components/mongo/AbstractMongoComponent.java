@@ -1,4 +1,4 @@
-package io.annot8.components.mongo.components;
+package io.annot8.components.mongo;
 
 import com.google.common.base.Strings;
 import io.annot8.components.base.components.AbstractComponent;
@@ -6,6 +6,7 @@ import io.annot8.components.mongo.resources.Mongo;
 import io.annot8.components.mongo.resources.MongoConnection;
 import io.annot8.components.mongo.resources.MongoConnectionSettings;
 import io.annot8.components.mongo.resources.MongoFactory;
+import io.annot8.components.mongo.resources.MongoSettings;
 import io.annot8.core.capabilities.UsesResource;
 import io.annot8.core.context.Context;
 import io.annot8.core.exceptions.BadConfigurationException;
@@ -14,14 +15,14 @@ import io.annot8.core.settings.SettingsClass;
 import java.util.Optional;
 
 /**
- * Base class for Mongo components which simplfies configuration
+ * Base class for Mongo components which simplifies configuration
  *
- * THis can be configured to us a named Mongo resource (see {@link MongoResourceSettings}) or
- * using a non-named Mongo resource, or using settings (see {@link MongoConnectionSettings}).
+ * This can be configured to use a named or unnamed Mongo resource (see {@link MongoSettings}},
+ * or use settings (see {@link MongoConnectionSettings}).
  *
  * Implement configure(context, connection) to set up using the best connection.
  */
-@SettingsClass(value=MongoResourceSettings.class, optional = true)
+@SettingsClass(value= MongoSettings.class, optional = true)
 @SettingsClass(value=MongoConnectionSettings.class, optional = true)
 @UsesResource(value = Mongo.class, optional = true)
 @UsesResource(value = MongoFactory.class, optional = true)
@@ -33,7 +34,7 @@ public abstract class AbstractMongoComponent extends AbstractComponent {
   public void configure(Context context) throws BadConfigurationException, MissingResourceException {
     super.configure(context);
 
-    Optional<MongoResourceSettings> optionalMongoResource = context.getSettings(MongoResourceSettings.class);
+    Optional<MongoSettings> optionalMongoResource = context.getSettings(MongoSettings.class);
     Optional<MongoConnectionSettings> optionalMongoConnection = context.getSettings(MongoConnectionSettings.class);
 
     if(optionalMongoResource.isPresent() && !Strings.isNullOrEmpty(optionalMongoResource.get().getMongo())) {

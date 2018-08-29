@@ -7,10 +7,9 @@ import java.util.stream.Stream;
 
 public class MongoConnectionSettings implements Settings {
 
-  private String connection;
+  private String connection = "mongodb://localhost";
 
-
-  private String database;
+  private String database = "annot8";
 
   private String collection;
 
@@ -46,8 +45,10 @@ public class MongoConnectionSettings implements Settings {
   }
 
   public boolean validateConnection() {
-    return !Strings.isNullOrEmpty(connection);
+    return !Strings.isNullOrEmpty(connection)
+        && (connection.startsWith("mongodb://") || connection.startsWith("mongodb+srv://"));
   }
+
 
   public MongoConnectionSettings merge(Optional<MongoConnectionSettings> settings) {
     if(settings.isPresent()){

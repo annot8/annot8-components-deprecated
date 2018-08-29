@@ -1,9 +1,8 @@
-package io.annot8.components.mongo.components;
+package io.annot8.components.mongo.resources;
 
-import io.annot8.components.mongo.resources.MongoConnectionSettings;
 import io.annot8.core.settings.Settings;
 
-public class MongoResourceSettings implements Settings {
+public class MongoSettings implements Settings {
   private String mongo = null;
 
   public String getMongo() {

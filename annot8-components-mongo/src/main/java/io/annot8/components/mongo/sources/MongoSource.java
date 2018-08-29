@@ -1,7 +1,7 @@
 package io.annot8.components.mongo.sources;
 
 import com.mongodb.client.MongoCursor;
-import io.annot8.components.mongo.components.AbstractMongoComponent;
+import io.annot8.components.mongo.AbstractMongoComponent;
 import io.annot8.components.mongo.data.MongoDocument;
 import io.annot8.components.mongo.resources.MongoConnection;
 import io.annot8.conventions.PropertyKeys;
@@ -11,9 +11,7 @@ import io.annot8.core.components.responses.SourceResponse;
 import io.annot8.core.context.Context;
 import io.annot8.core.data.Item;
 import io.annot8.core.data.ItemFactory;
-import io.annot8.core.exceptions.BadConfigurationException;
 import io.annot8.core.exceptions.IncompleteException;
-import io.annot8.core.exceptions.MissingResourceException;
 import io.annot8.core.exceptions.UnsupportedContentException;
 import java.time.Instant;
 import org.bson.Document;
@@ -30,7 +28,7 @@ public class MongoSource extends AbstractMongoComponent implements Source {
   private MongoCursor<Document> cursor = null;
 
   @Override
-  public void configure(Context context, MongoConnection connection) throws BadConfigurationException, MissingResourceException {
+  public void configure(Context context, MongoConnection connection) {
     cursor = connection.getCollection().find().iterator();
     //TODO: Use change streams (collection.watch()) to pick up new documents
   }
@@ -62,6 +60,7 @@ public class MongoSource extends AbstractMongoComponent implements Source {
     } catch (UnsupportedContentException | IncompleteException e) {
       log().warn("Couldn't create item", e);
       item.discard();
+      return SourceResponse.sourceError();
     }
 
     return SourceResponse.ok();
