@@ -9,6 +9,7 @@ import com.google.common.io.CharStreams;
 import io.annot8.common.data.content.FileContent;
 import io.annot8.common.data.content.InputStreamContent;
 import io.annot8.common.data.content.Text;
+import io.annot8.common.implementations.stores.AnnotationStoreFactory;
 import io.annot8.components.monitor.resources.Logging;
 import io.annot8.core.components.Processor;
 import io.annot8.core.components.Resource;
@@ -22,6 +23,7 @@ import io.annot8.defaultimpl.context.SimpleContext;
 import io.annot8.defaultimpl.data.SimpleItem;
 import io.annot8.defaultimpl.factories.SimpleContentBuilderFactoryRegistry;
 import io.annot8.defaultimpl.factories.SimpleItemFactory;
+import io.annot8.defaultimpl.stores.SimpleAnnotationStore;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -45,10 +47,11 @@ public class EmlFileExtractorTest {
     try(
       Processor p = new EmlFileExtractor()
     ) {
+      AnnotationStoreFactory factory = SimpleAnnotationStore.factory();
       SimpleContentBuilderFactoryRegistry contentBuilderFactoryRegistry = new SimpleContentBuilderFactoryRegistry();
-      contentBuilderFactoryRegistry.register(Text.class, new SimpleText.BuilderFactory());
-      contentBuilderFactoryRegistry.register(InputStreamContent.class, new SimpleInputStream.BuilderFactory());
-      contentBuilderFactoryRegistry.register(FileContent.class, new SimpleFile.BuilderFactory());
+      contentBuilderFactoryRegistry.register(Text.class, new SimpleText.BuilderFactory(factory));
+      contentBuilderFactoryRegistry.register(InputStreamContent.class, new SimpleInputStream.BuilderFactory(factory));
+      contentBuilderFactoryRegistry.register(FileContent.class, new SimpleFile.BuilderFactory(factory));
 
       ItemFactory itemFactory = new SimpleItemFactory(contentBuilderFactoryRegistry, consumer);
 
@@ -77,12 +80,12 @@ public class EmlFileExtractorTest {
       assertEquals("Sat, 30 Apr 2005 19:28:29 -0300", item.getProperties().get("Date").get());
       assertEquals(Arrays.asList("Original file from https://www.phpclasses.org/browse/file/14672.html", "Modified by James Baker"), item.getProperties().get("Comment").get());
 
-      Text text1 = (Text) item.getContent("body-1-1-1").get();
+      Text text1 = (Text) item.getContentByName("body-1-1-1").findFirst().get();
       assertNotNull(text1);
       assertEquals("text/plain; charset=ISO-8859-1", text1.getProperties().get("Content-Type").get());
       assertTrue(text1.getData().contains("Please use an HTML capable mail program"));
 
-      Text text2 = (Text) item.getContent("body-1-1-2").get();
+      Text text2 = (Text) item.getContentByName("body-1-1-2").findFirst().get();
       assertNotNull(text2);
       assertEquals("text/html; charset=ISO-8859-1", text2.getProperties().get("Content-Type").get());
       assertTrue(text2.getData().contains("Testing Manuel Lemos' MIME E-mail composing and sending PHP class: HTML message"));
@@ -90,13 +93,13 @@ public class EmlFileExtractorTest {
       assertEquals(3, newItems.size());
 
       Item logoItem = newItems.get(0);
-      assertTrue(logoItem.hasContent("logo.gif"));
+      assertTrue(logoItem.hasContentOfName("logo.gif"));
 
       Item backgroundItem = newItems.get(1);
-      assertTrue(backgroundItem.hasContent("background.gif"));
+      assertTrue(backgroundItem.hasContentOfName("background.gif"));
 
       Item attachmentItem = newItems.get(2);
-      InputStreamContent inputStreamContent = (InputStreamContent) attachmentItem.getContent("attachment.txt").get();
+      InputStreamContent inputStreamContent = (InputStreamContent) attachmentItem.getContentByName("attachment.txt").findFirst().get();
       assertNotNull(inputStreamContent);
       String content = CharStreams
           .toString(new InputStreamReader(inputStreamContent.getData(), Charsets.ISO_8859_1));
