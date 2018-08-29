@@ -36,7 +36,7 @@ public class EmlFileExtractor extends AbstractComponent implements Processor {
   @Override
   public ProcessorResponse process(Item item) {
     item.getContents(FileContent.class)
-        .filter(f -> f.getData().getName().endsWith(".eml") || f.getData().getName().endsWith(".msg"))
+        .filter(f -> f.getData().getName().endsWith(".eml"))
         .forEach(f -> {
           try {
             Message message = Message.Builder.of(new FileInputStream(f.getData())).build();
