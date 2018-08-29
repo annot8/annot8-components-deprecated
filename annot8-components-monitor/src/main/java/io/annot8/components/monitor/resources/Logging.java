@@ -12,7 +12,6 @@ public final class Logging implements Resource {
 
   private final boolean useLoggerFactory;
 
-
   protected Logging(boolean useLoggerFactory, ILoggerFactory iLoggerFactory) {
     // Ensure that we have at least something to create a logger with
 
