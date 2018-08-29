@@ -84,7 +84,7 @@ public abstract class AbstractContentProcessor extends AbstractItemProcessor {
 
     // List of view name to consider
     // null/empty implies all
-    private Set<String> content;
+    private final Set<String> content;
 
     public ContentAnnotatorSettings(Set<String> content) {
       this.content = content;
@@ -92,10 +92,6 @@ public abstract class AbstractContentProcessor extends AbstractItemProcessor {
 
     public Set<String> getContent() {
       return content == null ? Collections.emptySet(): content;
-    }
-
-    public void setContent(Set<String> content) {
-      this.content = content;
     }
 
     @Override
