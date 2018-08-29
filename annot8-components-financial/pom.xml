@@ -24,6 +24,11 @@
       <artifactId>iban4j</artifactId>
       <version>3.2.1</version>
     </dependency>
+    <dependency>
+      <groupId>org.bitcoinj</groupId>
+      <artifactId>bitcoinj-core</artifactId>
+      <version>0.14.7</version>
+    </dependency>
 
     <dependency>
       <groupId>io.annot8</groupId>

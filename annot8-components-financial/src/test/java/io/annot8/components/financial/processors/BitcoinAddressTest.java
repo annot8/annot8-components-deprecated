@@ -1,0 +1,67 @@
+package io.annot8.components.financial.processors;
+
+import io.annot8.common.data.content.Text;
+import io.annot8.conventions.AnnotationTypes;
+import io.annot8.conventions.PropertyKeys;
+import io.annot8.core.annotations.Annotation;
+import io.annot8.core.components.Processor;
+import io.annot8.core.context.Context;
+import io.annot8.core.data.Item;
+import io.annot8.core.exceptions.Annot8Exception;
+import io.annot8.core.settings.EmptySettings;
+import io.annot8.core.settings.SettingsClass;
+import io.annot8.core.stores.AnnotationStore;
+import io.annot8.testing.testimpl.TestContext;
+import io.annot8.testing.testimpl.TestItem;
+import io.annot8.testing.testimpl.content.TestStringContent;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+public class BitcoinAddressTest {
+
+  @Test
+  public void testSettings() {
+    SettingsClass annotation = BitcoinAddress.class.getAnnotation(SettingsClass.class);
+    Assertions.assertEquals(EmptySettings.class, annotation.value());
+  }
+
+  @Test
+  public void testBitcoinAddress() throws Annot8Exception {
+    try(
+        Processor p = new BitcoinAddress()
+    ) {
+      Item item = new TestItem();
+      Context context = new TestContext();
+
+      p.configure(context);
+
+      Text content = item.create(TestStringContent.class).withName("test")
+          .withData("These are valid addresses: 17VZNX1SN5NtKa8UQFxwQbFeFc3iqRYhem and 3EktnHQD7RiAE6uzMj2ZifT9YgRrkSgzQX; "
+              + "whereas the following are not: 17VZNX1SN5Ntja8UQFxwQbFeFc3iqRYhem (bad checksum), 17VZNX1SN5NtKa8 (too short), 5Hwgr3u458GLafKBgxtssHSPqJnYoGrSzgQsPwLFhLNYskDPyyA (wrong prefix)")
+          .save();
+
+      p.process(item);
+
+      AnnotationStore store = content.getAnnotations();
+
+      List<Annotation> annotations = store.getAll().collect(Collectors.toList());
+      Assertions.assertEquals(2, annotations.size());
+
+      Annotation a1 = annotations.get(0);
+      Assertions.assertEquals(AnnotationTypes.ANNOTATION_TYPE_FINANCIALACCOUNT, a1.getType());
+      Assertions.assertEquals(content.getId(), a1.getContentId());
+      Assertions.assertEquals("17VZNX1SN5NtKa8UQFxwQbFeFc3iqRYhem", a1.getBounds().getData(content).get());
+      Assertions.assertEquals(1, a1.getProperties().getAll().size());
+      Assertions.assertEquals("bitcoin#P2PKH", a1.getProperties().get(PropertyKeys.PROPERTY_KEY_ACCOUNTTYPE).get());
+
+      Annotation a2 = annotations.get(1);
+      Assertions.assertEquals(AnnotationTypes.ANNOTATION_TYPE_FINANCIALACCOUNT, a2.getType());
+      Assertions.assertEquals(content.getId(), a2.getContentId());
+      Assertions.assertEquals("3EktnHQD7RiAE6uzMj2ZifT9YgRrkSgzQX", a2.getBounds().getData(content).get());
+      Assertions.assertEquals(1, a2.getProperties().getAll().size());
+      Assertions.assertEquals("bitcoin#P2SH", a2.getProperties().get(PropertyKeys.PROPERTY_KEY_ACCOUNTTYPE).get());
+    }
+  }
+}
