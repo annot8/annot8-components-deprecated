@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.CharStreams;
 import io.annot8.common.data.content.FileContent;
 import io.annot8.common.data.content.InputStreamContent;
 import io.annot8.common.data.content.Text;
@@ -21,11 +23,15 @@ import io.annot8.defaultimpl.data.SimpleItem;
 import io.annot8.defaultimpl.factories.SimpleContentBuilderFactoryRegistry;
 import io.annot8.defaultimpl.factories.SimpleItemFactory;
 import java.io.File;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import org.junit.jupiter.api.Test;
 
 public class EmlFileExtractorTest {
@@ -33,7 +39,8 @@ public class EmlFileExtractorTest {
   @Test
   public void test() throws Exception{
 
-
+    List<Item> newItems = new ArrayList<>();
+    Consumer<Item> consumer = newItems::add;
 
     try(
       Processor p = new EmlFileExtractor()
@@ -43,7 +50,7 @@ public class EmlFileExtractorTest {
       contentBuilderFactoryRegistry.register(InputStreamContent.class, new SimpleInputStream.BuilderFactory());
       contentBuilderFactoryRegistry.register(FileContent.class, new SimpleFile.BuilderFactory());
 
-      ItemFactory itemFactory = new SimpleItemFactory(contentBuilderFactoryRegistry);
+      ItemFactory itemFactory = new SimpleItemFactory(contentBuilderFactoryRegistry, consumer);
 
       Logging logging = Logging.useLoggerFactory();
       Map<String, Resource> resources = new HashMap<>();
@@ -80,19 +87,21 @@ public class EmlFileExtractorTest {
       assertEquals("text/html; charset=ISO-8859-1", text2.getProperties().get("Content-Type").get());
       assertTrue(text2.getData().contains("Testing Manuel Lemos' MIME E-mail composing and sending PHP class: HTML message"));
 
-      //TODO: Test attachments
-      /*Item childItem = ?;
+      assertEquals(3, newItems.size());
 
-      assertTrue(childItem.hasContent("background.gif"));
-      assertTrue(childItem.hasContent("logo.gif"));
+      Item logoItem = newItems.get(0);
+      assertTrue(logoItem.hasContent("logo.gif"));
 
-      InputStreamContent inputStreamContent = (InputStreamContent) childItem.getContent("attachment.txt").get();
+      Item backgroundItem = newItems.get(1);
+      assertTrue(backgroundItem.hasContent("background.gif"));
+
+      Item attachmentItem = newItems.get(2);
+      InputStreamContent inputStreamContent = (InputStreamContent) attachmentItem.getContent("attachment.txt").get();
       assertNotNull(inputStreamContent);
-      String content = CharStreams.toString(new InputStreamReader(inputStreamContent.getData(), Charsets.ISO_8859_1));
-      assertEquals("VGhpcyBpcyBqdXN0IGEgcGxhaW4gdGV4dCBhdHRhY2htZW50IGZpbGUgbmFtZWQgYXR0YWNobWVu\r\ndC50eHQgLg==", content);
-
-      //TODO: Test headers
-      */
+      String content = CharStreams
+          .toString(new InputStreamReader(inputStreamContent.getData(), Charsets.ISO_8859_1));
+      assertEquals("This is just a plain text attachment file named attachment.txt .", content);
+      assertEquals("This is just a plain text attachment file named attachment.txt .", content);
     }
   }
 }
