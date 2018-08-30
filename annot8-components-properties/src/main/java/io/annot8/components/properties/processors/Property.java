@@ -1,4 +1,4 @@
-package io.annot8.components.base.processors;
+package io.annot8.components.properties.processors;
 
 import io.annot8.components.base.components.AbstractComponent;
 import io.annot8.core.components.Processor;
