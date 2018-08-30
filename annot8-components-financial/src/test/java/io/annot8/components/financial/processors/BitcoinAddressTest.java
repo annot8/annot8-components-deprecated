@@ -14,7 +14,9 @@ import io.annot8.core.stores.AnnotationStore;
 import io.annot8.testing.testimpl.TestContext;
 import io.annot8.testing.testimpl.TestItem;
 import io.annot8.testing.testimpl.content.TestStringContent;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -49,17 +51,18 @@ public class BitcoinAddressTest {
       List<Annotation> annotations = store.getAll().collect(Collectors.toList());
       Assertions.assertEquals(2, annotations.size());
 
-      Annotation a1 = annotations.get(0);
+      Map<String, Annotation> annotationMap = new HashMap<>();
+      annotations.forEach(a -> annotationMap.put(a.getBounds().getData(content).get(), a));
+
+      Annotation a1 = annotationMap.get("17VZNX1SN5NtKa8UQFxwQbFeFc3iqRYhem");
       Assertions.assertEquals(AnnotationTypes.ANNOTATION_TYPE_FINANCIALACCOUNT, a1.getType());
       Assertions.assertEquals(content.getId(), a1.getContentId());
-      Assertions.assertEquals("17VZNX1SN5NtKa8UQFxwQbFeFc3iqRYhem", a1.getBounds().getData(content).get());
       Assertions.assertEquals(1, a1.getProperties().getAll().size());
       Assertions.assertEquals("bitcoin#P2PKH", a1.getProperties().get(PropertyKeys.PROPERTY_KEY_ACCOUNTTYPE).get());
 
-      Annotation a2 = annotations.get(1);
+      Annotation a2 = annotationMap.get("3EktnHQD7RiAE6uzMj2ZifT9YgRrkSgzQX");
       Assertions.assertEquals(AnnotationTypes.ANNOTATION_TYPE_FINANCIALACCOUNT, a2.getType());
       Assertions.assertEquals(content.getId(), a2.getContentId());
-      Assertions.assertEquals("3EktnHQD7RiAE6uzMj2ZifT9YgRrkSgzQX", a2.getBounds().getData(content).get());
       Assertions.assertEquals(1, a2.getProperties().getAll().size());
       Assertions.assertEquals("bitcoin#P2SH", a2.getProperties().get(PropertyKeys.PROPERTY_KEY_ACCOUNTTYPE).get());
     }
