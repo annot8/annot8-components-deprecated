@@ -12,6 +12,7 @@ import io.annot8.core.context.Context;
 import io.annot8.core.data.Item;
 import io.annot8.core.data.ItemFactory;
 import io.annot8.core.exceptions.Annot8Exception;
+import io.annot8.core.settings.EmptySettings;
 import io.annot8.core.settings.Settings;
 import io.annot8.defaultimpl.content.SimpleText;
 import io.annot8.defaultimpl.context.SimpleContext;
@@ -28,90 +29,44 @@ import org.junit.jupiter.api.Test;
 
 public class PropertyToTextTest {
 
+  private static final String EXPECTED_KEY = "test";
+  private static final String EXPECTED_VALUE = "Hello World!";
+
   @Test
-  public void testPropertyToText() throws Annot8Exception {
-    AnnotationStoreFactory factory = SimpleAnnotationStore.factory();
-    SimpleContentBuilderFactoryRegistry contentBuilderFactoryRegistry = new SimpleContentBuilderFactoryRegistry();
-    contentBuilderFactoryRegistry.register(Text.class, new SimpleText.BuilderFactory(factory));
+  public void testNoSettings() throws Annot8Exception {
+    Map<String, Object> properties = new HashMap<>();
+    properties.put(EXPECTED_KEY, EXPECTED_VALUE);
 
-    ItemFactory itemFactory = new SimpleItemFactory(contentBuilderFactoryRegistry);
+    Settings settings = EmptySettings.getInstance();
 
-    Logging logging = Logging.useLoggerFactory();
-    Map<String, Resource> resources = new HashMap<>();
-    resources.put("logging", logging);
-
-    Context context = new SimpleContext(itemFactory, resources);
-
-    try(Processor p = new PropertyToText()) {
-
-      p.configure(context);
-
-      Item item = new SimpleItem(itemFactory, contentBuilderFactoryRegistry);
-
-      item.getProperties().set("test", "Hello World!");
-
-      assertEquals(0, item.getContents().count());
-
-      p.process(item);
-
-      AtomicInteger count = new AtomicInteger();
-      item.getContents().forEach(c -> {
-            count.getAndIncrement();
-            assertEquals("test", c.getName());
-            assertEquals("Hello World!", c.getData());
-          }
-      );
-
-      assertEquals(1, count.get());
-
-    }
+    doTest(properties, settings);
   }
 
   @Test
   public void testWhitelist() throws Annot8Exception {
-    AnnotationStoreFactory factory = SimpleAnnotationStore.factory();
-    SimpleContentBuilderFactoryRegistry contentBuilderFactoryRegistry = new SimpleContentBuilderFactoryRegistry();
-    contentBuilderFactoryRegistry.register(Text.class, new SimpleText.BuilderFactory(factory));
+    Map<String, Object> properties = new HashMap<>();
+    properties.put(EXPECTED_KEY, EXPECTED_VALUE);
+    properties.put("foo", "bar");
 
-    ItemFactory itemFactory = new SimpleItemFactory(contentBuilderFactoryRegistry);
+    PropertyToTextSettings settings = new PropertyToTextSettings();
+    settings.setWhitelist(new HashSet<>(Arrays.asList(EXPECTED_KEY)));
 
-    Logging logging = Logging.useLoggerFactory();
-    Map<String, Resource> resources = new HashMap<>();
-    resources.put("logging", logging);
-
-    Settings settings = new PropertyToTextSettings();
-    ((PropertyToTextSettings) settings).setWhitelist(new HashSet<>(Arrays.asList("test")));
-
-    Context context = new SimpleContext(itemFactory, Arrays.asList(settings), resources);
-
-    try(Processor p = new PropertyToText()) {
-
-      p.configure(context);
-
-      Item item = new SimpleItem(itemFactory, contentBuilderFactoryRegistry);
-
-      item.getProperties().set("test", "Hello World!");
-      item.getProperties().set("foo", "bar");
-
-      assertEquals(0, item.getContents().count());
-
-      p.process(item);
-
-      AtomicInteger count = new AtomicInteger();
-      item.getContents().forEach(c -> {
-            count.getAndIncrement();
-            assertEquals("test", c.getName());
-            assertEquals("Hello World!", c.getData());
-          }
-      );
-
-      assertEquals(1, count.get());
-
-    }
+    doTest(properties, settings);
   }
 
   @Test
   public void testBlacklist() throws Annot8Exception {
+    Map<String, Object> properties = new HashMap<>();
+    properties.put(EXPECTED_KEY, EXPECTED_VALUE);
+    properties.put("foo", "bar");
+
+    PropertyToTextSettings settings = new PropertyToTextSettings();
+    settings.setBlacklist(new HashSet<>(Arrays.asList("foo")));
+
+    doTest(properties, settings);
+  }
+
+  private void doTest(Map<String, Object> properties, Settings settings) throws Annot8Exception{
     AnnotationStoreFactory factory = SimpleAnnotationStore.factory();
     SimpleContentBuilderFactoryRegistry contentBuilderFactoryRegistry = new SimpleContentBuilderFactoryRegistry();
     contentBuilderFactoryRegistry.register(Text.class, new SimpleText.BuilderFactory(factory));
@@ -122,9 +77,6 @@ public class PropertyToTextTest {
     Map<String, Resource> resources = new HashMap<>();
     resources.put("logging", logging);
 
-    Settings settings = new PropertyToTextSettings();
-    ((PropertyToTextSettings) settings).setBlacklist(new HashSet<>(Arrays.asList("foo")));
-
     Context context = new SimpleContext(itemFactory, Arrays.asList(settings), resources);
 
     try(Processor p = new PropertyToText()) {
@@ -133,9 +85,7 @@ public class PropertyToTextTest {
 
       Item item = new SimpleItem(itemFactory, contentBuilderFactoryRegistry);
 
-      item.getProperties().set("test", "Hello World!");
-      item.getProperties().set("foo", "bar");
-
+      item.getProperties().set(properties);
       assertEquals(0, item.getContents().count());
 
       p.process(item);
@@ -143,8 +93,8 @@ public class PropertyToTextTest {
       AtomicInteger count = new AtomicInteger();
       item.getContents().forEach(c -> {
             count.getAndIncrement();
-            assertEquals("test", c.getName());
-            assertEquals("Hello World!", c.getData());
+            assertEquals(EXPECTED_KEY, c.getName());
+            assertEquals(EXPECTED_VALUE, c.getData());
           }
       );
 
