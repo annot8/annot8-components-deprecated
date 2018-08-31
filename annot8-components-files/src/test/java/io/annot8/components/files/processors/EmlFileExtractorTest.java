@@ -16,12 +16,9 @@ import io.annot8.core.components.Resource;
 import io.annot8.core.context.Context;
 import io.annot8.core.data.Item;
 import io.annot8.core.data.ItemFactory;
-import io.annot8.defaultimpl.content.SimpleFile;
-import io.annot8.defaultimpl.content.SimpleInputStream;
-import io.annot8.defaultimpl.content.SimpleText;
-import io.annot8.defaultimpl.data.SimpleItem;
-import io.annot8.defaultimpl.factories.SimpleContentBuilderFactoryRegistry;
-import io.annot8.defaultimpl.factories.SimpleItemFactory;
+import io.annot8.defaultimpl.data.DefaultItem;
+import io.annot8.defaultimpl.factories.DefaultContentBuilderFactoryRegistry;
+import io.annot8.defaultimpl.factories.DefaultItemFactory;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -45,12 +42,8 @@ public class EmlFileExtractorTest {
     try(
       Processor p = new EmlFileExtractor()
     ) {
-      SimpleContentBuilderFactoryRegistry contentBuilderFactoryRegistry = new SimpleContentBuilderFactoryRegistry();
-      contentBuilderFactoryRegistry.register(Text.class, new SimpleText.BuilderFactory());
-      contentBuilderFactoryRegistry.register(InputStreamContent.class, new SimpleInputStream.BuilderFactory());
-      contentBuilderFactoryRegistry.register(FileContent.class, new SimpleFile.BuilderFactory());
-
-      ItemFactory itemFactory = new SimpleItemFactory(contentBuilderFactoryRegistry, consumer);
+      DefaultContentBuilderFactoryRegistry contentBuilderFactoryRegistry = new DefaultContentBuilderFactoryRegistry();
+      ItemFactory itemFactory = new DefaultItemFactory(contentBuilderFactoryRegistry, consumer);
 
       Logging logging = Logging.useLoggerFactory();
       Map<String, Resource> resources = new HashMap<>();
@@ -59,7 +52,7 @@ public class EmlFileExtractorTest {
       Context context = new SimpleContext( resources);
       p.configure(context);
 
-      Item item = new SimpleItem(itemFactory, contentBuilderFactoryRegistry);
+      Item item = new DefaultItem(itemFactory, contentBuilderFactoryRegistry);
 
       URL resource = EmlFileExtractorTest.class.getResource("test_sample_message.eml");   //Based on https://www.phpclasses.org/browse/file/14672.html
       File f = Paths.get(resource.toURI()).toFile();

@@ -2,7 +2,6 @@ package io.annot8.components.properties.processors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import io.annot8.common.data.content.Text;
 import io.annot8.common.implementations.context.SimpleContext;
 import io.annot8.components.monitor.resources.Logging;
 import io.annot8.components.properties.processors.PropertyToText.PropertyToTextSettings;
@@ -14,10 +13,9 @@ import io.annot8.core.data.ItemFactory;
 import io.annot8.core.exceptions.Annot8Exception;
 import io.annot8.core.settings.EmptySettings;
 import io.annot8.core.settings.Settings;
-import io.annot8.defaultimpl.content.SimpleText;
-import io.annot8.defaultimpl.data.SimpleItem;
-import io.annot8.defaultimpl.factories.SimpleContentBuilderFactoryRegistry;
-import io.annot8.defaultimpl.factories.SimpleItemFactory;
+import io.annot8.defaultimpl.data.DefaultItem;
+import io.annot8.defaultimpl.factories.DefaultContentBuilderFactoryRegistry;
+import io.annot8.defaultimpl.factories.DefaultItemFactory;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -65,10 +63,9 @@ public class PropertyToTextTest {
   }
 
   private void doTest(Map<String, Object> properties, Settings settings) throws Annot8Exception{
-    SimpleContentBuilderFactoryRegistry contentBuilderFactoryRegistry = new SimpleContentBuilderFactoryRegistry();
-    contentBuilderFactoryRegistry.register(Text.class, new SimpleText.BuilderFactory());
+    DefaultContentBuilderFactoryRegistry contentBuilderFactoryRegistry = new DefaultContentBuilderFactoryRegistry();
 
-    ItemFactory itemFactory = new SimpleItemFactory(contentBuilderFactoryRegistry);
+    ItemFactory itemFactory = new DefaultItemFactory(contentBuilderFactoryRegistry);
 
     Logging logging = Logging.useLoggerFactory();
     Map<String, Resource> resources = new HashMap<>();
@@ -80,7 +77,7 @@ public class PropertyToTextTest {
 
       p.configure(context);
 
-      Item item = new SimpleItem(itemFactory, contentBuilderFactoryRegistry);
+      Item item = new DefaultItem(itemFactory, contentBuilderFactoryRegistry);
 
       item.getProperties().set(properties);
       assertEquals(0, item.getContents().count());
