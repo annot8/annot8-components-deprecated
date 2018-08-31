@@ -3,7 +3,7 @@ package io.annot8.components.properties.processors;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import io.annot8.common.data.content.Text;
-import io.annot8.common.implementations.stores.AnnotationStoreFactory;
+import io.annot8.common.implementations.context.SimpleContext;
 import io.annot8.components.monitor.resources.Logging;
 import io.annot8.components.properties.processors.PropertyToText.PropertyToTextSettings;
 import io.annot8.core.components.Processor;
@@ -15,11 +15,9 @@ import io.annot8.core.exceptions.Annot8Exception;
 import io.annot8.core.settings.EmptySettings;
 import io.annot8.core.settings.Settings;
 import io.annot8.defaultimpl.content.SimpleText;
-import io.annot8.defaultimpl.context.SimpleContext;
 import io.annot8.defaultimpl.data.SimpleItem;
 import io.annot8.defaultimpl.factories.SimpleContentBuilderFactoryRegistry;
 import io.annot8.defaultimpl.factories.SimpleItemFactory;
-import io.annot8.defaultimpl.stores.SimpleAnnotationStore;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -67,9 +65,8 @@ public class PropertyToTextTest {
   }
 
   private void doTest(Map<String, Object> properties, Settings settings) throws Annot8Exception{
-    AnnotationStoreFactory factory = SimpleAnnotationStore.factory();
     SimpleContentBuilderFactoryRegistry contentBuilderFactoryRegistry = new SimpleContentBuilderFactoryRegistry();
-    contentBuilderFactoryRegistry.register(Text.class, new SimpleText.BuilderFactory(factory));
+    contentBuilderFactoryRegistry.register(Text.class, new SimpleText.BuilderFactory());
 
     ItemFactory itemFactory = new SimpleItemFactory(contentBuilderFactoryRegistry);
 

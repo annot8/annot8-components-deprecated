@@ -9,7 +9,7 @@ import com.google.common.io.CharStreams;
 import io.annot8.common.data.content.FileContent;
 import io.annot8.common.data.content.InputStreamContent;
 import io.annot8.common.data.content.Text;
-import io.annot8.common.implementations.stores.AnnotationStoreFactory;
+import io.annot8.common.implementations.context.SimpleContext;
 import io.annot8.components.monitor.resources.Logging;
 import io.annot8.core.components.Processor;
 import io.annot8.core.components.Resource;
@@ -19,11 +19,9 @@ import io.annot8.core.data.ItemFactory;
 import io.annot8.defaultimpl.content.SimpleFile;
 import io.annot8.defaultimpl.content.SimpleInputStream;
 import io.annot8.defaultimpl.content.SimpleText;
-import io.annot8.defaultimpl.context.SimpleContext;
 import io.annot8.defaultimpl.data.SimpleItem;
 import io.annot8.defaultimpl.factories.SimpleContentBuilderFactoryRegistry;
 import io.annot8.defaultimpl.factories.SimpleItemFactory;
-import io.annot8.defaultimpl.stores.SimpleAnnotationStore;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -47,11 +45,10 @@ public class EmlFileExtractorTest {
     try(
       Processor p = new EmlFileExtractor()
     ) {
-      AnnotationStoreFactory factory = SimpleAnnotationStore.factory();
       SimpleContentBuilderFactoryRegistry contentBuilderFactoryRegistry = new SimpleContentBuilderFactoryRegistry();
-      contentBuilderFactoryRegistry.register(Text.class, new SimpleText.BuilderFactory(factory));
-      contentBuilderFactoryRegistry.register(InputStreamContent.class, new SimpleInputStream.BuilderFactory(factory));
-      contentBuilderFactoryRegistry.register(FileContent.class, new SimpleFile.BuilderFactory(factory));
+      contentBuilderFactoryRegistry.register(Text.class, new SimpleText.BuilderFactory());
+      contentBuilderFactoryRegistry.register(InputStreamContent.class, new SimpleInputStream.BuilderFactory());
+      contentBuilderFactoryRegistry.register(FileContent.class, new SimpleFile.BuilderFactory());
 
       ItemFactory itemFactory = new SimpleItemFactory(contentBuilderFactoryRegistry, consumer);
 
