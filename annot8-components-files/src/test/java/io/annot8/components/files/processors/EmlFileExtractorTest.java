@@ -59,7 +59,7 @@ public class EmlFileExtractorTest {
       Map<String, Resource> resources = new HashMap<>();
       resources.put("logging", logging);
 
-      Context context = new SimpleContext(itemFactory, resources);
+      Context context = new SimpleContext( resources);
       p.configure(context);
 
       Item item = new SimpleItem(itemFactory, contentBuilderFactoryRegistry);

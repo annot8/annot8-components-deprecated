@@ -77,7 +77,7 @@ public class PropertyToTextTest {
     Map<String, Resource> resources = new HashMap<>();
     resources.put("logging", logging);
 
-    Context context = new SimpleContext(itemFactory, Arrays.asList(settings), resources);
+    Context context = new SimpleContext(Arrays.asList(settings), resources);
 
     try(Processor p = new PropertyToText()) {
 
