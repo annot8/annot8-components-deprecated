@@ -61,10 +61,10 @@ public class EpochTime extends AbstractRegex {
 
     if(settings.isMilliseconds()){
       builder.withProperty(PropertyKeys.PROPERTY_KEY_UNIT, "ms");
-      builder.withProperty(PropertyKeys.PROPERTY_KEY_REFERENCE, "1970-01-01T00:00:00.000");
+      builder.withProperty(PropertyKeys.PROPERTY_KEY_REFERENCE, "1970-01-01T00:00:00.000Z");
     }else{
       builder.withProperty(PropertyKeys.PROPERTY_KEY_UNIT, "s");
-      builder.withProperty(PropertyKeys.PROPERTY_KEY_REFERENCE, "1970-01-01T00:00:00");
+      builder.withProperty(PropertyKeys.PROPERTY_KEY_REFERENCE, "1970-01-01T00:00:00Z");
     }
   }
 

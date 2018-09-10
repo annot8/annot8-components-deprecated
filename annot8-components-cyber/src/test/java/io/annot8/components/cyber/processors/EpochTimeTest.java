@@ -51,7 +51,7 @@ public class EpochTimeTest {
       Assertions.assertEquals("1507725753567", a.getBounds().getData(content).get());
       Assertions.assertEquals(2, a.getProperties().getAll().size());
       Assertions.assertEquals("ms", a.getProperties().get(PropertyKeys.PROPERTY_KEY_UNIT).get());
-      Assertions.assertEquals("1970-01-01T00:00:00.000", a.getProperties().get(PropertyKeys.PROPERTY_KEY_REFERENCE).get());
+      Assertions.assertEquals("1970-01-01T00:00:00.000Z", a.getProperties().get(PropertyKeys.PROPERTY_KEY_REFERENCE).get());
     }
   }
 
@@ -85,7 +85,7 @@ public class EpochTimeTest {
       Assertions.assertEquals("1507725753", a.getBounds().getData(content).get());
       Assertions.assertEquals(2, a.getProperties().getAll().size());
       Assertions.assertEquals("s", a.getProperties().get(PropertyKeys.PROPERTY_KEY_UNIT).get());
-      Assertions.assertEquals("1970-01-01T00:00:00", a.getProperties().get(PropertyKeys.PROPERTY_KEY_REFERENCE).get());
+      Assertions.assertEquals("1970-01-01T00:00:00Z", a.getProperties().get(PropertyKeys.PROPERTY_KEY_REFERENCE).get());
     }
   }
 
