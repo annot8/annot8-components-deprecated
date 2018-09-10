@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 public class FileSystemSourceSettings implements Settings {
 
   private Path rootFolder = Paths.get(".");
+  private boolean watching = true;
   private boolean recursive = true;
   private boolean reprocessOnModify = true;
   private Set<Pattern> acceptedFileNamePatterns = new HashSet<>();
@@ -56,6 +57,14 @@ public class FileSystemSourceSettings implements Settings {
 
   public void addAcceptedFilePattern(Pattern acceptedFilePattern) {
     this.acceptedFileNamePatterns.add(acceptedFilePattern);
+  }
+
+  public boolean isWatching() {
+    return watching;
+  }
+
+  public void setWatching(boolean watching) {
+    this.watching = watching;
   }
 
   @Override
