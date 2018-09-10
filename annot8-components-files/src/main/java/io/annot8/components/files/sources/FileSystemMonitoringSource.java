@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 
-public class FileSystemWatchingSource extends AbstractFileSystemSource {
+public class FileSystemMonitoringSource extends AbstractFileSystemSource {
 
   private final WatchService watchService;
 
@@ -28,7 +28,7 @@ public class FileSystemWatchingSource extends AbstractFileSystemSource {
 
   private final Set<Path> initialFiles = new HashSet<>();
 
-  public FileSystemWatchingSource() {
+  public FileSystemMonitoringSource() {
     try {
       watchService = FileSystems.getDefault().newWatchService();
     } catch (IOException e) {
