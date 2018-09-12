@@ -16,11 +16,11 @@ import org.junit.jupiter.api.Assertions;
 
 public abstract class AbstractQuantityTest {
 
-  private final Class<? extends AbstractQuantityProcessor> clazz;
+  private final Class<? extends Processor> clazz;
   private final String type;
   private final String unit;
 
-  public AbstractQuantityTest(Class<? extends AbstractQuantityProcessor> clazz, String type, String unit){
+  public AbstractQuantityTest(Class<? extends Processor> clazz, String type, String unit){
     this.clazz = clazz;
     this.type = type;
     this.unit = unit;
