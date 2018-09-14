@@ -72,7 +72,7 @@ public class FileMetadataExtractorTest {
     assertNotNull(getKeyValue(annotations, FileMetadata.LAST_MODIFIED));
     assertNotNull(getKeyValue(annotations, FileMetadata.LAST_ACCESS_DATE));
     assertEquals( 60l, getKeyValue(annotations, FileMetadata.FILE_SIZE));
-    assertEquals("steventaylor", getKeyValue(annotations, FileMetadata.OWNER));
+    assertNotNull(getKeyValue(annotations, FileMetadata.OWNER));
     assertFalse((boolean) getKeyValue(annotations, FileMetadata.DIRECTORY));
     annotations.forEach(a -> assertEquals(FileMetadataExtractor.FILE_METADATA, a.getType()));
   }
