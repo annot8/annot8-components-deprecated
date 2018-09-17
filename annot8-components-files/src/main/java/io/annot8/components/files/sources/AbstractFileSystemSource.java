@@ -68,8 +68,6 @@ public abstract class AbstractFileSystemSource extends AbstractComponent impleme
           item.getProperties().set(PropertyKeys.PROPERTY_KEY_SOURCE, path);
           item.getProperties().set(PropertyKeys.PROPERTY_KEY_ACCESSEDAT, Instant.now().getEpochSecond());
 
-            System.out.println(path.toFile());
-
           item.create(FileContent.class)
               .withName("file")
               .withData(path.toFile())
@@ -77,6 +75,7 @@ public abstract class AbstractFileSystemSource extends AbstractComponent impleme
 
           return true;
         } catch (Annot8Exception e) {
+          log().error("Unable to create item, discarding", e);
           item.discard();
         }
       }
