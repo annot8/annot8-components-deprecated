@@ -10,12 +10,12 @@ import io.annot8.common.data.content.FileContent;
 import io.annot8.common.data.content.InputStreamContent;
 import io.annot8.common.data.content.Text;
 import io.annot8.common.implementations.context.SimpleContext;
+import io.annot8.common.implementations.factories.NotifyingItemFactory;
 import io.annot8.components.monitor.resources.Logging;
 import io.annot8.core.components.Processor;
 import io.annot8.core.components.Resource;
 import io.annot8.core.context.Context;
 import io.annot8.core.data.Item;
-import io.annot8.core.data.ItemFactory;
 import io.annot8.defaultimpl.data.DefaultItem;
 import io.annot8.defaultimpl.factories.DefaultContentBuilderFactoryRegistry;
 import io.annot8.defaultimpl.factories.DefaultItemFactory;
@@ -28,7 +28,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 import org.junit.jupiter.api.Test;
 
 public class EmlFileExtractorTest {
@@ -37,13 +36,13 @@ public class EmlFileExtractorTest {
   public void test() throws Exception{
 
     List<Item> newItems = new ArrayList<>();
-    Consumer<Item> consumer = newItems::add;
 
     try(
       Processor p = new EmlFileExtractor()
     ) {
       DefaultContentBuilderFactoryRegistry contentBuilderFactoryRegistry = new DefaultContentBuilderFactoryRegistry();
-      ItemFactory itemFactory = new DefaultItemFactory(contentBuilderFactoryRegistry, consumer);
+      NotifyingItemFactory itemFactory = new NotifyingItemFactory(new DefaultItemFactory(contentBuilderFactoryRegistry));
+      itemFactory.registerListener(newItems::add);
 
       Logging logging = Logging.useLoggerFactory();
       Map<String, Resource> resources = new HashMap<>();
