@@ -38,7 +38,7 @@ public class MassTest extends AbstractQuantityTest {
 
   @Test
   public void testLbs() throws Exception {
-    test("According to 3 sources, 4lb of explosive was carried across the border.", "4lb", 1.81437);
+    test("According to 3 processors, 4lb of explosive was carried across the border.", "4lb", 1.81437);
   }
 
   @Test
