@@ -17,7 +17,7 @@ import io.annot8.core.components.Resource;
 import io.annot8.core.context.Context;
 import io.annot8.core.data.Item;
 import io.annot8.testing.testimpl.TestItem;
-import io.annot8.testing.testimpl.TestItemFactory;
+import io.annot8.testing.testimpl.TestItemCreator;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -39,7 +39,7 @@ public class EmlFileExtractorTest {
     try(
       Processor p = new EmlFileExtractor()
     ) {
-      NotifyingItemFactory itemFactory = new NotifyingItemFactory(new TestItemFactory());
+      NotifyingItemFactory itemFactory = new NotifyingItemFactory(new TestItemCreator());
       itemFactory.registerListener(newItems::add);
 
       Logging logging = Logging.useLoggerFactory();
