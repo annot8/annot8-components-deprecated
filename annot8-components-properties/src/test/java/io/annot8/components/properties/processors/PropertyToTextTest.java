@@ -13,9 +13,7 @@ import io.annot8.core.data.ItemFactory;
 import io.annot8.core.exceptions.Annot8Exception;
 import io.annot8.core.settings.EmptySettings;
 import io.annot8.core.settings.Settings;
-import io.annot8.defaultimpl.data.DefaultItem;
-import io.annot8.defaultimpl.factories.DefaultContentBuilderFactoryRegistry;
-import io.annot8.defaultimpl.factories.DefaultItemFactory;
+import io.annot8.testing.testimpl.TestItemFactory;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -63,9 +61,7 @@ public class PropertyToTextTest {
   }
 
   private void doTest(Map<String, Object> properties, Settings settings) throws Annot8Exception{
-    DefaultContentBuilderFactoryRegistry contentBuilderFactoryRegistry = new DefaultContentBuilderFactoryRegistry();
-
-    ItemFactory itemFactory = new DefaultItemFactory(contentBuilderFactoryRegistry);
+    ItemFactory itemFactory = new TestItemFactory();
 
     Logging logging = Logging.useLoggerFactory();
     Map<String, Resource> resources = new HashMap<>();
@@ -77,7 +73,7 @@ public class PropertyToTextTest {
 
       p.configure(context);
 
-      Item item = new DefaultItem(itemFactory, contentBuilderFactoryRegistry);
+      Item item = itemFactory.create();
 
       item.getProperties().set(properties);
       assertEquals(0, item.getContents().count());

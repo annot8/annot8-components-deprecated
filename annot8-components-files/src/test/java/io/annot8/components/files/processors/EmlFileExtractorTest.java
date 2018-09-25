@@ -16,9 +16,8 @@ import io.annot8.core.components.Processor;
 import io.annot8.core.components.Resource;
 import io.annot8.core.context.Context;
 import io.annot8.core.data.Item;
-import io.annot8.defaultimpl.data.DefaultItem;
-import io.annot8.defaultimpl.factories.DefaultContentBuilderFactoryRegistry;
-import io.annot8.defaultimpl.factories.DefaultItemFactory;
+import io.annot8.testing.testimpl.TestItem;
+import io.annot8.testing.testimpl.TestItemFactory;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -40,8 +39,7 @@ public class EmlFileExtractorTest {
     try(
       Processor p = new EmlFileExtractor()
     ) {
-      DefaultContentBuilderFactoryRegistry contentBuilderFactoryRegistry = new DefaultContentBuilderFactoryRegistry();
-      NotifyingItemFactory itemFactory = new NotifyingItemFactory(new DefaultItemFactory(contentBuilderFactoryRegistry));
+      NotifyingItemFactory itemFactory = new NotifyingItemFactory(new TestItemFactory());
       itemFactory.registerListener(newItems::add);
 
       Logging logging = Logging.useLoggerFactory();
@@ -51,7 +49,7 @@ public class EmlFileExtractorTest {
       Context context = new SimpleContext( resources);
       p.configure(context);
 
-      Item item = new DefaultItem(itemFactory, contentBuilderFactoryRegistry);
+      Item item = new TestItem(itemFactory);
 
       URL resource = EmlFileExtractorTest.class.getResource("test_sample_message.eml");   //Based on https://www.phpclasses.org/browse/file/14672.html
       File f = Paths.get(resource.toURI()).toFile();
