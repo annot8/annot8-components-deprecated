@@ -1,7 +1,9 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.quantities.processors;
 
-import io.annot8.conventions.AnnotationTypes;
 import org.junit.jupiter.api.Test;
+
+import io.annot8.conventions.AnnotationTypes;
 
 public class VolumeTest extends AbstractQuantityTest {
 
@@ -9,10 +11,10 @@ public class VolumeTest extends AbstractQuantityTest {
     super(Volume.class, AnnotationTypes.ANNOTATION_TYPE_VOLUME, "m^3");
   }
 
-
   @Test
   public void testM3() throws Exception {
-    test("There was approximately 2 cubic metres of water in the container.", "2 cubic metres", 2.0);
+    test(
+        "There was approximately 2 cubic metres of water in the container.", "2 cubic metres", 2.0);
   }
 
   @Test
@@ -24,7 +26,7 @@ public class VolumeTest extends AbstractQuantityTest {
   @Test
   public void testL() throws Exception {
     test("A 20 litre bucket was found hidden in the bushes.", "20 litre", 0.02);
-    test("It contained 4.3l of petrol.","4.3l", 0.0043);
+    test("It contained 4.3l of petrol.", "4.3l", 0.0043);
   }
 
   @Test

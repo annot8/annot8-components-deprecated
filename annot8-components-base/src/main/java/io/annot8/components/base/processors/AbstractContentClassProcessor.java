@@ -1,3 +1,4 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.base.processors;
 
 import io.annot8.core.capabilities.Capabilities;
@@ -8,7 +9,8 @@ import io.annot8.core.exceptions.Annot8Exception;
 /**
  * A base class for building processors which act on a specific class of content
  *
- * This is likely to be the base class for many processors which will function and requrie on specific content types
+ * <p>This is likely to be the base class for many processors which will function and requrie on
+ * specific content types
  *
  * @param <T> the content class processed
  */
@@ -19,6 +21,7 @@ public abstract class AbstractContentClassProcessor<T extends Content<?>>
 
   /**
    * New instances
+   *
    * @param contentClazz the content to process
    */
   protected AbstractContentClassProcessor(final Class<T> contentClazz) {
@@ -38,6 +41,7 @@ public abstract class AbstractContentClassProcessor<T extends Content<?>>
 
   /**
    * Process the content
+   *
    * @param item the owning item
    * @param content the content to provess
    * @throws Annot8Exception

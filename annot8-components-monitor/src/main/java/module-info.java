@@ -5,5 +5,4 @@ module io.annot8.components.monitor {
 
   exports io.annot8.components.monitor.resources;
   exports io.annot8.components.monitor.resources.metering;
-
 }

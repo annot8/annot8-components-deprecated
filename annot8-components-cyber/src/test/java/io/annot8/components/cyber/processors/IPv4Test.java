@@ -1,4 +1,11 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.cyber.processors;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import io.annot8.common.data.content.Text;
 import io.annot8.conventions.AnnotationTypes;
@@ -12,26 +19,23 @@ import io.annot8.core.stores.AnnotationStore;
 import io.annot8.testing.testimpl.TestContext;
 import io.annot8.testing.testimpl.TestItem;
 import io.annot8.testing.testimpl.content.TestStringContent;
-import java.util.List;
-import java.util.stream.Collectors;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 public class IPv4Test {
 
   @Test
   public void testIPv4() throws Annot8Exception {
-    try(
-        Processor p = new IPv4()
-    ) {
+    try (Processor p = new IPv4()) {
       Item item = new TestItem();
       Context context = new TestContext();
 
       p.configure(context);
 
-//    Item item = new SimpleItem(itemFactory, contentBuilderFactoryRegistry);
-      Text content = item.create(TestStringContent.class).withName("test")
-          .withData("The attack came from 127.0.0.1").save();
+      //    Item item = new SimpleItem(itemFactory, contentBuilderFactoryRegistry);
+      Text content =
+          item.create(TestStringContent.class)
+              .withName("test")
+              .withData("The attack came from 127.0.0.1")
+              .save();
 
       p.process(item);
 

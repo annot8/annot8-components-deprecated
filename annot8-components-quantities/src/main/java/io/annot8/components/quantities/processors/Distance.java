@@ -1,7 +1,9 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.quantities.processors;
 
-import io.annot8.conventions.AnnotationTypes;
 import java.util.regex.Pattern;
+
+import io.annot8.conventions.AnnotationTypes;
 
 public class Distance extends AbstractQuantityProcessor {
 
@@ -9,7 +11,7 @@ public class Distance extends AbstractQuantityProcessor {
   private static final double YD_TO_M = 0.9144;
   private static final double FT_TO_M = 0.3048;
   private static final double IN_TO_M = 0.0254;
-  private static final double NM_TO_M = 1852.0; //Nautical miles
+  private static final double NM_TO_M = 1852.0; // Nautical miles
 
   private final Pattern kmPattern =
       Pattern.compile(

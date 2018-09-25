@@ -1,4 +1,10 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.files.processors;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.attribute.BasicFileAttributes;
 
 import io.annot8.common.data.bounds.NoBounds;
 import io.annot8.common.data.content.FileContent;
@@ -10,10 +16,6 @@ import io.annot8.core.data.Item;
 import io.annot8.core.exceptions.Annot8Exception;
 import io.annot8.core.exceptions.IncompleteException;
 import io.annot8.core.stores.AnnotationStore;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.attribute.BasicFileAttributes;
 
 @ProcessesContent(FileContent.class)
 public class FileMetadataExtractor extends AbstractComponent implements Processor {
@@ -22,21 +24,22 @@ public class FileMetadataExtractor extends AbstractComponent implements Processo
 
   @Override
   public ProcessorResponse process(Item item) throws Annot8Exception {
-    boolean withoutErrors = item.getContents(FileContent.class)
-                                        .map(this::extractMetadata)
-                                        .reduce(true, (a,b) -> a && b);
+    boolean withoutErrors =
+        item.getContents(FileContent.class)
+            .map(this::extractMetadata)
+            .reduce(true, (a, b) -> a && b);
 
-    if(!withoutErrors){
+    if (!withoutErrors) {
       return ProcessorResponse.itemError();
     }
 
     return ProcessorResponse.ok();
   }
 
-  private boolean extractMetadata(FileContent fileContent){
+  private boolean extractMetadata(FileContent fileContent) {
     File file = fileContent.getData();
 
-    if(!file.exists()){
+    if (!file.exists()) {
       return false;
     }
 
@@ -46,13 +49,13 @@ public class FileMetadataExtractor extends AbstractComponent implements Processo
     boolean isDir = false;
     boolean isSym = false;
     String owner = null;
-    try{
+    try {
       isHidden = Files.isHidden(file.toPath());
       isRegular = Files.isRegularFile(file.toPath());
       isDir = Files.isDirectory(file.toPath());
       isSym = Files.isSymbolicLink(file.toPath());
       owner = Files.getOwner(file.toPath()).getName();
-    }catch(IOException e){
+    } catch (IOException e) {
       log().error("Failed to retrieve file metadata", e);
       return false;
     }
@@ -64,10 +67,13 @@ public class FileMetadataExtractor extends AbstractComponent implements Processo
       return false;
     }
 
-    if(attr != null){
-      createMetadataAnnotation(fileContent, FileMetadata.DATE_CREATED, attr.creationTime().toMillis());
-      createMetadataAnnotation(fileContent, FileMetadata.LAST_MODIFIED, attr.lastModifiedTime().toMillis());
-      createMetadataAnnotation(fileContent, FileMetadata.LAST_ACCESS_DATE, attr.lastAccessTime().toMillis());
+    if (attr != null) {
+      createMetadataAnnotation(
+          fileContent, FileMetadata.DATE_CREATED, attr.creationTime().toMillis());
+      createMetadataAnnotation(
+          fileContent, FileMetadata.LAST_MODIFIED, attr.lastModifiedTime().toMillis());
+      createMetadataAnnotation(
+          fileContent, FileMetadata.LAST_ACCESS_DATE, attr.lastAccessTime().toMillis());
       createMetadataAnnotation(fileContent, FileMetadata.FILE_SIZE, attr.size());
     }
     createMetadataAnnotation(fileContent, FileMetadata.PATH, file.getAbsolutePath());
@@ -78,24 +84,29 @@ public class FileMetadataExtractor extends AbstractComponent implements Processo
     createMetadataAnnotation(fileContent, FileMetadata.OWNER, owner);
 
     String extension = getFileExtension(file);
-    if(extension != null){
+    if (extension != null) {
       createMetadataAnnotation(fileContent, FileMetadata.EXTENSION, extension);
     }
     return true;
   }
 
-  private String getFileExtension(File file){
+  private String getFileExtension(File file) {
     int index = file.getAbsolutePath().lastIndexOf('.');
-    if(index > 0 && index != file.getAbsolutePath().length()){
-      return file.getAbsolutePath().substring(index+1);
+    if (index > 0 && index != file.getAbsolutePath().length()) {
+      return file.getAbsolutePath().substring(index + 1);
     }
     return null;
   }
 
-  private void createMetadataAnnotation(FileContent content, String key, Object value){
+  private void createMetadataAnnotation(FileContent content, String key, Object value) {
     AnnotationStore annotations = content.getAnnotations();
     try {
-      annotations.create().withType(FILE_METADATA).withBounds(NoBounds.getInstance()).withProperty(key, value).save();
+      annotations
+          .create()
+          .withType(FILE_METADATA)
+          .withBounds(NoBounds.getInstance())
+          .withProperty(key, value)
+          .save();
     } catch (IncompleteException e) {
       log().error("Failed to create file metadata annotation", e);
     }

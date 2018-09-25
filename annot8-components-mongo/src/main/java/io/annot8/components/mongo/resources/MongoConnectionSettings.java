@@ -1,9 +1,12 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.mongo.resources;
 
-import com.google.common.base.Strings;
-import io.annot8.core.settings.Settings;
 import java.util.Optional;
 import java.util.stream.Stream;
+
+import com.google.common.base.Strings;
+
+import io.annot8.core.settings.Settings;
 
 public class MongoConnectionSettings implements Settings {
 
@@ -40,8 +43,10 @@ public class MongoConnectionSettings implements Settings {
   @Override
   public boolean validate() {
     return validateConnection()
-        && database != null && !database.isEmpty()
-        && collection != null && !collection.isEmpty();
+        && database != null
+        && !database.isEmpty()
+        && collection != null
+        && !collection.isEmpty();
   }
 
   public boolean validateConnection() {
@@ -49,39 +54,33 @@ public class MongoConnectionSettings implements Settings {
         && (connection.startsWith("mongodb://") || connection.startsWith("mongodb+srv://"));
   }
 
-
   public MongoConnectionSettings merge(Optional<MongoConnectionSettings> settings) {
-    if(settings.isPresent()){
+    if (settings.isPresent()) {
 
       MongoConnectionSettings s = settings.get();
 
-      if( validateConnection()  ) {
+      if (validateConnection()) {
         this.connection = s.getConnection();
       }
 
-      if( Strings.isNullOrEmpty(database) ) {
+      if (Strings.isNullOrEmpty(database)) {
         this.database = s.getDatabase();
       }
 
-      if( Strings.isNullOrEmpty(collection) ) {
+      if (Strings.isNullOrEmpty(collection)) {
         this.collection = s.getCollection();
       }
-
     }
 
     return this;
   }
 
-
   public static MongoConnectionSettings merge(Optional<MongoConnectionSettings>... settings) {
 
     MongoConnectionSettings s = new MongoConnectionSettings();
 
-    Stream.of(settings)
-        .forEach(s::merge);
+    Stream.of(settings).forEach(s::merge);
 
     return s;
   }
-
-
 }

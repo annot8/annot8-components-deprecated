@@ -1,3 +1,4 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.base.processors;
 
 import io.annot8.components.base.components.AbstractComponent;
@@ -5,14 +6,11 @@ import io.annot8.core.components.Processor;
 import io.annot8.core.components.responses.ProcessorResponse;
 import io.annot8.core.data.Item;
 
-/**
- * Base class to simplify selectively processing itmem
- */
+/** Base class to simplify selectively processing itmem */
 public abstract class AbstractItemProcessor extends AbstractComponent implements Processor {
 
   @Override
   public final ProcessorResponse process(final Item item) {
-
 
     try {
       metrics().counter("process.called").increment();
@@ -52,5 +50,4 @@ public abstract class AbstractItemProcessor extends AbstractComponent implements
    * @return false if the item should be discarded from the pipeline
    */
   protected abstract boolean processItem(final Item item);
-
 }

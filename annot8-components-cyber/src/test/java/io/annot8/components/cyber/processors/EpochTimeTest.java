@@ -1,4 +1,12 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.cyber.processors;
+
+import java.time.Instant;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import io.annot8.common.data.content.Text;
 import io.annot8.components.cyber.processors.EpochTime.EpochTimeSettings;
@@ -13,19 +21,12 @@ import io.annot8.core.stores.AnnotationStore;
 import io.annot8.testing.testimpl.TestContext;
 import io.annot8.testing.testimpl.TestItem;
 import io.annot8.testing.testimpl.content.TestStringContent;
-import java.time.Instant;
-import java.util.List;
-import java.util.stream.Collectors;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 public class EpochTimeTest {
 
   @Test
   public void testMillis() throws Annot8Exception {
-    try(
-        Processor p = new EpochTime()
-    ) {
+    try (Processor p = new EpochTime()) {
       Item item = new TestItem();
 
       EpochTimeSettings settings = new EpochTimeSettings();
@@ -35,8 +36,11 @@ public class EpochTimeTest {
 
       p.configure(context);
 
-      Text content = item.create(TestStringContent.class).withName("test")
-          .withData("It happened at 1507725753567").save();
+      Text content =
+          item.create(TestStringContent.class)
+              .withName("test")
+              .withData("It happened at 1507725753567")
+              .save();
 
       p.process(item);
 
@@ -51,15 +55,15 @@ public class EpochTimeTest {
       Assertions.assertEquals("1507725753567", a.getBounds().getData(content).get());
       Assertions.assertEquals(2, a.getProperties().getAll().size());
       Assertions.assertEquals("ms", a.getProperties().get(PropertyKeys.PROPERTY_KEY_UNIT).get());
-      Assertions.assertEquals("1970-01-01T00:00:00.000Z", a.getProperties().get(PropertyKeys.PROPERTY_KEY_REFERENCE).get());
+      Assertions.assertEquals(
+          "1970-01-01T00:00:00.000Z",
+          a.getProperties().get(PropertyKeys.PROPERTY_KEY_REFERENCE).get());
     }
   }
 
   @Test
   public void testSeconds() throws Annot8Exception {
-    try(
-        Processor p = new EpochTime()
-    ) {
+    try (Processor p = new EpochTime()) {
       Item item = new TestItem();
 
       EpochTimeSettings settings = new EpochTimeSettings();
@@ -69,8 +73,11 @@ public class EpochTimeTest {
 
       p.configure(context);
 
-      Text content = item.create(TestStringContent.class).withName("test")
-          .withData("It happened at 1507725753").save();
+      Text content =
+          item.create(TestStringContent.class)
+              .withName("test")
+              .withData("It happened at 1507725753")
+              .save();
 
       p.process(item);
 
@@ -85,15 +92,14 @@ public class EpochTimeTest {
       Assertions.assertEquals("1507725753", a.getBounds().getData(content).get());
       Assertions.assertEquals(2, a.getProperties().getAll().size());
       Assertions.assertEquals("s", a.getProperties().get(PropertyKeys.PROPERTY_KEY_UNIT).get());
-      Assertions.assertEquals("1970-01-01T00:00:00Z", a.getProperties().get(PropertyKeys.PROPERTY_KEY_REFERENCE).get());
+      Assertions.assertEquals(
+          "1970-01-01T00:00:00Z", a.getProperties().get(PropertyKeys.PROPERTY_KEY_REFERENCE).get());
     }
   }
 
   @Test
   public void testEarliest() throws Annot8Exception {
-    try(
-        Processor p = new EpochTime()
-    ) {
+    try (Processor p = new EpochTime()) {
       Item item = new TestItem();
 
       EpochTimeSettings settings = new EpochTimeSettings();
@@ -104,8 +110,11 @@ public class EpochTimeTest {
 
       p.configure(context);
 
-      Text content = item.create(TestStringContent.class).withName("test")
-          .withData("It happened at 1507725753").save();
+      Text content =
+          item.create(TestStringContent.class)
+              .withName("test")
+              .withData("It happened at 1507725753")
+              .save();
 
       p.process(item);
 
@@ -118,9 +127,7 @@ public class EpochTimeTest {
 
   @Test
   public void testLatest() throws Annot8Exception {
-    try(
-        Processor p = new EpochTime()
-    ) {
+    try (Processor p = new EpochTime()) {
       Item item = new TestItem();
 
       EpochTimeSettings settings = new EpochTimeSettings();
@@ -131,8 +138,11 @@ public class EpochTimeTest {
 
       p.configure(context);
 
-      Text content = item.create(TestStringContent.class).withName("test")
-          .withData("It happened at 1507725753").save();
+      Text content =
+          item.create(TestStringContent.class)
+              .withName("test")
+              .withData("It happened at 1507725753")
+              .save();
 
       p.process(item);
 

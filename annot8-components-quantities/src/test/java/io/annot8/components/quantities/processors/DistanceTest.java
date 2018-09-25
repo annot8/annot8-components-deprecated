@@ -1,7 +1,9 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.quantities.processors;
 
-import io.annot8.conventions.AnnotationTypes;
 import org.junit.jupiter.api.Test;
+
+import io.annot8.conventions.AnnotationTypes;
 
 public class DistanceTest extends AbstractQuantityTest {
 
@@ -10,9 +12,7 @@ public class DistanceTest extends AbstractQuantityTest {
   }
 
   @Test
-  public void testM(){
-    
-  }
+  public void testM() {}
 
   // Kilometres
   @Test

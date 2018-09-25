@@ -1,8 +1,11 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.base.processors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
 import io.annot8.core.components.responses.ProcessorResponse;
 import io.annot8.core.components.responses.ProcessorResponse.Status;
 import io.annot8.core.data.Item;
@@ -32,7 +35,6 @@ public class AbstractFilterTest {
     protected boolean filter(Item item) {
       return true;
     }
-
   }
 
   private class FilterError extends AbstractFilter {
@@ -41,7 +43,5 @@ public class AbstractFilterTest {
     protected boolean filter(Item item) {
       throw new Annot8RuntimeException("Test should throw this error");
     }
-
   }
-
 }

@@ -1,24 +1,25 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.base.processors;
 
+import java.util.regex.Pattern;
 
 import com.google.common.base.Strings;
+
 import io.annot8.components.base.processors.Regex.RegexSettings;
 import io.annot8.core.context.Context;
 import io.annot8.core.exceptions.BadConfigurationException;
 import io.annot8.core.exceptions.MissingResourceException;
 import io.annot8.core.settings.Settings;
 import io.annot8.core.settings.SettingsClass;
-import java.util.regex.Pattern;
 
-/**
- * Base class for regex annotators
- */
+/** Base class for regex annotators */
 @SettingsClass(RegexSettings.class)
-public class Regex extends
-    AbstractRegex{  //TODO: Are there functions in AbstractTextProcessor we ought to be implementing?
+public class Regex
+    extends AbstractRegex { // TODO: Are there functions in AbstractTextProcessor we ought to be
+  // implementing?
 
   public Regex() {
-    //Do nothing
+    // Do nothing
   }
 
   public Regex(Pattern pattern, int group, String type) {
@@ -32,9 +33,12 @@ public class Regex extends
       throws BadConfigurationException, MissingResourceException {
     super.configure(context);
 
-    RegexSettings settings = context.getSettings(RegexSettings.class).orElseThrow(() -> new BadConfigurationException("Regex settings are required"));
+    RegexSettings settings =
+        context
+            .getSettings(RegexSettings.class)
+            .orElseThrow(() -> new BadConfigurationException("Regex settings are required"));
 
-    if(!settings.validate()) {
+    if (!settings.validate()) {
       throw new BadConfigurationException("Regex settings are invalid");
     }
 
@@ -42,7 +46,6 @@ public class Regex extends
     this.group = settings.getGroup();
     this.type = settings.getType();
   }
-
 
   public static class RegexSettings implements Settings {
 

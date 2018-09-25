@@ -1,3 +1,4 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.print.processors;
 
 import io.annot8.components.base.components.AbstractComponent;
@@ -23,7 +24,6 @@ public class PrintItem extends AbstractComponent implements Processor {
     return ProcessorResponse.ok();
   }
 
-
   private void print(Content<?> content) {
     println(content.getName(), 1);
     println("Properties:", 1);
@@ -33,10 +33,10 @@ public class PrintItem extends AbstractComponent implements Processor {
   }
 
   private void print(Properties properties, int indent) {
-    properties.getAll()
+    properties
+        .getAll()
         .forEach((key, value) -> println(String.format("%s: %s", key, value), indent));
   }
-
 
   private void print(AnnotationStore annotations, int indent) {
     annotations.getAll().forEach(a -> print(a, indent));
@@ -45,7 +45,6 @@ public class PrintItem extends AbstractComponent implements Processor {
   private void print(Annotation annotation, int indent) {
     println(annotation.toString(), indent);
   }
-
 
   private void println(String s, int indent) {
     StringBuilder sb = new StringBuilder();
@@ -56,5 +55,4 @@ public class PrintItem extends AbstractComponent implements Processor {
 
     System.out.println(sb.toString());
   }
-
 }

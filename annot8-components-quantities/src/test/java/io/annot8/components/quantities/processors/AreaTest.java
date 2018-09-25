@@ -1,11 +1,13 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.quantities.processors;
 
-import io.annot8.conventions.AnnotationTypes;
 import org.junit.jupiter.api.Test;
 
-public class AreaTest extends AbstractQuantityTest{
+import io.annot8.conventions.AnnotationTypes;
 
-  public AreaTest(){
+public class AreaTest extends AbstractQuantityTest {
+
+  public AreaTest() {
     super(Area.class, AnnotationTypes.ANNOTATION_TYPE_AREA, "m^2");
   }
 
@@ -66,5 +68,4 @@ public class AreaTest extends AbstractQuantityTest{
   public void testHectare() throws Exception {
     test("The field measured 400 hectares", "400 hectares", 4000000.0);
   }
-
 }

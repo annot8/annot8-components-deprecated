@@ -1,10 +1,12 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.monitor.resources;
 
-import io.annot8.core.components.Resource;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.NOPLoggerFactory;
+
+import io.annot8.core.components.Resource;
 
 public final class Logging implements Resource {
 

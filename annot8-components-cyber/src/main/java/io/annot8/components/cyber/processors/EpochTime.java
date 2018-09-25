@@ -1,4 +1,9 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.cyber.processors;
+
+import java.time.Instant;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import io.annot8.components.base.processors.AbstractRegex;
 import io.annot8.components.cyber.processors.EpochTime.EpochTimeSettings;
@@ -10,9 +15,6 @@ import io.annot8.core.exceptions.BadConfigurationException;
 import io.annot8.core.exceptions.MissingResourceException;
 import io.annot8.core.settings.Settings;
 import io.annot8.core.settings.SettingsClass;
-import java.time.Instant;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @SettingsClass(EpochTimeSettings.class)
 public class EpochTime extends AbstractRegex {
@@ -23,16 +25,15 @@ public class EpochTime extends AbstractRegex {
     super(
         Pattern.compile("\\b\\d+\\b", Pattern.CASE_INSENSITIVE),
         0,
-        AnnotationTypes.ANNOTATION_TYPE_TIMESTAMP
-    );
+        AnnotationTypes.ANNOTATION_TYPE_TIMESTAMP);
   }
 
   @Override
-  public void configure(Context context) throws BadConfigurationException, MissingResourceException {
+  public void configure(Context context)
+      throws BadConfigurationException, MissingResourceException {
     super.configure(context);
 
-    settings = context.getSettings(EpochTimeSettings.class)
-        .orElseGet(EpochTimeSettings::new);
+    settings = context.getSettings(EpochTimeSettings.class).orElseGet(EpochTimeSettings::new);
   }
 
   @Override
@@ -45,30 +46,29 @@ public class EpochTime extends AbstractRegex {
     }
 
     Instant i;
-    if(settings.isMilliseconds()){
+    if (settings.isMilliseconds()) {
       i = Instant.ofEpochMilli(l);
-    }else{
+    } else {
       i = Instant.ofEpochSecond(l);
     }
 
-    return
-        (i.isAfter(settings.getEarliestTimestamp()) || i.equals(settings.getEarliestTimestamp())) &&
-        (i.isBefore(settings.getLatestTimestamp()) || i.equals(settings.getLatestTimestamp()));
+    return (i.isAfter(settings.getEarliestTimestamp()) || i.equals(settings.getEarliestTimestamp()))
+        && (i.isBefore(settings.getLatestTimestamp()) || i.equals(settings.getLatestTimestamp()));
   }
 
   @Override
   protected void addProperties(Builder builder) {
 
-    if(settings.isMilliseconds()){
+    if (settings.isMilliseconds()) {
       builder.withProperty(PropertyKeys.PROPERTY_KEY_UNIT, "ms");
       builder.withProperty(PropertyKeys.PROPERTY_KEY_REFERENCE, "1970-01-01T00:00:00.000Z");
-    }else{
+    } else {
       builder.withProperty(PropertyKeys.PROPERTY_KEY_UNIT, "s");
       builder.withProperty(PropertyKeys.PROPERTY_KEY_REFERENCE, "1970-01-01T00:00:00Z");
     }
   }
 
-  public static class EpochTimeSettings implements Settings{
+  public static class EpochTimeSettings implements Settings {
 
     private Instant earliestTimestamp = Instant.MIN;
     private Instant latestTimestamp = Instant.MAX;
@@ -76,7 +76,8 @@ public class EpochTime extends AbstractRegex {
 
     @Override
     public boolean validate() {
-      return earliestTimestamp.isBefore(latestTimestamp) || earliestTimestamp.equals(latestTimestamp);
+      return earliestTimestamp.isBefore(latestTimestamp)
+          || earliestTimestamp.equals(latestTimestamp);
     }
 
     public Instant getEarliestTimestamp() {
@@ -95,13 +96,12 @@ public class EpochTime extends AbstractRegex {
       this.latestTimestamp = latestTimestamp;
     }
 
-    public boolean isMilliseconds(){
+    public boolean isMilliseconds() {
       return milliseconds;
     }
 
-    public void setMilliseconds(boolean milliseconds){
+    public void setMilliseconds(boolean milliseconds) {
       this.milliseconds = milliseconds;
     }
-
   }
 }

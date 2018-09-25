@@ -1,8 +1,7 @@
-module io.annot8.components.mongo{
+module io.annot8.components.mongo {
   requires io.annot8.common.data;
   requires io.annot8.components.base;
   requires io.annot8.conventions;
-  
   requires transitive mongo.java.driver;
   requires com.google.common;
 

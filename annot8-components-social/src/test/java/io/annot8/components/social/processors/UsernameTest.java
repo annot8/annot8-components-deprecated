@@ -1,6 +1,12 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.social.processors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.junit.jupiter.api.Test;
 
 import io.annot8.common.data.content.Text;
 import io.annot8.conventions.AnnotationTypes;
@@ -13,9 +19,6 @@ import io.annot8.core.stores.AnnotationStore;
 import io.annot8.testing.testimpl.TestContext;
 import io.annot8.testing.testimpl.TestItem;
 import io.annot8.testing.testimpl.content.TestStringContent;
-import java.util.List;
-import java.util.stream.Collectors;
-import org.junit.jupiter.api.Test;
 
 public class UsernameTest {
 
@@ -23,20 +26,24 @@ public class UsernameTest {
   public void testUsername() throws Annot8Exception {
     Processor p = new Username();
 
-    //TODO: These should be replaced by Test* rather than using Simple*
-    //TODO: Provide some abstract test base classes that provide this common functionality
-//    SimpleContentBuilderFactoryRegistry contentBuilderFactoryRegistry = new SimpleContentBuilderFactoryRegistry();
-//    contentBuilderFactoryRegistry.register(Text.class, new SimpleText.BuilderFactory());
-//    ItemFactory itemFactory = new SimpleItemFactory(contentBuilderFactoryRegistry);
-//    Context context = new SimpleContext(itemFactory, EmptySettings.getInstance());
+    // TODO: These should be replaced by Test* rather than using Simple*
+    // TODO: Provide some abstract test base classes that provide this common functionality
+    //    SimpleContentBuilderFactoryRegistry contentBuilderFactoryRegistry = new
+    // SimpleContentBuilderFactoryRegistry();
+    //    contentBuilderFactoryRegistry.register(Text.class, new SimpleText.BuilderFactory());
+    //    ItemFactory itemFactory = new SimpleItemFactory(contentBuilderFactoryRegistry);
+    //    Context context = new SimpleContext(itemFactory, EmptySettings.getInstance());
 
     Item item = new TestItem();
     Context context = new TestContext();
 
     p.configure(context);
 
-    Text content = item.create(TestStringContent.class).withName("test")
-        .withData("@my-username logged in").save();
+    Text content =
+        item.create(TestStringContent.class)
+            .withName("test")
+            .withData("@my-username logged in")
+            .save();
 
     p.process(item);
 

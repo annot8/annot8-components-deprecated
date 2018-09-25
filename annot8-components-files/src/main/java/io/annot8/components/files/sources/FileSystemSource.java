@@ -1,11 +1,8 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.files.sources;
 
-import io.annot8.core.components.responses.SourceResponse;
-import io.annot8.core.context.Context;
-import io.annot8.core.data.ItemFactory;
-import io.annot8.core.exceptions.Annot8RuntimeException;
-import io.annot8.core.exceptions.BadConfigurationException;
-import io.annot8.core.exceptions.MissingResourceException;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,8 +13,12 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
-import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
+import io.annot8.core.components.responses.SourceResponse;
+import io.annot8.core.context.Context;
+import io.annot8.core.data.ItemFactory;
+import io.annot8.core.exceptions.Annot8RuntimeException;
+import io.annot8.core.exceptions.BadConfigurationException;
+import io.annot8.core.exceptions.MissingResourceException;
 
 public class FileSystemSource extends AbstractFileSystemSource {
 
@@ -36,10 +37,11 @@ public class FileSystemSource extends AbstractFileSystemSource {
   }
 
   @Override
-  public void configure(final Context context) throws BadConfigurationException, MissingResourceException {
+  public void configure(final Context context)
+      throws BadConfigurationException, MissingResourceException {
     super.configure(context);
 
-    //Unregister existing watchers
+    // Unregister existing watchers
     watchKeys.forEach(WatchKey::cancel);
     watchKeys.clear();
 
@@ -115,12 +117,11 @@ public class FileSystemSource extends AbstractFileSystemSource {
       initialFiles.forEach(path -> createItem(itemFactory, path));
       initialFiles.clear();
 
-      if(!getSettings().isWatching()){
+      if (!getSettings().isWatching()) {
         watchKeys.forEach(WatchKey::cancel);
         watchKeys.clear();
         return SourceResponse.done();
       }
-
     }
 
     boolean read = false;
@@ -141,5 +142,4 @@ public class FileSystemSource extends AbstractFileSystemSource {
 
     return SourceResponse.empty();
   }
-
 }

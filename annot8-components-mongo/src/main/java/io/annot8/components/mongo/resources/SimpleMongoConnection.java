@@ -1,17 +1,11 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.mongo.resources;
+
+import org.bson.Document;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import io.annot8.components.base.components.AbstractResource;
-import io.annot8.core.capabilities.UsesResource;
-import io.annot8.core.components.Resource;
-import io.annot8.core.context.Context;
-import io.annot8.core.exceptions.BadConfigurationException;
-import io.annot8.core.exceptions.MissingResourceException;
-import io.annot8.core.settings.SettingsClass;
-import java.util.Optional;
-import org.bson.Document;
 
 public class SimpleMongoConnection implements MongoConnection {
 
@@ -19,7 +13,8 @@ public class SimpleMongoConnection implements MongoConnection {
   private MongoDatabase database;
   private MongoCollection<Document> collection;
 
-  public SimpleMongoConnection(MongoClient client, MongoDatabase database, MongoCollection<Document> collection) {
+  public SimpleMongoConnection(
+      MongoClient client, MongoDatabase database, MongoCollection<Document> collection) {
     this.client = client;
     this.database = database;
     this.collection = collection;
@@ -38,7 +33,7 @@ public class SimpleMongoConnection implements MongoConnection {
   }
 
   public void disconnect() {
-    if(client != null) {
+    if (client != null) {
       client.close();
     }
   }

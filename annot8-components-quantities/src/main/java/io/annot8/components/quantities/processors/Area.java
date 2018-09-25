@@ -1,7 +1,9 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.quantities.processors;
 
-import io.annot8.conventions.AnnotationTypes;
 import java.util.regex.Pattern;
+
+import io.annot8.conventions.AnnotationTypes;
 
 public class Area extends AbstractQuantityProcessor {
 

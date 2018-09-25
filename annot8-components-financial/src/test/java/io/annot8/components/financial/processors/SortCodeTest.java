@@ -1,4 +1,11 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.financial.processors;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import io.annot8.common.data.content.Text;
 import io.annot8.conventions.AnnotationTypes;
@@ -14,10 +21,6 @@ import io.annot8.core.stores.AnnotationStore;
 import io.annot8.testing.testimpl.TestContext;
 import io.annot8.testing.testimpl.TestItem;
 import io.annot8.testing.testimpl.content.TestStringContent;
-import java.util.List;
-import java.util.stream.Collectors;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 public class SortCodeTest {
   @Test
@@ -28,16 +31,17 @@ public class SortCodeTest {
 
   @Test
   public void testSortCode() throws Annot8Exception {
-    try(
-        Processor p = new SortCode()
-    ) {
+    try (Processor p = new SortCode()) {
       Item item = new TestItem();
       Context context = new TestContext();
 
       p.configure(context);
 
-      Text content = item.create(TestStringContent.class).withName("test")
-          .withData("The sort code was 77-49-09").save();
+      Text content =
+          item.create(TestStringContent.class)
+              .withName("test")
+              .withData("The sort code was 77-49-09")
+              .save();
 
       p.process(item);
 
@@ -51,7 +55,8 @@ public class SortCodeTest {
       Assertions.assertEquals(content.getId(), a.getContentId());
       Assertions.assertEquals("77-49-09", a.getBounds().getData(content).get());
       Assertions.assertEquals(1, a.getProperties().getAll().size());
-      Assertions.assertEquals("774909", a.getProperties().get(PropertyKeys.PROPERTY_KEY_BRANCHCODE).get());
+      Assertions.assertEquals(
+          "774909", a.getProperties().get(PropertyKeys.PROPERTY_KEY_BRANCHCODE).get());
     }
   }
 }

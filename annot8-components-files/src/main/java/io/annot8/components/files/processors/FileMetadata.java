@@ -1,3 +1,4 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.files.processors;
 
 public class FileMetadata {
@@ -13,5 +14,4 @@ public class FileMetadata {
   public static final String FILE_SIZE = "FILE_SIZE";
   public static final String OWNER = "OWNER";
   public static final String DIRECTORY = "DIRECTORY";
-
 }

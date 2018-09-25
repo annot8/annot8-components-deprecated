@@ -1,6 +1,15 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.properties.processors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.junit.jupiter.api.Test;
 
 import io.annot8.common.implementations.context.SimpleContext;
 import io.annot8.components.monitor.resources.Logging;
@@ -13,12 +22,6 @@ import io.annot8.core.exceptions.Annot8Exception;
 import io.annot8.core.settings.EmptySettings;
 import io.annot8.core.settings.Settings;
 import io.annot8.testing.testimpl.TestItem;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-import org.junit.jupiter.api.Test;
 
 public class PropertyToTextTest {
 
@@ -59,7 +62,7 @@ public class PropertyToTextTest {
     doTest(properties, settings);
   }
 
-  private void doTest(Map<String, Object> properties, Settings settings) throws Annot8Exception{
+  private void doTest(Map<String, Object> properties, Settings settings) throws Annot8Exception {
 
     Logging logging = Logging.useLoggerFactory();
     Map<String, Resource> resources = new HashMap<>();
@@ -67,7 +70,7 @@ public class PropertyToTextTest {
 
     Context context = new SimpleContext(Arrays.asList(settings), resources);
 
-    try(Processor p = new PropertyToText()) {
+    try (Processor p = new PropertyToText()) {
 
       p.configure(context);
 
@@ -79,15 +82,15 @@ public class PropertyToTextTest {
       p.process(item);
 
       AtomicInteger count = new AtomicInteger();
-      item.getContents().forEach(c -> {
-            count.getAndIncrement();
-            assertEquals(EXPECTED_KEY, c.getName());
-            assertEquals(EXPECTED_VALUE, c.getData());
-          }
-      );
+      item.getContents()
+          .forEach(
+              c -> {
+                count.getAndIncrement();
+                assertEquals(EXPECTED_KEY, c.getName());
+                assertEquals(EXPECTED_VALUE, c.getData());
+              });
 
       assertEquals(1, count.get());
-
     }
   }
 }

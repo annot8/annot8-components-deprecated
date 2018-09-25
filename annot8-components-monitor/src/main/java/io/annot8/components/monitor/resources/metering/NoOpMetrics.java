@@ -1,3 +1,4 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.monitor.resources.metering;
 
 import io.micrometer.core.instrument.MeterRegistry;
@@ -6,7 +7,8 @@ import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 /**
  * Metrics which can be used whatever is configured, but which don't do anything.
  *
- * We use a real meter registry as otherwise we'd have to 'mock' out all the different meter types.
+ * <p>We use a real meter registry as otherwise we'd have to 'mock' out all the different meter
+ * types.
  */
 public final class NoOpMetrics {
 

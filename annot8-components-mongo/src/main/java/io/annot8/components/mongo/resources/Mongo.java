@@ -1,14 +1,18 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.mongo.resources;
+
+import java.util.Optional;
+
+import org.bson.Document;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+
 import io.annot8.components.base.components.AbstractResource;
 import io.annot8.core.context.Context;
 import io.annot8.core.exceptions.BadConfigurationException;
 import io.annot8.core.exceptions.MissingResourceException;
-import java.util.Optional;
-import org.bson.Document;
 
 public class Mongo extends AbstractResource implements MongoConnection {
 
@@ -26,13 +30,14 @@ public class Mongo extends AbstractResource implements MongoConnection {
       throw new MissingResourceException("MongoFactory is required");
     }
 
-    Optional<MongoConnectionSettings> mongoSettings = context
-        .getSettings(MongoConnectionSettings.class);
+    Optional<MongoConnectionSettings> mongoSettings =
+        context.getSettings(MongoConnectionSettings.class);
     if (!mongoSettings.isPresent()) {
       throw new BadConfigurationException("MongoConnectionSettings are required");
     }
 
-    MongoConnectionSettings mergedSettings = mongoFactory.get().mergeWithDefaultSettings(mongoSettings);
+    MongoConnectionSettings mergedSettings =
+        mongoFactory.get().mergeWithDefaultSettings(mongoSettings);
 
     if (!mergedSettings.validate()) {
       throw new BadConfigurationException("MongoConnectionSettings are incomplete");
@@ -42,7 +47,6 @@ public class Mongo extends AbstractResource implements MongoConnection {
     database = client.getDatabase(mergedSettings.getDatabase());
     collection = database.getCollection(mergedSettings.getCollection());
   }
-
 
   public MongoDatabase getDatabase() {
     return database;
@@ -59,7 +63,7 @@ public class Mongo extends AbstractResource implements MongoConnection {
 
   @Override
   public void close() {
-    if(client != null) {
+    if (client != null) {
       client.close();
     }
   }

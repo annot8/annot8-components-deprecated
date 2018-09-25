@@ -1,6 +1,10 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.mongo;
 
+import java.util.Optional;
+
 import com.google.common.base.Strings;
+
 import io.annot8.components.base.components.AbstractComponent;
 import io.annot8.components.mongo.resources.Mongo;
 import io.annot8.components.mongo.resources.MongoConnection;
@@ -12,18 +16,17 @@ import io.annot8.core.context.Context;
 import io.annot8.core.exceptions.BadConfigurationException;
 import io.annot8.core.exceptions.MissingResourceException;
 import io.annot8.core.settings.SettingsClass;
-import java.util.Optional;
 
 /**
  * Base class for Mongo components which simplifies configuration
  *
- * This can be configured to use a named or unnamed Mongo resource (see {@link MongoSettings}},
+ * <p>This can be configured to use a named or unnamed Mongo resource (see {@link MongoSettings}},
  * or use settings (see {@link MongoConnectionSettings}).
  *
- * Implement configure(context, connection) to set up using the best connection.
+ * <p>Implement configure(context, connection) to set up using the best connection.
  */
-@SettingsClass(value= MongoSettings.class, optional = true)
-@SettingsClass(value=MongoConnectionSettings.class, optional = true)
+@SettingsClass(value = MongoSettings.class, optional = true)
+@SettingsClass(value = MongoConnectionSettings.class, optional = true)
 @UsesResource(value = Mongo.class, optional = true)
 @UsesResource(value = MongoFactory.class, optional = true)
 public abstract class AbstractMongoComponent extends AbstractComponent {
@@ -31,40 +34,42 @@ public abstract class AbstractMongoComponent extends AbstractComponent {
   private MongoConnection connection = null;
 
   @Override
-  public void configure(Context context) throws BadConfigurationException, MissingResourceException {
+  public void configure(Context context)
+      throws BadConfigurationException, MissingResourceException {
     super.configure(context);
 
     Optional<MongoSettings> optionalMongoResource = context.getSettings(MongoSettings.class);
-    Optional<MongoConnectionSettings> optionalMongoConnection = context.getSettings(MongoConnectionSettings.class);
+    Optional<MongoConnectionSettings> optionalMongoConnection =
+        context.getSettings(MongoConnectionSettings.class);
 
-    if(optionalMongoResource.isPresent() && !Strings.isNullOrEmpty(optionalMongoResource.get().getMongo())) {
+    if (optionalMongoResource.isPresent()
+        && !Strings.isNullOrEmpty(optionalMongoResource.get().getMongo())) {
       // Use the resource first
 
       String key = optionalMongoResource.get().getMongo();
       Optional<Mongo> optionalConnection = context.getResource(key, Mongo.class);
 
-      if(!optionalConnection.isPresent()) {
+      if (!optionalConnection.isPresent()) {
         throw new MissingResourceException(String.format("Named Mongo {} is missing", key));
       }
 
       connection = optionalConnection.get();
 
-    } else if(optionalMongoConnection.isPresent()) {
+    } else if (optionalMongoConnection.isPresent()) {
       // Create a new connection
 
       Optional<MongoFactory> mongoFactory = context.getResource(MongoFactory.class);
 
-      if(!mongoFactory.isPresent()) {
+      if (!mongoFactory.isPresent()) {
         throw new MissingResourceException("Missing MongoFactory needed for Mongo connection");
       }
 
-      MongoConnectionSettings mergedSettings = mongoFactory.get()
-          .mergeWithDefaultSettings(optionalMongoConnection);
-      Optional<MongoConnection> optionalConnection = mongoFactory.get()
-          .buildMongo(Optional.of(mergedSettings));
+      MongoConnectionSettings mergedSettings =
+          mongoFactory.get().mergeWithDefaultSettings(optionalMongoConnection);
+      Optional<MongoConnection> optionalConnection =
+          mongoFactory.get().buildMongo(Optional.of(mergedSettings));
 
-
-      if(!optionalConnection.isPresent()) {
+      if (!optionalConnection.isPresent()) {
         throw new BadConfigurationException("Unable to create Mongo connection from settings");
       }
 
@@ -73,15 +78,14 @@ public abstract class AbstractMongoComponent extends AbstractComponent {
       // Fall back to default Mongo
       Optional<Mongo> optionalConnection = context.getResource(Mongo.class);
 
-      if(!optionalConnection.isPresent()) {
+      if (!optionalConnection.isPresent()) {
         throw new MissingResourceException("No Mongo resource available");
       }
 
       connection = optionalConnection.get();
     }
 
-
-    if(connection != null) {
+    if (connection != null) {
       configure(context, connection);
     } else {
       log().error("Unable to create connection to Mongo");
@@ -89,11 +93,12 @@ public abstract class AbstractMongoComponent extends AbstractComponent {
     }
   }
 
-  protected abstract void configure(Context context, MongoConnection connection) throws BadConfigurationException, MissingResourceException;
+  protected abstract void configure(Context context, MongoConnection connection)
+      throws BadConfigurationException, MissingResourceException;
 
   @Override
   public void close() {
-    if(connection != null) {
+    if (connection != null) {
       connection.disconnect();
     }
   }

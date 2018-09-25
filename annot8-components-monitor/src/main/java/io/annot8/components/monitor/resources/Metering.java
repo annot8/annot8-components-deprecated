@@ -1,12 +1,15 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.monitor.resources;
+
+import java.util.Objects;
 
 import io.annot8.components.monitor.resources.metering.Metrics;
 import io.annot8.components.monitor.resources.metering.NamedMetrics;
 import io.annot8.core.components.Annot8Component;
 import io.annot8.core.components.Resource;
+
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
-import java.util.Objects;
 
 public final class Metering implements Resource {
 
@@ -37,6 +40,4 @@ public final class Metering implements Resource {
   public Metrics getMetrics(Class<? extends Annot8Component> clazz) {
     return new NamedMetrics(meterRegistry, clazz);
   }
-
-
 }

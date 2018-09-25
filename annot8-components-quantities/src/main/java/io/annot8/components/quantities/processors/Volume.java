@@ -1,7 +1,9 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.quantities.processors;
 
-import io.annot8.conventions.AnnotationTypes;
 import java.util.regex.Pattern;
+
+import io.annot8.conventions.AnnotationTypes;
 
 public class Volume extends AbstractQuantityProcessor {
 
@@ -33,7 +35,7 @@ public class Volume extends AbstractQuantityProcessor {
           "\\b([0-9]+([0-9\\.,]+[0-9])?)[ ]?(thousand|million|billion|trillion)?[ ]?(gal|gallon)(s)?\\b",
           Pattern.CASE_INSENSITIVE);
 
-  public Volume(){
+  public Volume() {
     super(AnnotationTypes.ANNOTATION_TYPE_VOLUME, "m^3");
 
     add(cm3Pattern, 0.000001);

@@ -1,4 +1,9 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.base.processors;
+
+import java.util.Collections;
+import java.util.Set;
+import java.util.stream.Stream;
 
 import io.annot8.components.base.processors.AbstractContentProcessor.ContentAnnotatorSettings;
 import io.annot8.core.context.Context;
@@ -9,14 +14,8 @@ import io.annot8.core.exceptions.BadConfigurationException;
 import io.annot8.core.exceptions.MissingResourceException;
 import io.annot8.core.settings.Settings;
 import io.annot8.core.settings.SettingsClass;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Stream;
 
-/**
- * A base class for content processors which limit to content by (configurable name)
- */
+/** A base class for content processors which limit to content by (configurable name) */
 @SettingsClass(ContentAnnotatorSettings.class)
 public abstract class AbstractContentProcessor extends AbstractItemProcessor {
 
@@ -29,7 +28,7 @@ public abstract class AbstractContentProcessor extends AbstractItemProcessor {
 
     settings = context.getSettings(ContentAnnotatorSettings.class).orElse(null);
 
-    if(settings != null && !settings.validate()) {
+    if (settings != null && !settings.validate()) {
       throw new BadConfigurationException("Invalid content settings");
     }
   }
@@ -47,15 +46,16 @@ public abstract class AbstractContentProcessor extends AbstractItemProcessor {
 
     contentToProcess
         .filter(this::acceptsContent)
-        .forEach(c -> {
-          try {
-            metrics().counter("content.accepted").increment();
-            processContent(item, c);
-          } catch (Annot8Exception e) {
-            metrics().counter("content.errors").increment();
-            log().warn("Unable to process content {}", c.getName(), e);
-          }
-        });
+        .forEach(
+            c -> {
+              try {
+                metrics().counter("content.accepted").increment();
+                processContent(item, c);
+              } catch (Annot8Exception e) {
+                metrics().counter("content.errors").increment();
+                log().warn("Unable to process content {}", c.getName(), e);
+              }
+            });
 
     // Always pass on to next
     return true;
@@ -73,6 +73,7 @@ public abstract class AbstractContentProcessor extends AbstractItemProcessor {
 
   /**
    * Process the content
+   *
    * @param item the owning item
    * @param content the content to provess
    * @throws Annot8Exception
@@ -91,7 +92,7 @@ public abstract class AbstractContentProcessor extends AbstractItemProcessor {
     }
 
     public Set<String> getContent() {
-      return content == null ? Collections.emptySet(): content;
+      return content == null ? Collections.emptySet() : content;
     }
 
     @Override
@@ -99,6 +100,4 @@ public abstract class AbstractContentProcessor extends AbstractItemProcessor {
       return true;
     }
   }
-
-
 }

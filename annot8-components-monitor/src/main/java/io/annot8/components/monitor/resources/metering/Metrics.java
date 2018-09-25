@@ -1,13 +1,15 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.monitor.resources.metering;
+
+import java.util.Collection;
+import java.util.Map;
+import java.util.function.ToDoubleFunction;
 
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.DistributionSummary;
 import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.Timer;
 import io.micrometer.core.lang.Nullable;
-import java.util.Collection;
-import java.util.Map;
-import java.util.function.ToDoubleFunction;
 
 public interface Metrics {
 
@@ -69,24 +71,22 @@ public interface Metrics {
    * Register a gauge that reports the value of the object after the function {@code f} is applied.
    * The registration will keep a weak reference to the object so it will not prevent garbage
    * collection. Applying {@code f} on the object should be thread safe.
-   * <p>
-   * If multiple gauges are registered with the same id, then the values will be aggregated and the
-   * sum will be reported. For example, registering multiple gauges for active threads in a thread
-   * pool with the same id would produce a value that is the overall number of active threads. For
-   * other behaviors, manage it on the user side and avoid multiple registrations.
+   *
+   * <p>If multiple gauges are registered with the same id, then the values will be aggregated and
+   * the sum will be reported. For example, registering multiple gauges for active threads in a
+   * thread pool with the same id would produce a value that is the overall number of active
+   * threads. For other behaviors, manage it on the user side and avoid multiple registrations.
    *
    * @param name Name of the gauge being registered.
    * @param tags Sequence of dimensions for breaking down the name.
    * @param obj State object used to compute a value.
-   * @param valueFunction Function that produces an instantaneous gauge value from the state
-   * object.
+   * @param valueFunction Function that produces an instantaneous gauge value from the state object.
    * @param <T> The type of the state object from which the gauge value is extracted.
    * @return The number that was passed in so the registration can be done as part of an assignment
-   * statement.
+   *     statement.
    */
   @Nullable
-  <T> T gauge(String name, Iterable<Tag> tags, @Nullable T obj,
-      ToDoubleFunction<T> valueFunction);
+  <T> T gauge(String name, Iterable<Tag> tags, @Nullable T obj, ToDoubleFunction<T> valueFunction);
 
   /**
    * Register a gauge that reports the value of the {@link Number}.
@@ -96,7 +96,7 @@ public interface Metrics {
    * @param number Thread-safe implementation of {@link Number} used to access the value.
    * @param <T> The type of the number from which the gauge value is extracted.
    * @return The number that was passed in so the registration can be done as part of an assignment
-   * statement.
+   *     statement.
    */
   @Nullable
   <T extends Number> T gauge(String name, Iterable<Tag> tags, T number);
@@ -108,7 +108,7 @@ public interface Metrics {
    * @param number Thread-safe implementation of {@link Number} used to access the value.
    * @param <T> The type of the state object from which the gauge value is extracted.
    * @return The number that was passed in so the registration can be done as part of an assignment
-   * statement.
+   *     statement.
    */
   @Nullable
   <T extends Number> T gauge(String name, T number);
@@ -118,11 +118,10 @@ public interface Metrics {
    *
    * @param name Name of the gauge being registered.
    * @param obj State object used to compute a value.
-   * @param valueFunction Function that produces an instantaneous gauge value from the state
-   * object.
+   * @param valueFunction Function that produces an instantaneous gauge value from the state object.
    * @param <T> The type of the state object from which the gauge value is extracted.
    * @return The number that was passed in so the registration can be done as part of an assignment
-   * statement.
+   *     statement.
    */
   @Nullable
   <T> T gauge(String name, T obj, ToDoubleFunction<T> valueFunction);
@@ -138,11 +137,10 @@ public interface Metrics {
    * @param collection Thread-safe implementation of {@link Collection} used to access the value.
    * @param <T> The type of the state object from which the gauge value is extracted.
    * @return The number that was passed in so the registration can be done as part of an assignment
-   * statement.
+   *     statement.
    */
   @Nullable
-  <T extends Collection<?>> T gaugeCollectionSize(String name, Iterable<Tag> tags,
-      T collection);
+  <T extends Collection<?>> T gaugeCollectionSize(String name, Iterable<Tag> tags, T collection);
 
   /**
    * Register a gauge that reports the size of the {@link Map}. The registration will keep a weak
@@ -155,7 +153,7 @@ public interface Metrics {
    * @param map Thread-safe implementation of {@link Map} used to access the value.
    * @param <T> The type of the state object from which the gauge value is extracted.
    * @return The number that was passed in so the registration can be done as part of an assignment
-   * statement.
+   *     statement.
    */
   @Nullable
   <T extends Map<?, ?>> T gaugeMapSize(String name, Iterable<Tag> tags, T map);

@@ -1,6 +1,14 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.base.processors;
 
 import static org.junit.jupiter.api.Assertions.fail;
+
+import java.util.List;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import io.annot8.common.data.bounds.SpanBounds;
 import io.annot8.common.data.content.Text;
@@ -14,16 +22,11 @@ import io.annot8.core.stores.AnnotationStore;
 import io.annot8.testing.testimpl.TestContext;
 import io.annot8.testing.testimpl.TestItem;
 import io.annot8.testing.testimpl.content.TestStringContent;
-import java.util.List;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 public class RegexTest {
 
   @Test
-  public void testRegexFromConstructor(){
+  public void testRegexFromConstructor() {
     Processor p = new Regex(Pattern.compile("[0-9]+"), 0, "number");
     try {
       assertProcessorCorrectness(p);
@@ -33,7 +36,7 @@ public class RegexTest {
   }
 
   @Test
-  public void testRegexFromSettings()  {
+  public void testRegexFromSettings() {
     Processor p = new Regex();
     RegexSettings rs = new RegexSettings(Pattern.compile("[0-9]+"), 0, "number");
     Context context = new TestContext(rs);
@@ -44,13 +47,12 @@ public class RegexTest {
     } catch (Annot8Exception e) {
       fail("Error not expected in this test", e);
     }
-
   }
 
-  private void assertProcessorCorrectness(Processor processor) throws Annot8Exception{
+  private void assertProcessorCorrectness(Processor processor) throws Annot8Exception {
     Item item = new TestItem();
-    Text content = item.create(TestStringContent.class).withName("test").withData("x + 12 = 42")
-            .save();
+    Text content =
+        item.create(TestStringContent.class).withName("test").withData("x + 12 = 42").save();
 
     processor.process(item);
 
@@ -80,5 +82,4 @@ public class RegexTest {
       }
     }
   }
-
 }
