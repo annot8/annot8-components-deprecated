@@ -8,3 +8,4 @@
 *.iml
 .sts4-cache
 target
+*.versionsBackup
