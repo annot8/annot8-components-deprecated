@@ -16,6 +16,7 @@
 
   <name>Annot8 Components</name>
   <description>Components for the Annot8 Framework</description>
+  <version>0.1.0</version>
 
   <issueManagement>
     <url>https://github.com/annot8/components/issues</url>
