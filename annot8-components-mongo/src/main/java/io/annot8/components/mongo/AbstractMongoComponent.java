@@ -93,8 +93,7 @@ public abstract class AbstractMongoComponent extends AbstractComponent {
     }
   }
 
-  protected abstract void configure(Context context, MongoConnection connection)
-      throws BadConfigurationException, MissingResourceException;
+  protected abstract void configure(Context context, MongoConnection connection);
 
   @Override
   public void close() {

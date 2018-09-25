@@ -3,7 +3,7 @@ package io.annot8.components.properties.processors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -45,7 +45,7 @@ public class PropertyToTextTest {
     properties.put("foo", "bar");
 
     PropertyToTextSettings settings = new PropertyToTextSettings();
-    settings.setWhitelist(new HashSet<>(Arrays.asList(EXPECTED_KEY)));
+    settings.setWhitelist(new HashSet<>(Collections.singletonList(EXPECTED_KEY)));
 
     doTest(properties, settings);
   }
@@ -57,7 +57,7 @@ public class PropertyToTextTest {
     properties.put("foo", "bar");
 
     PropertyToTextSettings settings = new PropertyToTextSettings();
-    settings.setBlacklist(new HashSet<>(Arrays.asList("foo")));
+    settings.setBlacklist(new HashSet<>(Collections.singletonList("foo")));
 
     doTest(properties, settings);
   }
@@ -68,7 +68,7 @@ public class PropertyToTextTest {
     Map<String, Resource> resources = new HashMap<>();
     resources.put("logging", logging);
 
-    Context context = new SimpleContext(Arrays.asList(settings), resources);
+    Context context = new SimpleContext(Collections.singletonList(settings), resources);
 
     try (Processor p = new PropertyToText()) {
 

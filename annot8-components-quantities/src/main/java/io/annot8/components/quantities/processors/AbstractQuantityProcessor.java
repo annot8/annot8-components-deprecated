@@ -20,8 +20,8 @@ public abstract class AbstractQuantityProcessor extends AbstractTextProcessor {
   private final String annotationType;
   private final String normalizedUnit;
 
-  private List<Pattern> patterns = new ArrayList<>();
-  private List<Double> normalizationConstants = new ArrayList<>();
+  private final List<Pattern> patterns = new ArrayList<>();
+  private final List<Double> normalizationConstants = new ArrayList<>();
 
   public AbstractQuantityProcessor(String annotationType, String normalizedUnit) {
     this.annotationType = annotationType;

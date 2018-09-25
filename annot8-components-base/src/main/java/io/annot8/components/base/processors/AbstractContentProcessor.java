@@ -64,7 +64,7 @@ public abstract class AbstractContentProcessor extends AbstractItemProcessor {
   /**
    * Check if the content should be passed to processContent
    *
-   * @param content
+   * @param content the content to be processed
    * @return true is the content should be processed
    */
   protected boolean acceptsContent(final Content<?> content) {
@@ -76,7 +76,7 @@ public abstract class AbstractContentProcessor extends AbstractItemProcessor {
    *
    * @param item the owning item
    * @param content the content to provess
-   * @throws Annot8Exception
+   * @throws Annot8Exception if the content can't be processed
    */
   protected abstract void processContent(final Item item, final Content<?> content)
       throws Annot8Exception;

@@ -111,8 +111,9 @@ public class AbstractContentProcessorTest {
     return item;
   }
 
+  @SafeVarargs
   private <T> Answer<Stream<T>> getAnswer(T... content) {
-    return new Answer<Stream<T>>() {
+    return new Answer<>() {
       @Override
       public Stream<T> answer(InvocationOnMock invocation) {
         return Stream.of(content);
@@ -122,7 +123,7 @@ public class AbstractContentProcessorTest {
 
   private class TestcontentProcessor extends AbstractContentProcessor {
 
-    private List<String> observedContent = new ArrayList<String>();
+    private final List<String> observedContent = new ArrayList<>();
 
     @Override
     protected void processContent(Item item, Content<?> content) {

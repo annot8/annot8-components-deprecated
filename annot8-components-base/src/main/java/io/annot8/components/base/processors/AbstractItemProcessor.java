@@ -36,7 +36,7 @@ public abstract class AbstractItemProcessor extends AbstractComponent implements
   /**
    * Should this item be passed to processItem?
    *
-   * @param item
+   * @param item the item to test
    * @return true if the item should be processed
    */
   protected boolean acceptsItem(final Item item) {
@@ -46,7 +46,7 @@ public abstract class AbstractItemProcessor extends AbstractComponent implements
   /**
    * Process the item
    *
-   * @param item
+   * @param item the item to process
    * @return false if the item should be discarded from the pipeline
    */
   protected abstract boolean processItem(final Item item);

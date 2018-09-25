@@ -11,9 +11,6 @@ public class DistanceTest extends AbstractQuantityTest {
     super(Distance.class, AnnotationTypes.ANNOTATION_TYPE_DISTANCE, "m");
   }
 
-  @Test
-  public void testM() {}
-
   // Kilometres
   @Test
   public void testKm() throws Exception {

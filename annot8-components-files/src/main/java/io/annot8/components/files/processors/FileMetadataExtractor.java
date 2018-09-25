@@ -13,7 +13,6 @@ import io.annot8.core.capabilities.ProcessesContent;
 import io.annot8.core.components.Processor;
 import io.annot8.core.components.responses.ProcessorResponse;
 import io.annot8.core.data.Item;
-import io.annot8.core.exceptions.Annot8Exception;
 import io.annot8.core.exceptions.IncompleteException;
 import io.annot8.core.stores.AnnotationStore;
 
@@ -23,7 +22,7 @@ public class FileMetadataExtractor extends AbstractComponent implements Processo
   public static final String FILE_METADATA = "FILE_METADATA";
 
   @Override
-  public ProcessorResponse process(Item item) throws Annot8Exception {
+  public ProcessorResponse process(Item item) {
     boolean withoutErrors =
         item.getContents(FileContent.class)
             .map(this::extractMetadata)
@@ -43,12 +42,12 @@ public class FileMetadataExtractor extends AbstractComponent implements Processo
       return false;
     }
 
-    BasicFileAttributes attr = null;
-    boolean isHidden = false;
-    boolean isRegular = false;
-    boolean isDir = false;
-    boolean isSym = false;
-    String owner = null;
+    BasicFileAttributes attr;
+    boolean isHidden;
+    boolean isRegular;
+    boolean isDir;
+    boolean isSym;
+    String owner;
     try {
       isHidden = Files.isHidden(file.toPath());
       isRegular = Files.isRegularFile(file.toPath());

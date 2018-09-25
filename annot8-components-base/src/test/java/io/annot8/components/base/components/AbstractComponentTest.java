@@ -16,7 +16,6 @@ import io.annot8.core.components.Processor;
 import io.annot8.core.components.responses.ProcessorResponse;
 import io.annot8.core.context.Context;
 import io.annot8.core.data.Item;
-import io.annot8.core.exceptions.Annot8Exception;
 import io.annot8.core.exceptions.BadConfigurationException;
 import io.annot8.core.exceptions.MissingResourceException;
 
@@ -44,11 +43,8 @@ public class AbstractComponentTest {
       fail("No exceptions should occur in this test case");
     }
 
-    try {
-      component.process(null);
-    } catch (Annot8Exception e) {
-      fail("No exceptions should occur in this test case");
-    }
+    component.process(null);
+
     component.close();
   }
 
@@ -63,11 +59,7 @@ public class AbstractComponentTest {
       fail("No exceptions should occur in this test case");
     }
 
-    try {
-      component.process(null);
-    } catch (Annot8Exception e) {
-      fail("No exceptions should occur in this test case");
-    }
+    component.process(null);
 
     component.close();
   }
@@ -75,7 +67,7 @@ public class AbstractComponentTest {
   private class TestComponent extends AbstractComponent implements Processor {
 
     @Override
-    public ProcessorResponse process(Item item) throws Annot8Exception {
+    public ProcessorResponse process(Item item) {
       assertNotNull(log());
       assertNotNull(metrics());
       return null;

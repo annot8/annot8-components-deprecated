@@ -40,7 +40,7 @@ public class AbstractItemProcessorTest {
 
   private class TestItemProcessor extends AbstractItemProcessor {
 
-    private boolean doesProcess;
+    private final boolean doesProcess;
 
     public TestItemProcessor(boolean doesProcess) {
       this.doesProcess = doesProcess;

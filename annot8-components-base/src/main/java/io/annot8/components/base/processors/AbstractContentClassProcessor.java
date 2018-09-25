@@ -44,7 +44,7 @@ public abstract class AbstractContentClassProcessor<T extends Content<?>>
    *
    * @param item the owning item
    * @param content the content to provess
-   * @throws Annot8Exception
+   * @throws Annot8Exception if unable to process
    */
   protected abstract void process(final Item item, final T content) throws Annot8Exception;
 

@@ -48,7 +48,6 @@ public class IBAN extends AbstractTextProcessor {
 
       } catch (Iban4jException e) {
         // Not a valid IBAN, so continue
-        continue;
       }
     }
   }

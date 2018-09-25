@@ -26,7 +26,6 @@ import io.annot8.core.annotations.Annotation;
 import io.annot8.core.components.responses.ProcessorResponse;
 import io.annot8.core.components.responses.ProcessorResponse.Status;
 import io.annot8.core.data.Item;
-import io.annot8.core.exceptions.Annot8Exception;
 import io.annot8.core.stores.AnnotationStore;
 import io.annot8.testing.testimpl.TestAnnotationStore;
 
@@ -51,7 +50,7 @@ public class FileMetadataExtractorTest {
     doAnswer(
             new Answer<Stream<FileContent>>() {
               @Override
-              public Stream<FileContent> answer(InvocationOnMock invocation) throws Throwable {
+              public Stream<FileContent> answer(InvocationOnMock invocation) {
                 return Stream.of(fileContent);
               }
             })
@@ -60,12 +59,8 @@ public class FileMetadataExtractorTest {
 
     FileMetadataExtractor extractor = new FileMetadataExtractor();
 
-    ProcessorResponse processResponse = null;
-    try {
-      processResponse = extractor.process(item);
-    } catch (Annot8Exception e) {
-      fail("This test process should not error", e);
-    }
+    ProcessorResponse processResponse = extractor.process(item);
+
     assertEquals(Status.OK, processResponse.getStatus());
 
     List<Annotation> annotations =
@@ -78,7 +73,7 @@ public class FileMetadataExtractorTest {
     assertNotNull(getKeyValue(annotations, FileMetadata.DATE_CREATED));
     assertNotNull(getKeyValue(annotations, FileMetadata.LAST_MODIFIED));
     assertNotNull(getKeyValue(annotations, FileMetadata.LAST_ACCESS_DATE));
-    assertEquals(60l, getKeyValue(annotations, FileMetadata.FILE_SIZE));
+    assertEquals(60L, getKeyValue(annotations, FileMetadata.FILE_SIZE));
     assertNotNull(getKeyValue(annotations, FileMetadata.OWNER));
     assertFalse((boolean) getKeyValue(annotations, FileMetadata.DIRECTORY));
     annotations.forEach(a -> assertEquals(FileMetadataExtractor.FILE_METADATA, a.getType()));
@@ -100,12 +95,8 @@ public class FileMetadataExtractorTest {
     when(item.getContents(Mockito.eq(FileContent.class))).thenReturn(Stream.empty());
 
     FileMetadataExtractor extractor = new FileMetadataExtractor();
-    ProcessorResponse processResponse = null;
-    try {
-      processResponse = extractor.process(item);
-    } catch (Annot8Exception e) {
-      fail("This test process should not error");
-    }
+    ProcessorResponse processResponse = extractor.process(item);
+
     assertEquals(Status.OK, processResponse.getStatus());
   }
 
@@ -117,7 +108,7 @@ public class FileMetadataExtractorTest {
     doAnswer(
             new Answer<Stream<FileContent>>() {
               @Override
-              public Stream<FileContent> answer(InvocationOnMock invocation) throws Throwable {
+              public Stream<FileContent> answer(InvocationOnMock invocation) {
                 return Stream.of(fileContent);
               }
             })
@@ -125,12 +116,7 @@ public class FileMetadataExtractorTest {
         .getContents(Mockito.eq(FileContent.class));
 
     FileMetadataExtractor extractor = new FileMetadataExtractor();
-    ProcessorResponse response = null;
-    try {
-      response = extractor.process(item);
-    } catch (Annot8Exception e) {
-      fail("Test case should not fail here", e);
-    }
+    ProcessorResponse response = extractor.process(item);
 
     assertEquals(Status.ITEM_ERROR, response.getStatus());
   }

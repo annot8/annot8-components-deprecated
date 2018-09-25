@@ -20,7 +20,7 @@ public class PropertyTest {
   public void testProperty() throws Annot8Exception {
     Processor p = new Property();
 
-    Property.PropertySettings ps = new Property.PropertySettings("test", Integer.valueOf(123));
+    Property.PropertySettings ps = new Property.PropertySettings("test", 123);
     Context c = new TestContext(ps);
     p.configure(c);
 
@@ -31,6 +31,6 @@ public class PropertyTest {
     p.process(item);
 
     assertTrue(item.getProperties().get("test").isPresent());
-    assertEquals(Integer.valueOf(123), item.getProperties().get("test").get());
+    assertEquals(123, item.getProperties().get("test").get());
   }
 }

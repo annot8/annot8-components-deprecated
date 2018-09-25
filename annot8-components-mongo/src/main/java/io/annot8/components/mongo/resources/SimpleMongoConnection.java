@@ -9,9 +9,9 @@ import com.mongodb.client.MongoDatabase;
 
 public class SimpleMongoConnection implements MongoConnection {
 
-  private MongoClient client;
-  private MongoDatabase database;
-  private MongoCollection<Document> collection;
+  private final MongoClient client;
+  private final MongoDatabase database;
+  private final MongoCollection<Document> collection;
 
   public SimpleMongoConnection(
       MongoClient client, MongoDatabase database, MongoCollection<Document> collection) {
