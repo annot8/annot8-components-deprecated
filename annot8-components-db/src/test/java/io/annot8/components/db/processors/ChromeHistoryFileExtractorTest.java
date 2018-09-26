@@ -46,17 +46,8 @@ public class ChromeHistoryFileExtractorTest {
     };
 
     Item item = new TestItem(itemFactory, new TestGroupStore(), registry);
-    FileContent fileContent = Mockito.mock(FileContent.class);
+    FileContent fileContent = mockFileContent("ChromeHistory");
     ((TestItem) item).setContent(Collections.singletonMap("file", fileContent));
-
-    URL resource = ChromeHistoryFileExtractorTest.class.getClassLoader().getResource("ChromeHistory");
-    File file = null;
-    try {
-      file = new File(resource.toURI());
-    } catch (URISyntaxException e) {
-      fail("Error not expected when finding test file");
-    }
-    when(fileContent.getData()).thenReturn(file);
 
     ChromeHistoryFileExtractor extractor = new ChromeHistoryFileExtractor();
     ProcessorResponse response = null;
@@ -84,6 +75,52 @@ public class ChromeHistoryFileExtractorTest {
 
     assertThat(urls).containsExactlyInAnyOrder("https://www.google.com/webhp?ie=UTF-8&rct=j",
         "https://www.bbc.co.uk/", "https://www.reddit.com/");
+  }
+
+  @Test
+  public void testNonDBFile(){
+    // Test to ensure that normal files are not processed
+    // and do not result in a failed process
+    Item item = new TestItem();
+    FileContent content = mockFileContent("nonSqlliteFile.txt");
+    ((TestItem) item).setContent(Collections.singletonMap("file", content));
+    ChromeHistoryFileExtractor extractor = new ChromeHistoryFileExtractor();
+    ProcessorResponse response = null;
+    try {
+      response = extractor.process(item);
+    } catch (Annot8Exception e) {
+      fail("The test is not expected to fail here");
+    }
+    assertEquals(Status.OK, response.getStatus());
+  }
+
+  @Test
+  public void testFailingFile(){
+    Item item = new TestItem();
+    FileContent content = Mockito.mock(FileContent.class);
+    when(content.getData()).thenReturn(new File("nonExistentFile"));
+    ((TestItem)item).setContent(Collections.singletonMap("file", content));
+    ChromeHistoryFileExtractor fileExtractor = new ChromeHistoryFileExtractor();
+    ProcessorResponse response = null;
+    try {
+      response = fileExtractor.process(item);
+    } catch (Annot8Exception e) {
+      fail("Test should not error here", e);
+    }
+    assertEquals(Status.ITEM_ERROR, response.getStatus());
+  }
+
+  private FileContent mockFileContent(String resourceFileName){
+    FileContent fileContent = Mockito.mock(FileContent.class);
+    URL resource = ChromeHistoryFileExtractorTest.class.getClassLoader().getResource(resourceFileName);
+    File file = null;
+    try {
+      file = new File(resource.toURI());
+    } catch (URISyntaxException e) {
+      fail("Error not expected when finding test file");
+    }
+    when(fileContent.getData()).thenReturn(file);
+    return fileContent;
   }
 
 }

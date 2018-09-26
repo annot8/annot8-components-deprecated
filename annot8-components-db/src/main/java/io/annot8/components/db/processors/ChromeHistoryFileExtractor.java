@@ -49,6 +49,9 @@ public class ChromeHistoryFileExtractor extends AbstractJDBCSource<URL> implemen
 
   private boolean extractHistory(FileContent fileContent, Item item){
     File file = fileContent.getData();
+    if(!file.exists()){
+      return false;
+    }
     String jdbcUrl = "jdbc:sqlite:/" + file.getAbsolutePath();
 
     List<URL> urls = null;
