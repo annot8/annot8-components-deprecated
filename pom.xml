@@ -42,5 +42,6 @@
     <module>annot8-components-mongo</module>
     <module>annot8-components-properties</module>
     <module>annot8-components-quantities</module>
+    <module>annot8-components-types</module>
   </modules>
 </project>
