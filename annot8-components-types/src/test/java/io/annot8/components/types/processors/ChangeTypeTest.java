@@ -80,7 +80,6 @@ public class ChangeTypeTest {
 
     assertEquals(1, item.getContents().count());
     AnnotationStore as = item.getContent("1").get().getAnnotations();
-    as.getAll().forEach(a -> System.out.println(a.getType()));
     assertEquals(2, as.getAll().count());
     assertEquals(0, as.getByType("my.person").count());
     assertEquals(1, as.getByType("my.place").count());

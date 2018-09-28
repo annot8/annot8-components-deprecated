@@ -42,12 +42,14 @@ public class ChangeType extends AbstractComponent implements Processor {
     item.getContents().forEach(c -> {
       c.getAnnotations().getByType(changeTypeSettings.getOriginalType()).forEach(a -> {
         try {
-          c.getAnnotations().create().from(a).newId()
-              .withType(changeTypeSettings.getNewType())
-              .save();
-
-          if(!changeTypeSettings.getRetainOriginal()){
-            c.getAnnotations().delete(a);
+          if(changeTypeSettings.getRetainOriginal()){
+            c.getAnnotations().copy(a)
+                .withType(changeTypeSettings.getNewType())
+                .save();
+          }else{
+            c.getAnnotations().create().from(a)
+                .withType(changeTypeSettings.getNewType())
+                .save();
           }
         }catch (IncompleteException ie){
           log().warn("Unable to copy annotation", ie);
