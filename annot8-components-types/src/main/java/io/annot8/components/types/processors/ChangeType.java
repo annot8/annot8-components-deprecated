@@ -54,7 +54,7 @@ public class ChangeType extends AbstractComponent implements Processor {
         }
       });
     });
-    return null;
+    return ProcessorResponse.ok();
   }
 
   /** Configuration for the ChangeType processor */
