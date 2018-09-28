@@ -1,6 +1,8 @@
 /* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.types.processors;
 
+import java.util.Optional;
+
 import io.annot8.components.base.components.AbstractComponent;
 import io.annot8.components.types.processors.ChangeType.ChangeTypeSettings;
 import io.annot8.core.components.Processor;
@@ -13,11 +15,10 @@ import io.annot8.core.exceptions.IncompleteException;
 import io.annot8.core.exceptions.MissingResourceException;
 import io.annot8.core.settings.Settings;
 import io.annot8.core.settings.SettingsClass;
-import java.util.Optional;
 
 /**
- * Create a duplicate annotation but with a different type.
- * The original annotation can optionally be deleted or retained.
+ * Create a duplicate annotation but with a different type. The original annotation can optionally
+ * be deleted or retained.
  */
 @SettingsClass(ChangeTypeSettings.class)
 public class ChangeType extends AbstractComponent implements Processor {
@@ -39,23 +40,30 @@ public class ChangeType extends AbstractComponent implements Processor {
 
   @Override
   public ProcessorResponse process(Item item) throws Annot8Exception {
-    item.getContents().forEach(c -> {
-      c.getAnnotations().getByType(changeTypeSettings.getOriginalType()).forEach(a -> {
-        try {
-          if(changeTypeSettings.getRetainOriginal()){
-            c.getAnnotations().copy(a)
-                .withType(changeTypeSettings.getNewType())
-                .save();
-          }else{
-            c.getAnnotations().edit(a)
-                .withType(changeTypeSettings.getNewType())
-                .save();
-          }
-        }catch (IncompleteException ie){
-          log().warn("Unable to copy annotation", ie);
-        }
-      });
-    });
+    item.getContents()
+        .forEach(
+            c -> {
+              c.getAnnotations()
+                  .getByType(changeTypeSettings.getOriginalType())
+                  .forEach(
+                      a -> {
+                        try {
+                          if (changeTypeSettings.getRetainOriginal()) {
+                            c.getAnnotations()
+                                .copy(a)
+                                .withType(changeTypeSettings.getNewType())
+                                .save();
+                          } else {
+                            c.getAnnotations()
+                                .edit(a)
+                                .withType(changeTypeSettings.getNewType())
+                                .save();
+                          }
+                        } catch (IncompleteException ie) {
+                          log().warn("Unable to copy annotation", ie);
+                        }
+                      });
+            });
     return ProcessorResponse.ok();
   }
 
@@ -94,6 +102,5 @@ public class ChangeType extends AbstractComponent implements Processor {
     public boolean validate() {
       return originalType != null && newType != null;
     }
-
   }
 }

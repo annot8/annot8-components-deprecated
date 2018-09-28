@@ -4,6 +4,11 @@ package io.annot8.components.types.processors;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.junit.jupiter.api.Test;
+
 import io.annot8.common.data.bounds.SpanBounds;
 import io.annot8.common.data.content.Text;
 import io.annot8.core.annotations.Annotation;
@@ -14,9 +19,6 @@ import io.annot8.core.exceptions.Annot8Exception;
 import io.annot8.core.stores.AnnotationStore;
 import io.annot8.testing.testimpl.TestContext;
 import io.annot8.testing.testimpl.TestItem;
-import java.util.List;
-import java.util.stream.Collectors;
-import org.junit.jupiter.api.Test;
 
 public class ChangeTypeTest {
 
@@ -24,20 +26,33 @@ public class ChangeTypeTest {
   public void testChangeTypeRetain() throws Annot8Exception {
     Processor p = new ChangeType();
 
-    ChangeType.ChangeTypeSettings cts = new ChangeType.ChangeTypeSettings("my.person", "Person", true);
+    ChangeType.ChangeTypeSettings cts =
+        new ChangeType.ChangeTypeSettings("my.person", "Person", true);
     assertTrue(cts.validate());
     Context c = new TestContext(cts);
     p.configure(c);
 
     Item item = new TestItem();
-    Text content = item.create(Text.class)
-        .withData("James went to London")
-        .withId("1")
-        .withName("test-content")
-        .save();
+    Text content =
+        item.create(Text.class)
+            .withData("James went to London")
+            .withId("1")
+            .withName("test-content")
+            .save();
 
-    content.getAnnotations().create().withType("my.person").withProperty("gender", "M").withBounds(new SpanBounds(0, 5)).save();
-    content.getAnnotations().create().withType("my.place").withBounds(new SpanBounds(14, 20)).save();
+    content
+        .getAnnotations()
+        .create()
+        .withType("my.person")
+        .withProperty("gender", "M")
+        .withBounds(new SpanBounds(0, 5))
+        .save();
+    content
+        .getAnnotations()
+        .create()
+        .withType("my.place")
+        .withBounds(new SpanBounds(14, 20))
+        .save();
 
     p.process(item);
 
@@ -67,14 +82,26 @@ public class ChangeTypeTest {
     p.configure(c);
 
     Item item = new TestItem();
-    Text content = item.create(Text.class)
-        .withData("James went to London")
-        .withId("1")
-        .withName("test-content")
-        .save();
+    Text content =
+        item.create(Text.class)
+            .withData("James went to London")
+            .withId("1")
+            .withName("test-content")
+            .save();
 
-    content.getAnnotations().create().withType("my.person").withProperty("gender", "M").withBounds(new SpanBounds(0, 5)).save();
-    content.getAnnotations().create().withType("my.place").withBounds(new SpanBounds(14, 20)).save();
+    content
+        .getAnnotations()
+        .create()
+        .withType("my.person")
+        .withProperty("gender", "M")
+        .withBounds(new SpanBounds(0, 5))
+        .save();
+    content
+        .getAnnotations()
+        .create()
+        .withType("my.place")
+        .withBounds(new SpanBounds(14, 20))
+        .save();
 
     p.process(item);
 
@@ -93,5 +120,4 @@ public class ChangeTypeTest {
 
     p.close();
   }
-
 }
