@@ -47,7 +47,7 @@ public class ChangeType extends AbstractComponent implements Processor {
                 .withType(changeTypeSettings.getNewType())
                 .save();
           }else{
-            c.getAnnotations().create().from(a)
+            c.getAnnotations().edit(a)
                 .withType(changeTypeSettings.getNewType())
                 .save();
           }
