@@ -1,3 +1,4 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.db.processors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -11,6 +12,7 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+
 import org.hsqldb.server.Server;
 import org.junit.jupiter.api.Test;
 
@@ -28,7 +30,7 @@ public class JDBCSettingsTest {
   }
 
   @Test
-  public void testNonValidSettings(){
+  public void testNonValidSettings() {
     JDBCSettings settings = new JDBCSettings("badURL", "");
     assertFalse(settings.validate());
   }
@@ -38,7 +40,7 @@ public class JDBCSettingsTest {
     URL db = JDBCSettings.class.getClassLoader().getResource("ChromeHistory");
     JDBCSettings settings = new JDBCSettings("jdbc:sqlite:/" + db.getPath(), "");
 
-    try(Connection connection = settings.getConnection()) {
+    try (Connection connection = settings.getConnection()) {
       assertNotNull(connection);
       assertTrue(connection.isValid(1000));
     } catch (SQLException e) {
@@ -47,7 +49,7 @@ public class JDBCSettingsTest {
   }
 
   @Test
-  public void testGetConnectionBadURL(){
+  public void testGetConnectionBadURL() {
     JDBCSettings settings = new JDBCSettings("badURL", "");
     assertThrows(SQLException.class, () -> settings.getConnection());
   }
@@ -61,15 +63,15 @@ public class JDBCSettingsTest {
   }
 
   @Test
-  public void testGetConnectionWithCredentials(){
+  public void testGetConnectionWithCredentials() {
     Server server = createServer();
     server.start();
 
     JDBCSettings settings = new JDBCSettings(JDBC_TEST_URL, "", USER, PASS);
-    try(Connection connection = settings.getConnection()){
+    try (Connection connection = settings.getConnection()) {
       assertNotNull(connection);
       assertTrue(connection.isValid(1000));
-    }catch(SQLException e){
+    } catch (SQLException e) {
       fail("Test should not fail here", e);
     }
 
@@ -77,7 +79,7 @@ public class JDBCSettingsTest {
   }
 
   @Test
-  public void testValidateWithCredentials(){
+  public void testValidateWithCredentials() {
     Server server = createServer();
 
     JDBCSettings settings = new JDBCSettings(JDBC_TEST_URL, "", USER, PASS);
@@ -87,7 +89,7 @@ public class JDBCSettingsTest {
   }
 
   @Test
-  public void testValidateInvalidCredentials(){
+  public void testValidateInvalidCredentials() {
     Server server = createServer();
     server.start();
 
@@ -102,22 +104,20 @@ public class JDBCSettingsTest {
     server.setDatabaseName(0, "test");
     server.setDatabasePath(0, "mem:test");
     server.start();
-    try(Connection conn = DriverManager.getConnection(JDBC_TEST_URL)){
-      conn.createStatement()
-          .executeQuery("CREATE USER " + USER + " PASSWORD " + PASS);
+    try (Connection conn = DriverManager.getConnection(JDBC_TEST_URL)) {
+      conn.createStatement().executeQuery("CREATE USER " + USER + " PASSWORD " + PASS);
     } catch (SQLException e) {
       fail("Test should not fail here", e);
     }
     return server;
   }
 
-  private void shutdownServer(Server server){
-    try(Connection conn = DriverManager.getConnection(JDBC_TEST_URL)){
+  private void shutdownServer(Server server) {
+    try (Connection conn = DriverManager.getConnection(JDBC_TEST_URL)) {
       conn.createStatement().executeQuery("DROP USER " + USER);
     } catch (SQLException e) {
       fail("Test should not fail here", e);
     }
     server.shutdown();
   }
-
 }

@@ -1,3 +1,4 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.db.processors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -5,6 +6,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
+
+import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Stream;
+
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import io.annot8.common.data.content.FileContent;
 import io.annot8.common.implementations.registries.ContentBuilderFactoryRegistry;
@@ -17,15 +29,6 @@ import io.annot8.core.exceptions.Annot8Exception;
 import io.annot8.testing.testimpl.TestContentBuilderFactoryRegistry;
 import io.annot8.testing.testimpl.TestGroupStore;
 import io.annot8.testing.testimpl.TestItem;
-import java.io.File;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Stream;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 public class ChromeHistoryFileExtractorTest {
 
@@ -35,14 +38,15 @@ public class ChromeHistoryFileExtractorTest {
     registry.register(URLContent.class, new DefaultURL.BuilderFactory());
     List<Item> createdItems = new ArrayList<>();
 
-    ItemFactory itemFactory = new ItemFactory(){
-      @Override
-      public Item create() {
-        TestItem childItem = new TestItem(null, new TestGroupStore(), registry);
-        createdItems.add(childItem);
-        return childItem;
-      }
-    };
+    ItemFactory itemFactory =
+        new ItemFactory() {
+          @Override
+          public Item create() {
+            TestItem childItem = new TestItem(null, new TestGroupStore(), registry);
+            createdItems.add(childItem);
+            return childItem;
+          }
+        };
 
     Item item = new TestItem(itemFactory, new TestGroupStore(), registry);
     FileContent fileContent = mockFileContent("ChromeHistory");
@@ -59,25 +63,34 @@ public class ChromeHistoryFileExtractorTest {
     assertEquals(Status.OK, response.getStatus());
     assertEquals(3, createdItems.size());
 
-    createdItems.stream().flatMap(Item::getContents).forEach(c -> {
-      assertEquals("url", c.getName());
-      assertNotNull(c.getId());
-      assertNotNull(c.getProperties());
-      assertNotNull(c.getAnnotations());
-    });
-
-    Stream <String> urls = createdItems.stream()
+    createdItems
+        .stream()
         .flatMap(Item::getContents)
-        .map(Content::getData)
-        .map(URL.class::cast)
-        .map(URL::toExternalForm);
+        .forEach(
+            c -> {
+              assertEquals("url", c.getName());
+              assertNotNull(c.getId());
+              assertNotNull(c.getProperties());
+              assertNotNull(c.getAnnotations());
+            });
 
-    assertThat(urls).containsExactlyInAnyOrder("https://www.google.com/webhp?ie=UTF-8&rct=j",
-        "https://www.bbc.co.uk/", "https://www.reddit.com/");
+    Stream<String> urls =
+        createdItems
+            .stream()
+            .flatMap(Item::getContents)
+            .map(Content::getData)
+            .map(URL.class::cast)
+            .map(URL::toExternalForm);
+
+    assertThat(urls)
+        .containsExactlyInAnyOrder(
+            "https://www.google.com/webhp?ie=UTF-8&rct=j",
+            "https://www.bbc.co.uk/",
+            "https://www.reddit.com/");
   }
 
   @Test
-  public void testNonDBFile(){
+  public void testNonDBFile() {
     // Test to ensure that normal files are not processed
     // and do not result in a failed process
     Item item = new TestItem();
@@ -94,11 +107,11 @@ public class ChromeHistoryFileExtractorTest {
   }
 
   @Test
-  public void testFailingFile(){
+  public void testFailingFile() {
     Item item = new TestItem();
     FileContent content = Mockito.mock(FileContent.class);
     when(content.getData()).thenReturn(new File("nonExistentFile"));
-    ((TestItem)item).setContent(Collections.singletonMap("file", content));
+    ((TestItem) item).setContent(Collections.singletonMap("file", content));
     ChromeHistoryFileExtractor fileExtractor = new ChromeHistoryFileExtractor();
     ProcessorResponse response = null;
     try {
@@ -109,9 +122,10 @@ public class ChromeHistoryFileExtractorTest {
     assertEquals(Status.ITEM_ERROR, response.getStatus());
   }
 
-  private FileContent mockFileContent(String resourceFileName){
+  private FileContent mockFileContent(String resourceFileName) {
     FileContent fileContent = Mockito.mock(FileContent.class);
-    URL resource = ChromeHistoryFileExtractorTest.class.getClassLoader().getResource(resourceFileName);
+    URL resource =
+        ChromeHistoryFileExtractorTest.class.getClassLoader().getResource(resourceFileName);
     File file = null;
     try {
       file = new File(resource.toURI());
@@ -121,5 +135,4 @@ public class ChromeHistoryFileExtractorTest {
     when(fileContent.getData()).thenReturn(file);
     return fileContent;
   }
-
 }

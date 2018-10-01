@@ -1,4 +1,8 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.db.processors;
+
+import java.net.URL;
+import java.util.function.Supplier;
 
 import io.annot8.common.implementations.content.AbstractContentBuilder;
 import io.annot8.common.implementations.content.AbstractContentBuilderFactory;
@@ -10,8 +14,6 @@ import io.annot8.core.exceptions.IncompleteException;
 import io.annot8.core.properties.ImmutableProperties;
 import io.annot8.core.stores.AnnotationStore;
 import io.annot8.defaultimpl.stores.DefaultAnnotationStore;
-import java.net.URL;
-import java.util.function.Supplier;
 
 public class DefaultURL implements URLContent {
 
@@ -21,8 +23,7 @@ public class DefaultURL implements URLContent {
   private final ImmutableProperties properties;
   private final AnnotationStore store;
 
-  private DefaultURL(String id, String name, URL url,
-      ImmutableProperties properties){
+  private DefaultURL(String id, String name, URL url, ImmutableProperties properties) {
     this.id = id;
     this.name = name;
     this.url = url;
@@ -76,24 +77,23 @@ public class DefaultURL implements URLContent {
     }
 
     @Override
-    protected URLContent create(String id, String name, ImmutableProperties properties,
-        Supplier<URL> data) throws IncompleteException {
+    protected URLContent create(
+        String id, String name, ImmutableProperties properties, Supplier<URL> data)
+        throws IncompleteException {
       return new DefaultURL(id, name, data.get(), properties);
     }
   }
 
-  public static class BuilderFactory extends AbstractContentBuilderFactory<URL, URLContent>{
+  public static class BuilderFactory extends AbstractContentBuilderFactory<URL, URLContent> {
 
     public BuilderFactory() {
       super(URL.class, URLContent.class);
     }
 
     @Override
-    public Content.Builder<URLContent, URL> create(Item item,
-        SaveCallback<URLContent, URLContent> saver) {
+    public Content.Builder<URLContent, URL> create(
+        Item item, SaveCallback<URLContent, URLContent> saver) {
       return new Builder(saver);
     }
   }
-
-
 }

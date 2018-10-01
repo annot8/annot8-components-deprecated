@@ -1,4 +1,17 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.db.processors;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import io.annot8.common.data.content.FileContent;
 import io.annot8.common.implementations.context.SimpleContext;
@@ -13,21 +26,8 @@ import io.annot8.core.exceptions.BadConfigurationException;
 import io.annot8.core.exceptions.IncompleteException;
 import io.annot8.core.exceptions.MissingResourceException;
 import io.annot8.core.exceptions.UnsupportedContentException;
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
-/**
- * FileContent processor that will use
- */
+/** FileContent processor that will use */
 @ProcessesContent(FileContent.class)
 @CreatesContent(URLContent.class)
 public class ChromeHistoryFileExtractor extends AbstractJDBCComponent<URL> implements Processor {
@@ -38,9 +38,9 @@ public class ChromeHistoryFileExtractor extends AbstractJDBCComponent<URL> imple
   public void configure(Context context)
       throws BadConfigurationException, MissingResourceException {
     Optional<JDBCSettings> optional = context.getSettings(JDBCSettings.class);
-    if(optional.isPresent()){
+    if (optional.isPresent()) {
       super.configure(context);
-    }else{
+    } else {
       return;
     }
 
@@ -51,7 +51,7 @@ public class ChromeHistoryFileExtractor extends AbstractJDBCComponent<URL> imple
     try (Connection connection = settings.getConnection()) {
       ResultSet set = connection.createStatement().executeQuery("pragma schema_version");
       int schemaVersion = set.getInt("schema_version");
-      if(schemaVersion == 0){
+      if (schemaVersion == 0) {
         throw new MissingResourceException("File is not an SQLite file");
       }
     } catch (SQLException e) {
@@ -73,9 +73,10 @@ public class ChromeHistoryFileExtractor extends AbstractJDBCComponent<URL> imple
   @Override
   public ProcessorResponse process(Item item) throws Annot8Exception {
     item.getContents(FileContent.class).collect(Collectors.toList());
-    boolean withoutErrors = item.getContents(FileContent.class)
-        .map((c) -> extractHistory(c, item))
-        .reduce(true, (a, b) -> a && b);
+    boolean withoutErrors =
+        item.getContents(FileContent.class)
+            .map((c) -> extractHistory(c, item))
+            .reduce(true, (a, b) -> a && b);
 
     if (!withoutErrors) {
       return ProcessorResponse.itemError();
@@ -94,12 +95,12 @@ public class ChromeHistoryFileExtractor extends AbstractJDBCComponent<URL> imple
     Context context = new SimpleContext(Collections.singleton(settings));
     try {
       this.configure(context);
-    }catch(MissingResourceException e){
+    } catch (MissingResourceException e) {
       // Indicates the file is not an SQLite file, this is not an issue with
       // the item and so process should stop here.
       log().info("Failed to read file as SQLite db", e);
       return true;
-    }catch (BadConfigurationException e) {
+    } catch (BadConfigurationException e) {
       // Indicates the processor has not been configured correctly and so
       // the process should error.
       log().info("Failed to read file as SQLite db", e);
@@ -107,19 +108,19 @@ public class ChromeHistoryFileExtractor extends AbstractJDBCComponent<URL> imple
     }
 
     // Confirmed as SQLite db so check specific table exists
-    try(Connection connection = settings.getConnection()){
+    try (Connection connection = settings.getConnection()) {
       DatabaseMetaData metadata = connection.getMetaData();
       ResultSet rs = metadata.getTables(null, null, "urls", null);
       boolean hasUrls = false;
-      while(rs.next()){
-        if(rs.getString("TABLE_NAME").equals("urls")){
+      while (rs.next()) {
+        if (rs.getString("TABLE_NAME").equals("urls")) {
           hasUrls = true;
         }
       }
-      if(!hasUrls){
+      if (!hasUrls) {
         return true;
       }
-    }catch(SQLException e){
+    } catch (SQLException e) {
       return true;
     }
 
@@ -131,8 +132,7 @@ public class ChromeHistoryFileExtractor extends AbstractJDBCComponent<URL> imple
       return false;
     }
 
-    return urls.stream()
-        .map(u -> createChildItem(item, u)).reduce(true, (a, b) -> a && b);
+    return urls.stream().map(u -> createChildItem(item, u)).reduce(true, (a, b) -> a && b);
   }
 
   private boolean createChildItem(Item item, URL url) {
@@ -148,5 +148,4 @@ public class ChromeHistoryFileExtractor extends AbstractJDBCComponent<URL> imple
     }
     return true;
   }
-
 }
