@@ -14,7 +14,6 @@ import io.annot8.core.data.Content;
 import io.annot8.core.data.Item;
 import io.annot8.core.data.ItemFactory;
 import io.annot8.core.exceptions.Annot8Exception;
-import io.annot8.testing.testimpl.TestAnnotationStoreFactory;
 import io.annot8.testing.testimpl.TestContentBuilderFactoryRegistry;
 import io.annot8.testing.testimpl.TestGroupStore;
 import io.annot8.testing.testimpl.TestItem;
@@ -33,7 +32,7 @@ public class ChromeHistoryFileExtractorTest {
   @Test
   public void testProcess() {
     ContentBuilderFactoryRegistry registry = new TestContentBuilderFactoryRegistry();
-    registry.register(URLContent.class, new DefaultURL.BuilderFactory(new TestAnnotationStoreFactory()));
+    registry.register(URLContent.class, new DefaultURL.BuilderFactory());
     List<Item> createdItems = new ArrayList<>();
 
     ItemFactory itemFactory = new ItemFactory(){

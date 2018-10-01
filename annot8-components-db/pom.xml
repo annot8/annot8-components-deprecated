@@ -51,5 +51,9 @@
       <version>2.4.0</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>io.annot8</groupId>
+      <artifactId>annot8-default-impl</artifactId>
+    </dependency>
   </dependencies>
 </project>

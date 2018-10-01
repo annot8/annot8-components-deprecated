@@ -9,6 +9,7 @@ import io.annot8.core.data.Item;
 import io.annot8.core.exceptions.IncompleteException;
 import io.annot8.core.properties.ImmutableProperties;
 import io.annot8.core.stores.AnnotationStore;
+import io.annot8.defaultimpl.stores.DefaultAnnotationStore;
 import java.net.URL;
 import java.util.function.Supplier;
 
@@ -21,12 +22,12 @@ public class DefaultURL implements URLContent {
   private final AnnotationStore store;
 
   private DefaultURL(String id, String name, URL url,
-      ImmutableProperties properties, AnnotationStoreFactory storeFactory){
+      ImmutableProperties properties){
     this.id = id;
     this.name = name;
     this.url = url;
     this.properties = properties;
-    this.store = storeFactory.create(this);
+    this.store = new DefaultAnnotationStore(id);
   }
 
   @Override
@@ -69,32 +70,28 @@ public class DefaultURL implements URLContent {
     private SaveCallback<URLContent, URLContent> callback;
     private AnnotationStoreFactory factory;
 
-    public Builder(SaveCallback<URLContent, URLContent> saver, AnnotationStoreFactory factory) {
+    public Builder(SaveCallback<URLContent, URLContent> saver) {
       super(saver);
-      this.factory = factory;
       this.callback = saver;
     }
 
     @Override
     protected URLContent create(String id, String name, ImmutableProperties properties,
         Supplier<URL> data) throws IncompleteException {
-      return new DefaultURL(id, name, data.get(), properties, factory);
+      return new DefaultURL(id, name, data.get(), properties);
     }
   }
 
   public static class BuilderFactory extends AbstractContentBuilderFactory<URL, URLContent>{
 
-    private final AnnotationStoreFactory factory;
-
-    public BuilderFactory(AnnotationStoreFactory storeFactory) {
+    public BuilderFactory() {
       super(URL.class, URLContent.class);
-      this.factory = storeFactory;
     }
 
     @Override
     public Content.Builder<URLContent, URL> create(Item item,
         SaveCallback<URLContent, URLContent> saver) {
-      return new Builder(saver, factory);
+      return new Builder(saver);
     }
   }
 

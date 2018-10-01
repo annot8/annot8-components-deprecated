@@ -17,6 +17,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collections;
@@ -36,10 +37,11 @@ public class ChromeHistoryFileExtractor extends AbstractJDBCComponent<URL> imple
   @Override
   public void configure(Context context)
       throws BadConfigurationException, MissingResourceException {
-    super.configure(context);
     Optional<JDBCSettings> optional = context.getSettings(JDBCSettings.class);
-    if(!optional.isPresent()){
-      throw new BadConfigurationException("Settings are not present");
+    if(optional.isPresent()){
+      super.configure(context);
+    }else{
+      return;
     }
 
     JDBCSettings settings = optional.get();
@@ -53,7 +55,7 @@ public class ChromeHistoryFileExtractor extends AbstractJDBCComponent<URL> imple
         throw new MissingResourceException("File is not an SQLite file");
       }
     } catch (SQLException e) {
-      throw new BadConfigurationException("Error validating SQLite file");
+      throw new BadConfigurationException("Error validating SQLite file", e);
     }
   }
 
@@ -95,17 +97,37 @@ public class ChromeHistoryFileExtractor extends AbstractJDBCComponent<URL> imple
     }catch(MissingResourceException e){
       // Indicates the file is not an SQLite file, this is not an issue with
       // the item and so process should stop here.
+      log().info("Failed to read file as SQLite db", e);
       return true;
     }catch (BadConfigurationException e) {
       // Indicates the processor has not been configured correctly and so
       // the process should error.
-      return false;
+      log().info("Failed to read file as SQLite db", e);
+      return true;
+    }
+
+    // Confirmed as SQLite db so check specific table exists
+    try(Connection connection = settings.getConnection()){
+      DatabaseMetaData metadata = connection.getMetaData();
+      ResultSet rs = metadata.getTables(null, null, "urls", null);
+      boolean hasUrls = false;
+      while(rs.next()){
+        if(rs.getString("TABLE_NAME").equals("urls")){
+          hasUrls = true;
+        }
+      }
+      if(!hasUrls){
+        return true;
+      }
+    }catch(SQLException e){
+      return true;
     }
 
     List<URL> urls = null;
     try {
       urls = executeQuery();
     } catch (Annot8Exception e) {
+      log().error("Error extracting chrome history", e);
       return false;
     }
 
