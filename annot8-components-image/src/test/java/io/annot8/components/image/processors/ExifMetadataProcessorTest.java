@@ -1,3 +1,4 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.image.processors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -7,7 +8,21 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
+import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
 import com.drew.lang.GeoLocation;
+
 import io.annot8.common.data.content.FileContent;
 import io.annot8.core.annotations.Annotation;
 import io.annot8.core.components.responses.ProcessorResponse;
@@ -16,22 +31,11 @@ import io.annot8.core.data.Item;
 import io.annot8.core.exceptions.Annot8Exception;
 import io.annot8.core.stores.AnnotationStore;
 import io.annot8.testing.testimpl.TestAnnotationStore;
-import java.io.File;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.List;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 public class ExifMetadataProcessorTest {
 
   @Test
-  public void testProcess(){
+  public void testProcess() {
     Item item = Mockito.mock(Item.class);
     FileContent fileContent = Mockito.mock(FileContent.class);
     AnnotationStore store = new TestAnnotationStore();
@@ -46,12 +50,15 @@ public class ExifMetadataProcessorTest {
     when(fileContent.getData()).thenReturn(file);
     when(fileContent.getAnnotations()).thenReturn(store);
 
-    doAnswer(new Answer<Stream<FileContent>>(){
-      @Override
-      public Stream<FileContent> answer(InvocationOnMock invocation) throws Throwable {
-        return Stream.of(fileContent);
-      }
-    }).when(item).getContents(Mockito.eq(FileContent.class));
+    doAnswer(
+            new Answer<Stream<FileContent>>() {
+              @Override
+              public Stream<FileContent> answer(InvocationOnMock invocation) throws Throwable {
+                return Stream.of(fileContent);
+              }
+            })
+        .when(item)
+        .getContents(Mockito.eq(FileContent.class));
 
     ExifMetadataProcessor processor = new ExifMetadataProcessor();
 
@@ -75,15 +82,19 @@ public class ExifMetadataProcessorTest {
     assertTrue(containsKeyValue(store.getAll(), "Image Height", 4048));
     assertTrue(containsKeyValue(store.getAll(), "Date/Time Original", 1537799743000l));
 
-    List<Annotation> geoLocation = store.getAll()
-        .filter(a -> a.getProperties().has("Geo Location")).collect(Collectors.toList());
-    List<Annotation> gpsDate = store.getAll().filter(a -> a.getProperties().has("Gps Date")).collect(
-        Collectors.toList());
+    List<Annotation> geoLocation =
+        store
+            .getAll()
+            .filter(a -> a.getProperties().has("Geo Location"))
+            .collect(Collectors.toList());
+    List<Annotation> gpsDate =
+        store.getAll().filter(a -> a.getProperties().has("Gps Date")).collect(Collectors.toList());
 
     assertEquals(1, geoLocation.size());
     assertEquals(1, gpsDate.size());
 
-    GeoLocation location = (GeoLocation) geoLocation.get(0).getProperties().get("Geo Location").get();
+    GeoLocation location =
+        (GeoLocation) geoLocation.get(0).getProperties().get("Geo Location").get();
     long gpsDateMillis = (long) gpsDate.get(0).getProperties().get("Gps Date").get();
 
     assertEquals(51.897819444444444, location.getLatitude());
@@ -92,14 +103,16 @@ public class ExifMetadataProcessorTest {
     assertEquals(1537796134000l, gpsDateMillis);
   }
 
-  private boolean containsKeyValue(Stream<Annotation> annotations, String key, Object value){
+  private boolean containsKeyValue(Stream<Annotation> annotations, String key, Object value) {
     return containsKeyValue(annotations, key, (v) -> value.equals(v));
   }
 
-  private boolean containsKeyValue(Stream<Annotation> annotations, String key, Predicate<Object> valueMatches){
-    return annotations.map(Annotation::getProperties)
-        .filter(p -> p.has(key) && valueMatches.test(p.get(key).get()))
-        .count() > 0;
+  private boolean containsKeyValue(
+      Stream<Annotation> annotations, String key, Predicate<Object> valueMatches) {
+    return annotations
+            .map(Annotation::getProperties)
+            .filter(p -> p.has(key) && valueMatches.test(p.get(key).get()))
+            .count()
+        > 0;
   }
-
 }

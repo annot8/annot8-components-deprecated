@@ -1,4 +1,8 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.image.processors;
+
+import java.io.IOException;
+import java.util.Date;
 
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
@@ -8,6 +12,7 @@ import com.drew.metadata.StringValue;
 import com.drew.metadata.Tag;
 import com.drew.metadata.exif.ExifDirectoryBase;
 import com.drew.metadata.exif.GpsDirectory;
+
 import io.annot8.common.data.bounds.NoBounds;
 import io.annot8.common.data.content.FileContent;
 import io.annot8.components.base.components.AbstractComponent;
@@ -18,27 +23,26 @@ import io.annot8.core.components.responses.ProcessorResponse;
 import io.annot8.core.data.Item;
 import io.annot8.core.exceptions.Annot8Exception;
 import io.annot8.core.exceptions.IncompleteException;
-import java.io.IOException;
-import java.util.Date;
 
 @ProcessesContent(FileContent.class)
-@CreatesAnnotation(value="ExifMetadata", bounds= NoBounds.class)
+@CreatesAnnotation(value = "ExifMetadata", bounds = NoBounds.class)
 public class ExifMetadataProcessor extends AbstractComponent implements Processor {
 
   @Override
   public ProcessorResponse process(Item item) throws Annot8Exception {
-    boolean withoutError = item.getContents(FileContent.class)
-        .map(this::extractExifMetadata)
-        .reduce(true, (a,b) -> a && b);
+    boolean withoutError =
+        item.getContents(FileContent.class)
+            .map(this::extractExifMetadata)
+            .reduce(true, (a, b) -> a && b);
 
-    if(!withoutError){
+    if (!withoutError) {
       return ProcessorResponse.itemError();
     }
 
     return ProcessorResponse.ok();
   }
 
-  private boolean extractExifMetadata(FileContent content){
+  private boolean extractExifMetadata(FileContent content) {
     Metadata metadata = null;
     try {
       metadata = ImageMetadataReader.readMetadata(content.getData());
@@ -49,14 +53,14 @@ public class ExifMetadataProcessor extends AbstractComponent implements Processo
 
     boolean withoutError = true;
 
-    for(ExifDirectoryBase directory : metadata.getDirectoriesOfType(ExifDirectoryBase.class)){
+    for (ExifDirectoryBase directory : metadata.getDirectoriesOfType(ExifDirectoryBase.class)) {
       try {
         if (directory instanceof GpsDirectory) {
           handleGpsDirectory((GpsDirectory) directory, content);
         } else {
           handleDirectory(directory, content);
         }
-      }catch(IncompleteException e){
+      } catch (IncompleteException e) {
         log().error("Failed to create annotations", e);
         return false;
       }
@@ -74,19 +78,19 @@ public class ExifMetadataProcessor extends AbstractComponent implements Processo
 
   private void handleDirectory(ExifDirectoryBase directory, FileContent content)
       throws IncompleteException {
-    for(Tag tag : directory.getTags()){
+    for (Tag tag : directory.getTags()) {
       Date date = directory.getDate(tag.getTagType());
       Object value = null;
-      if(date == null){
+      if (date == null) {
         Object object = directory.getObject(tag.getTagType());
-        if(object instanceof Rational){
-          value = ((Rational)object).doubleValue();
-        }else if(object instanceof StringValue){
-          value = ((StringValue)object).toString();
-        }else{
+        if (object instanceof Rational) {
+          value = ((Rational) object).doubleValue();
+        } else if (object instanceof StringValue) {
+          value = ((StringValue) object).toString();
+        } else {
           value = object;
         }
-      }else{
+      } else {
         value = date.getTime();
       }
       createAnnotation(content, tag.getTagName(), value);
@@ -95,7 +99,9 @@ public class ExifMetadataProcessor extends AbstractComponent implements Processo
 
   private void createAnnotation(FileContent content, String key, Object value)
       throws IncompleteException {
-    content.getAnnotations().create()
+    content
+        .getAnnotations()
+        .create()
         .withProperty(key, value)
         .withType("EXIF_METADATA")
         .withBounds(NoBounds.getInstance())
