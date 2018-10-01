@@ -10,10 +10,8 @@ import io.annot8.core.settings.Settings;
 
 public class MongoConnectionSettings implements Settings {
 
-  private String connection = "mongodb://localhost";
-
-  private String database = "annot8";
-
+  private String connection;
+  private String database;
   private String collection;
 
   public String getConnection() {
@@ -59,7 +57,7 @@ public class MongoConnectionSettings implements Settings {
 
       MongoConnectionSettings s = settings.get();
 
-      if (validateConnection()) {
+      if (!validateConnection()) {
         this.connection = s.getConnection();
       }
 
