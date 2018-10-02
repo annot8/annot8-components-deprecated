@@ -1,4 +1,8 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.db.processors;
+
+import java.net.URL;
+import java.util.function.Supplier;
 
 import io.annot8.common.data.content.URLContent;
 import io.annot8.common.implementations.content.AbstractContentBuilder;
@@ -9,8 +13,6 @@ import io.annot8.core.data.Item;
 import io.annot8.core.properties.ImmutableProperties;
 import io.annot8.core.stores.AnnotationStore;
 import io.annot8.testing.testimpl.TestAnnotationStore;
-import java.net.URL;
-import java.util.function.Supplier;
 
 public class TestURL implements URLContent {
 
@@ -20,7 +22,7 @@ public class TestURL implements URLContent {
   private ImmutableProperties properties;
   private AnnotationStore store;
 
-  public TestURL(String id, String name, ImmutableProperties properties, URL data){
+  public TestURL(String id, String name, ImmutableProperties properties, URL data) {
     this.id = id;
     this.name = name;
     this.properties = properties;
@@ -70,8 +72,8 @@ public class TestURL implements URLContent {
     }
 
     @Override
-    protected URLContent create(String id, String name, ImmutableProperties properties,
-        Supplier<URL> data) {
+    protected URLContent create(
+        String id, String name, ImmutableProperties properties, Supplier<URL> data) {
       return new TestURL(id, name, properties, data.get());
     }
   }

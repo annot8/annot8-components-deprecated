@@ -7,6 +7,17 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
 
+import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Stream;
+
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
 import io.annot8.common.data.content.FileContent;
 import io.annot8.common.data.content.URLContent;
 import io.annot8.common.implementations.registries.ContentBuilderFactoryRegistry;
@@ -20,15 +31,6 @@ import io.annot8.core.exceptions.Annot8Exception;
 import io.annot8.testing.testimpl.TestContentBuilderFactoryRegistry;
 import io.annot8.testing.testimpl.TestGroupStore;
 import io.annot8.testing.testimpl.TestItem;
-import java.io.File;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Stream;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 public class ChromeHistoryFileExtractorTest {
 
