@@ -10,7 +10,6 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
@@ -19,45 +18,39 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import io.annot8.common.data.content.FileContent;
-import io.annot8.common.implementations.registries.ContentBuilderFactoryRegistry;
 import io.annot8.core.components.responses.ProcessorResponse;
 import io.annot8.core.components.responses.ProcessorResponse.Status;
 import io.annot8.core.data.Content;
 import io.annot8.core.data.Item;
-import io.annot8.core.data.ItemFactory;
 import io.annot8.core.exceptions.Annot8Exception;
-import io.annot8.testing.testimpl.TestContentBuilderFactoryRegistry;
+import io.annot8.core.exceptions.BadConfigurationException;
+import io.annot8.core.exceptions.MissingResourceException;
+import io.annot8.testing.testimpl.TestContext;
 import io.annot8.testing.testimpl.TestGroupStore;
 import io.annot8.testing.testimpl.TestItem;
+import io.annot8.testing.testimpl.TestItemFactory;
 
 public class ChromeHistoryFileExtractorTest {
 
   @Test
-  public void testProcess() {
-    ContentBuilderFactoryRegistry registry = new TestContentBuilderFactoryRegistry();
-    List<Item> createdItems = new ArrayList<>();
+  public void testProcess() throws BadConfigurationException, MissingResourceException {
+    final TestItemFactory itemFactory = new TestItemFactory();
+    final TestContext testContext = new TestContext(itemFactory);
 
-    ItemFactory itemFactory =
-        new ItemFactory() {
-          @Override
-          public Item create() {
-            TestItem childItem = new TestItem(new TestGroupStore(), registry);
-            createdItems.add(childItem);
-            return childItem;
-          }
-        };
-
-    Item item = new TestItem(new TestGroupStore(), registry);
+    Item item = new TestItem(new TestGroupStore());
     FileContent fileContent = mockFileContent("ChromeHistory");
     ((TestItem) item).setContent(Collections.singletonMap("file", fileContent));
 
     ChromeHistoryFileExtractor extractor = new ChromeHistoryFileExtractor();
+    extractor.configure(testContext);
     ProcessorResponse response = null;
     try {
       response = extractor.process(item);
     } catch (Annot8Exception e) {
       fail("The test should not error here.", e);
     }
+
+    List<Item> createdItems = itemFactory.getCreatedItems();
 
     assertEquals(Status.OK, response.getStatus());
     assertEquals(3, createdItems.size());
