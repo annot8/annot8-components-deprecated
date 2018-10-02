@@ -11,7 +11,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.Test;
 
-import io.annot8.common.implementations.context.SimpleContext;
 import io.annot8.components.monitor.resources.Logging;
 import io.annot8.components.properties.processors.PropertyToText.PropertyToTextSettings;
 import io.annot8.core.components.Processor;
@@ -21,6 +20,7 @@ import io.annot8.core.data.Item;
 import io.annot8.core.exceptions.Annot8Exception;
 import io.annot8.core.settings.EmptySettings;
 import io.annot8.core.settings.Settings;
+import io.annot8.testing.testimpl.TestContext;
 import io.annot8.testing.testimpl.TestItem;
 
 public class PropertyToTextTest {
@@ -68,7 +68,7 @@ public class PropertyToTextTest {
     Map<String, Resource> resources = new HashMap<>();
     resources.put("logging", logging);
 
-    Context context = new SimpleContext(Collections.singletonList(settings), resources);
+    Context context = new TestContext(settings, resources);
 
     try (Processor p = new PropertyToText()) {
 

@@ -19,9 +19,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import io.annot8.common.data.content.FileContent;
-import io.annot8.common.data.content.URLContent;
 import io.annot8.common.implementations.registries.ContentBuilderFactoryRegistry;
-import io.annot8.components.db.processors.TestURL.TestURLBuilderFactory;
 import io.annot8.core.components.responses.ProcessorResponse;
 import io.annot8.core.components.responses.ProcessorResponse.Status;
 import io.annot8.core.data.Content;
@@ -37,20 +35,19 @@ public class ChromeHistoryFileExtractorTest {
   @Test
   public void testProcess() {
     ContentBuilderFactoryRegistry registry = new TestContentBuilderFactoryRegistry();
-    registry.register(URLContent.class, new TestURLBuilderFactory());
     List<Item> createdItems = new ArrayList<>();
 
     ItemFactory itemFactory =
         new ItemFactory() {
           @Override
           public Item create() {
-            TestItem childItem = new TestItem(null, new TestGroupStore(), registry);
+            TestItem childItem = new TestItem(new TestGroupStore(), registry);
             createdItems.add(childItem);
             return childItem;
           }
         };
 
-    Item item = new TestItem(itemFactory, new TestGroupStore(), registry);
+    Item item = new TestItem(new TestGroupStore(), registry);
     FileContent fileContent = mockFileContent("ChromeHistory");
     ((TestItem) item).setContent(Collections.singletonMap("file", fileContent));
 
