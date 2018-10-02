@@ -23,15 +23,15 @@ import com.google.common.io.CharStreams;
 import io.annot8.common.data.content.FileContent;
 import io.annot8.common.data.content.InputStreamContent;
 import io.annot8.common.data.content.Text;
-import io.annot8.common.implementations.context.SimpleContext;
 import io.annot8.common.implementations.factories.NotifyingItemFactory;
 import io.annot8.components.monitor.resources.Logging;
 import io.annot8.core.components.Processor;
 import io.annot8.core.components.Resource;
 import io.annot8.core.context.Context;
 import io.annot8.core.data.Item;
+import io.annot8.testing.testimpl.TestContext;
 import io.annot8.testing.testimpl.TestItem;
-import io.annot8.testing.testimpl.TestItemCreator;
+import io.annot8.testing.testimpl.TestItemFactory;
 
 public class EmlFileExtractorTest {
 
@@ -41,17 +41,17 @@ public class EmlFileExtractorTest {
     List<Item> newItems = new ArrayList<>();
 
     try (Processor p = new EmlFileExtractor()) {
-      NotifyingItemFactory itemFactory = new NotifyingItemFactory(new TestItemCreator());
+      NotifyingItemFactory itemFactory = new NotifyingItemFactory(new TestItemFactory());
       itemFactory.registerListener(newItems::add);
 
       Logging logging = Logging.useLoggerFactory();
       Map<String, Resource> resources = new HashMap<>();
       resources.put("logging", logging);
 
-      Context context = new SimpleContext(resources);
+      Context context = new TestContext(itemFactory, resources);
       p.configure(context);
 
-      Item item = new TestItem(itemFactory);
+      Item item = new TestItem();
 
       URL resource = EmlFileExtractorTest.class.getResource("test_sample_message.eml"); // Based on
       // https://www.phpclasses.org/browse/file/14672.html
