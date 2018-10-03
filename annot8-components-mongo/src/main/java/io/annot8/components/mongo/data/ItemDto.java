@@ -33,20 +33,4 @@ public class ItemDto {
   public Collection<ContentDto> getContents() {
     return contents;
   }
-
-  public void setId(String id) {
-    this.id = id;
-  }
-
-  public void setParentId(String parentId) {
-    this.parentId = parentId;
-  }
-
-  public void setProperties(Map<String, Object> properties) {
-    this.properties = properties;
-  }
-
-  public void setContents(Collection<ContentDto> contents) {
-    this.contents = contents;
-  }
 }

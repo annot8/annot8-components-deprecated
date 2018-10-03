@@ -1,11 +1,16 @@
 /* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.mongo.data;
 
-import org.bson.Document;
-
+import io.annot8.common.implementations.content.AbstractContentBuilder;
+import io.annot8.common.implementations.content.AbstractContentBuilderFactory;
+import io.annot8.common.implementations.stores.AnnotationStoreFactory;
+import io.annot8.common.implementations.stores.SaveCallback;
 import io.annot8.core.data.Content;
+import io.annot8.core.data.Item;
 import io.annot8.core.properties.ImmutableProperties;
 import io.annot8.core.stores.AnnotationStore;
+import java.util.function.Supplier;
+import org.bson.Document;
 
 public class MongoDocument implements Content<Document> {
 
@@ -18,12 +23,12 @@ public class MongoDocument implements Content<Document> {
   public MongoDocument(
       String id,
       String name,
-      AnnotationStore annotations,
+      AnnotationStoreFactory annotationStoreFactory,
       ImmutableProperties properties,
       Document document) {
     this.id = id;
     this.name = name;
-    this.annotations = annotations;
+    this.annotations = annotationStoreFactory.create(this);
     this.properties = properties;
     this.document = document;
   }
@@ -61,5 +66,38 @@ public class MongoDocument implements Content<Document> {
   @Override
   public ImmutableProperties getProperties() {
     return properties;
+  }
+
+  public static class Builder extends AbstractContentBuilder<Document, MongoDocument>{
+
+    private AnnotationStoreFactory factory;
+
+    public Builder(AnnotationStoreFactory annotationStoreFactory,
+        SaveCallback<MongoDocument, MongoDocument> saver){
+      super(saver);
+      this.factory = annotationStoreFactory;
+    }
+
+    @Override
+    protected MongoDocument create(String id, String name, ImmutableProperties properties,
+        Supplier<Document> data) {
+      return new MongoDocument(id, name, factory, properties, data.get());
+    }
+  }
+
+  public static class BuilderFactory extends AbstractContentBuilderFactory<Document, MongoDocument> {
+
+    private AnnotationStoreFactory annotationStoreFactory;
+
+    protected BuilderFactory(AnnotationStoreFactory annotationStoreFactory) {
+      super(Document.class, MongoDocument.class);
+      this.annotationStoreFactory = annotationStoreFactory;
+    }
+
+    @Override
+    public Content.Builder<MongoDocument, Document> create(Item item,
+        SaveCallback<MongoDocument, MongoDocument> saver) {
+      return new Builder(annotationStoreFactory, saver);
+    }
   }
 }
