@@ -39,7 +39,7 @@ public class FlatItemSinkTest {
     when(database.getCollection(Mockito.eq("content"))).thenReturn(contentStore);
     when(database.getCollection(Mockito.eq("annotation"))).thenReturn(annotationStore);
 
-    FlatMongoSink store = new FlatMongoSink(itemStore, contentStore, annotationStore);
+    FlatMongoSink store = new FlatMongoSink();
     store.configure(new TestContext(), connection);
     Item item = new TestItem();
     Content content = null;

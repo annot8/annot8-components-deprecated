@@ -23,11 +23,6 @@ public class NestedItemSink extends AbstractMongoSink {
 
   private MongoCollection<Document> itemCollection;
 
-  public NestedItemSink(MongoCollection<Document> itemCollection) {
-    super();
-    this.itemCollection = itemCollection;
-  }
-
   @Override
   public void storeItem(Item item) throws Annot8Exception {
     ItemDto itemDto = toDto(item);

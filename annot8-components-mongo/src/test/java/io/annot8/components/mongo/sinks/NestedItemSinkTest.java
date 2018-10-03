@@ -31,7 +31,7 @@ public class NestedItemSinkTest {
     MongoConnection connection = Mockito.mock(MongoConnection.class);
     MongoCollection collection = Mockito.mock(MongoCollection.class);
     when(connection.getCollection()).thenReturn(collection);
-    NestedItemSink store = new NestedItemSink(collection);
+    NestedItemSink store = new NestedItemSink();
     store.configure(new TestContext(), connection);
 
     Item item = new TestItem();

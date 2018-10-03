@@ -30,15 +30,6 @@ public class FlatMongoSink extends AbstractMongoSink {
   private MongoCollection<Document> contentsCollection;
   private MongoCollection<Document> annotationsCollection;
 
-  public FlatMongoSink(
-      MongoCollection<Document> itemCollection,
-      MongoCollection<Document> contentsCollection,
-      MongoCollection<Document> annotationsCollection) {
-    this.itemCollection = itemCollection;
-    this.contentsCollection = contentsCollection;
-    this.annotationsCollection = annotationsCollection;
-  }
-
   @Override
   public void storeItem(Item item) throws Annot8Exception {
     String parentId = null;
