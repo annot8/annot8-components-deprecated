@@ -1,11 +1,16 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.mongo.sinks;
-
 
 import static org.assertj.core.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
+import org.bson.Document;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
 import com.mongodb.client.MongoCollection;
+
 import io.annot8.common.data.bounds.NoBounds;
 import io.annot8.common.data.content.Text;
 import io.annot8.components.mongo.resources.MongoConnection;
@@ -18,14 +23,11 @@ import io.annot8.core.exceptions.IncompleteException;
 import io.annot8.core.exceptions.UnsupportedContentException;
 import io.annot8.testing.testimpl.TestContext;
 import io.annot8.testing.testimpl.TestItem;
-import org.bson.Document;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 public class NestedItemSinkTest {
 
   @Test
-  public void testStore(){
+  public void testStore() {
     MongoConnection connection = Mockito.mock(MongoConnection.class);
     MongoCollection collection = Mockito.mock(MongoCollection.class);
     when(connection.getCollection()).thenReturn(collection);
@@ -36,16 +38,14 @@ public class NestedItemSinkTest {
     Content content = null;
     Annotation annotation = null;
     try {
-      content = item
-          .create(Text.class)
-          .withName("test")
-          .withData("testing")
-          .save();
-      annotation = content.getAnnotations()
-          .create()
-          .withBounds(NoBounds.getInstance())
-          .withType("test")
-          .save();
+      content = item.create(Text.class).withName("test").withData("testing").save();
+      annotation =
+          content
+              .getAnnotations()
+              .create()
+              .withBounds(NoBounds.getInstance())
+              .withType("test")
+              .save();
     } catch (UnsupportedContentException | IncompleteException e) {
       fail("Test should not error here", e);
     }
@@ -55,30 +55,38 @@ public class NestedItemSinkTest {
     String expected = getExpected(item.getId(), content.getId(), annotation.getId());
     System.out.println(expected);
     Document expectedDoc = Document.parse(expected);
-    Mockito.verify(collection, Mockito.times(1))
-        .insertOne(Mockito.eq(expectedDoc));
+    Mockito.verify(collection, Mockito.times(1)).insertOne(Mockito.eq(expectedDoc));
   }
 
-  private String getExpected(String itemId, String contentId, String annotationId){
+  private String getExpected(String itemId, String contentId, String annotationId) {
     return "{"
-        + "\"id\":\"" + itemId + "\","
+        + "\"id\":\""
+        + itemId
+        + "\","
         + "\"parentId\":null,"
         + "\"properties\":{},"
         + "\"contents\":["
-          + "{"
-          + "\"id\":\"" + contentId + "\","
-          + "\"itemId\":\"" + itemId + "\""
-          + "\"name\":\"test\","
-          + "\"data\":\"testing\","
-          + "\"properties\":{},"
-          + "\"annotations\":["
-            + "{"
-            + "\"id\":\"" + annotationId + "\","
-            + "\"type\":\"test\","
-            + "\"properties\":{},"
-            + "\"bounds\":{},"
-            + "\"data\":null,"
-            + "\"contentId\":\"" + contentId + "\"}]}]}";
+        + "{"
+        + "\"id\":\""
+        + contentId
+        + "\","
+        + "\"itemId\":\""
+        + itemId
+        + "\""
+        + "\"name\":\"test\","
+        + "\"data\":\"testing\","
+        + "\"properties\":{},"
+        + "\"annotations\":["
+        + "{"
+        + "\"id\":\""
+        + annotationId
+        + "\","
+        + "\"type\":\"test\","
+        + "\"properties\":{},"
+        + "\"bounds\":{},"
+        + "\"data\":null,"
+        + "\"contentId\":\""
+        + contentId
+        + "\"}]}]}";
   }
-
 }

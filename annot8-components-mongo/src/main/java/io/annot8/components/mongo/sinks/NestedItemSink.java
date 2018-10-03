@@ -1,7 +1,15 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.mongo.sinks;
+
+import java.util.Collection;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.bson.Document;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mongodb.client.MongoCollection;
+
 import io.annot8.components.mongo.data.AnnotationDto;
 import io.annot8.components.mongo.data.ContentDto;
 import io.annot8.components.mongo.data.ItemDto;
@@ -10,16 +18,12 @@ import io.annot8.core.annotations.Annotation;
 import io.annot8.core.data.Content;
 import io.annot8.core.data.Item;
 import io.annot8.core.exceptions.Annot8Exception;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import org.bson.Document;
 
 public class NestedItemSink extends AbstractMongoSink {
 
   private MongoCollection<Document> itemCollection;
 
-  public NestedItemSink(MongoCollection<Document> itemCollection){
+  public NestedItemSink(MongoCollection<Document> itemCollection) {
     super();
     this.itemCollection = itemCollection;
   }
@@ -40,40 +44,48 @@ public class NestedItemSink extends AbstractMongoSink {
     itemCollection = connection.getCollection();
   }
 
-  private ItemDto toDto(Item item){
+  private ItemDto toDto(Item item) {
     String parentId = null;
-    if(item.getParent().isPresent()){
+    if (item.getParent().isPresent()) {
       parentId = item.getParent().get();
     }
-    return new ItemDto(item.getId(), parentId,
-        item.getProperties().getAll(), getContents(item));
+    return new ItemDto(item.getId(), parentId, item.getProperties().getAll(), getContents(item));
   }
 
-  private Collection<ContentDto> getContents(Item item){
-    return item.getContents()
-        .map(c -> toDto(c, item.getId()))
-        .collect(Collectors.toList());
+  private Collection<ContentDto> getContents(Item item) {
+    return item.getContents().map(c -> toDto(c, item.getId())).collect(Collectors.toList());
   }
 
-  private Collection<AnnotationDto> getAnnotations(Content content){
-    return content.getAnnotations().getAll()
+  private Collection<AnnotationDto> getAnnotations(Content content) {
+    return content
+        .getAnnotations()
+        .getAll()
         .map((a) -> toDto(a, content))
         .collect(Collectors.toList());
   }
 
-  private ContentDto toDto(Content content, String itemId){
-    return new ContentDto(content.getId(), content.getName(), content.getData(),
-        content.getProperties().getAll(), getAnnotations(content), itemId);
+  private ContentDto toDto(Content content, String itemId) {
+    return new ContentDto(
+        content.getId(),
+        content.getName(),
+        content.getData(),
+        content.getProperties().getAll(),
+        getAnnotations(content),
+        itemId);
   }
 
-  private AnnotationDto toDto(Annotation annotation, Content content){
+  private AnnotationDto toDto(Annotation annotation, Content content) {
     Object data = null;
     Optional<Object> optional = annotation.getBounds().getData(content);
-    if(optional.isPresent()){
+    if (optional.isPresent()) {
       data = optional.get();
     }
-    return new AnnotationDto(annotation.getId(),annotation.getType(),
-        annotation.getBounds(), data, annotation.getProperties().getAll(), content.getId());
+    return new AnnotationDto(
+        annotation.getId(),
+        annotation.getType(),
+        annotation.getBounds(),
+        data,
+        annotation.getProperties().getAll(),
+        content.getId());
   }
-
 }

@@ -1,3 +1,4 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.mongo.data;
 
 import java.util.Collection;
@@ -12,8 +13,13 @@ public class ContentDto {
   private Map<String, Object> properties;
   private Collection<AnnotationDto> annotations;
 
-  public ContentDto(String id, String name, Object data,
-      Map<String, Object> properties, Collection<AnnotationDto> annotations, String itemId){
+  public ContentDto(
+      String id,
+      String name,
+      Object data,
+      Map<String, Object> properties,
+      Collection<AnnotationDto> annotations,
+      String itemId) {
     this.id = id;
     this.name = name;
     this.data = data;
@@ -42,8 +48,7 @@ public class ContentDto {
     return annotations;
   }
 
-  public void setAnnotations(
-      Collection<AnnotationDto> annotations) {
+  public void setAnnotations(Collection<AnnotationDto> annotations) {
     this.annotations = annotations;
   }
 

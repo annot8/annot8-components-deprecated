@@ -1,7 +1,11 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.mongo.sinks;
+
+import org.bson.Document;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.annot8.common.serialisation.jackson.Annot8ObjectMapperFactory;
 import io.annot8.components.mongo.AbstractMongoComponent;
 import io.annot8.components.mongo.resources.MongoConnection;
@@ -12,7 +16,6 @@ import io.annot8.core.components.responses.ProcessorResponse;
 import io.annot8.core.context.Context;
 import io.annot8.core.data.Item;
 import io.annot8.core.exceptions.Annot8Exception;
-import org.bson.Document;
 
 @UsesResource(MongoFactory.class)
 public abstract class AbstractMongoSink extends AbstractMongoComponent implements Processor {
@@ -43,9 +46,8 @@ public abstract class AbstractMongoSink extends AbstractMongoComponent implement
     return ProcessorResponse.ok();
   }
 
-  protected Document toMongoDocument(Object object) throws JsonProcessingException{
+  protected Document toMongoDocument(Object object) throws JsonProcessingException {
     String json = mapper.writeValueAsString(object);
     return Document.parse(json);
   }
-
 }

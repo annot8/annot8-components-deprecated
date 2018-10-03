@@ -1,7 +1,9 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.mongo.data;
 
-import io.annot8.core.bounds.Bounds;
 import java.util.Map;
+
+import io.annot8.core.bounds.Bounds;
 
 public class AnnotationDto {
 
@@ -12,8 +14,13 @@ public class AnnotationDto {
   private Object data;
   private String contentId;
 
-  public AnnotationDto(String id, String type, Bounds bounds, Object data,
-      Map<String, Object> properties, String contentId) {
+  public AnnotationDto(
+      String id,
+      String type,
+      Bounds bounds,
+      Object data,
+      Map<String, Object> properties,
+      String contentId) {
     this.id = id;
     this.type = type;
     this.properties = properties;

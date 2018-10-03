@@ -1,3 +1,4 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.mongo.data;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -5,31 +6,34 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import org.bson.Document;
+import org.junit.jupiter.api.Test;
+
 import io.annot8.common.implementations.stores.NoOpSaveCallback;
 import io.annot8.components.mongo.data.MongoDocument.BuilderFactory;
 import io.annot8.core.data.Content.Builder;
 import io.annot8.core.exceptions.IncompleteException;
 import io.annot8.testing.testimpl.TestAnnotationStore;
 import io.annot8.testing.testimpl.TestItem;
-import org.bson.Document;
-import org.junit.jupiter.api.Test;
 
 public class MongoDocumentTest {
 
   @Test
-  public void testBuilderFactory(){
-    BuilderFactory factory = new MongoDocument.BuilderFactory(c -> new TestAnnotationStore(c.getId()));
-    Builder<MongoDocument, Document> mongoDocumentBuilder = factory
-        .create(new TestItem(), new NoOpSaveCallback<>());
+  public void testBuilderFactory() {
+    BuilderFactory factory =
+        new MongoDocument.BuilderFactory(c -> new TestAnnotationStore(c.getId()));
+    Builder<MongoDocument, Document> mongoDocumentBuilder =
+        factory.create(new TestItem(), new NoOpSaveCallback<>());
 
     assertNotNull(mongoDocumentBuilder);
   }
 
   @Test
-  public void testBuilder(){
-    BuilderFactory factory = new MongoDocument.BuilderFactory(c -> new TestAnnotationStore(c.getId()));
-    Builder<MongoDocument, Document> mongoDocumentBuilder = factory
-        .create(new TestItem(), new NoOpSaveCallback<>());
+  public void testBuilder() {
+    BuilderFactory factory =
+        new MongoDocument.BuilderFactory(c -> new TestAnnotationStore(c.getId()));
+    Builder<MongoDocument, Document> mongoDocumentBuilder =
+        factory.create(new TestItem(), new NoOpSaveCallback<>());
 
     Document document = Document.parse("{}");
 
@@ -49,5 +53,4 @@ public class MongoDocumentTest {
     assertNotNull(content.getProperties());
     assertTrue(content.getProperties().getAll().isEmpty());
   }
-
 }

@@ -1,11 +1,17 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.mongo.sinks;
 
 import static org.assertj.core.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
+import org.bson.Document;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+
 import io.annot8.common.data.bounds.NoBounds;
 import io.annot8.common.data.content.Text;
 import io.annot8.components.mongo.resources.MongoConnection;
@@ -17,9 +23,6 @@ import io.annot8.core.exceptions.IncompleteException;
 import io.annot8.core.exceptions.UnsupportedContentException;
 import io.annot8.testing.testimpl.TestContext;
 import io.annot8.testing.testimpl.TestItem;
-import org.bson.Document;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 public class FlatItemSinkTest {
 
@@ -43,21 +46,21 @@ public class FlatItemSinkTest {
     Annotation ann1 = null;
     Annotation ann2 = null;
     try {
-      content = item
-          .create(Text.class)
-          .withName("test")
-          .withData("testing")
-          .save();
-      ann1 = content.getAnnotations()
-          .create()
-          .withBounds(NoBounds.getInstance())
-          .withType("test")
-          .save();
-      ann2 = content.getAnnotations()
-          .create()
-          .withBounds(NoBounds.getInstance())
-          .withType("test2")
-          .save();
+      content = item.create(Text.class).withName("test").withData("testing").save();
+      ann1 =
+          content
+              .getAnnotations()
+              .create()
+              .withBounds(NoBounds.getInstance())
+              .withType("test")
+              .save();
+      ann2 =
+          content
+              .getAnnotations()
+              .create()
+              .withBounds(NoBounds.getInstance())
+              .withType("test2")
+              .save();
     } catch (UnsupportedContentException | IncompleteException e) {
       fail("Test should not error here", e);
     }
@@ -77,39 +80,52 @@ public class FlatItemSinkTest {
     Mockito.verify(annotationStore, Mockito.times(1)).insertOne(expectedAnn2);
   }
 
-  private Document getExpecetedItem(String itemId){
-    String json = "{"
-        + "\"id\":\"" + itemId + "\","
-        + "\"parentId\":null,"
-        + "\"properties\":{},"
-        + "\"contents\":null"
-        + "}";
+  private Document getExpecetedItem(String itemId) {
+    String json =
+        "{"
+            + "\"id\":\""
+            + itemId
+            + "\","
+            + "\"parentId\":null,"
+            + "\"properties\":{},"
+            + "\"contents\":null"
+            + "}";
     return Document.parse(json);
   }
 
-  private Document getExpectedContent(String contentId, String itemId){
-    String json = "{"
-        + "\"id\":\"" + contentId + "\","
-        + "\"itemId\":\"" + itemId + "\""
-        + "\"name\":\"test\","
-        + "\"data\":\"testing\","
-        + "\"properties\":{},"
-        + "\"annotations\":null"
-        + "}";
+  private Document getExpectedContent(String contentId, String itemId) {
+    String json =
+        "{"
+            + "\"id\":\""
+            + contentId
+            + "\","
+            + "\"itemId\":\""
+            + itemId
+            + "\""
+            + "\"name\":\"test\","
+            + "\"data\":\"testing\","
+            + "\"properties\":{},"
+            + "\"annotations\":null"
+            + "}";
     return Document.parse(json);
   }
 
-  private Document getExpectedAnnotation(String annotationId, String contentId, String type){
-    String json =  "{"
-        + "\"id\":\"" + annotationId + "\","
-        + "\"type\":\"" + type + "\","
-        + "\"properties\":{},"
-        + "\"bounds\":{},"
-        + "\"data\":null,"
-        + "\"contentId\":\"" + contentId + "\""
-        + "}";
+  private Document getExpectedAnnotation(String annotationId, String contentId, String type) {
+    String json =
+        "{"
+            + "\"id\":\""
+            + annotationId
+            + "\","
+            + "\"type\":\""
+            + type
+            + "\","
+            + "\"properties\":{},"
+            + "\"bounds\":{},"
+            + "\"data\":null,"
+            + "\"contentId\":\""
+            + contentId
+            + "\""
+            + "}";
     return Document.parse(json);
   }
-
 }
-

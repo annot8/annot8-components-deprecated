@@ -1,8 +1,17 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.mongo.sinks;
+
+import java.util.Collection;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.bson.Document;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+
 import io.annot8.components.mongo.data.AnnotationDto;
 import io.annot8.components.mongo.data.ContentDto;
 import io.annot8.components.mongo.data.ItemDto;
@@ -11,11 +20,6 @@ import io.annot8.core.annotations.Annotation;
 import io.annot8.core.data.Content;
 import io.annot8.core.data.Item;
 import io.annot8.core.exceptions.Annot8Exception;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import org.bson.Document;
 
 public class FlatMongoSink extends AbstractMongoSink {
 
@@ -26,8 +30,10 @@ public class FlatMongoSink extends AbstractMongoSink {
   private MongoCollection<Document> contentsCollection;
   private MongoCollection<Document> annotationsCollection;
 
-  public FlatMongoSink(MongoCollection<Document> itemCollection,
-      MongoCollection<Document> contentsCollection, MongoCollection<Document> annotationsCollection){
+  public FlatMongoSink(
+      MongoCollection<Document> itemCollection,
+      MongoCollection<Document> contentsCollection,
+      MongoCollection<Document> annotationsCollection) {
     this.itemCollection = itemCollection;
     this.contentsCollection = contentsCollection;
     this.annotationsCollection = annotationsCollection;
@@ -36,19 +42,26 @@ public class FlatMongoSink extends AbstractMongoSink {
   @Override
   public void storeItem(Item item) throws Annot8Exception {
     String parentId = null;
-    if(item.getParent().isPresent()){
+    if (item.getParent().isPresent()) {
       parentId = item.getParent().get();
     }
-    ItemDto itemDto = new ItemDto(item.getId(), parentId,
-        item.getProperties().getAll(), null);
+    ItemDto itemDto = new ItemDto(item.getId(), parentId, item.getProperties().getAll(), null);
 
-    Collection<ContentDto> contents = item.getContents()
-        .map(c -> new ContentDto(c.getId(), c.getName(), c.getData()
-            , c.getProperties().getAll(), null, item.getId()))
-        .collect(Collectors.toList());
+    Collection<ContentDto> contents =
+        item.getContents()
+            .map(
+                c ->
+                    new ContentDto(
+                        c.getId(),
+                        c.getName(),
+                        c.getData(),
+                        c.getProperties().getAll(),
+                        null,
+                        item.getId()))
+            .collect(Collectors.toList());
 
-    Collection<AnnotationDto> annotations = item.getContents()
-        .flatMap(this::getAnnotations).collect(Collectors.toList());
+    Collection<AnnotationDto> annotations =
+        item.getContents().flatMap(this::getAnnotations).collect(Collectors.toList());
 
     try {
       itemCollection.insertOne(toMongoDocument(itemDto));
@@ -62,23 +75,25 @@ public class FlatMongoSink extends AbstractMongoSink {
       log().error("Error converting object to document", e);
       throw new Annot8Exception("Error storing item", e);
     }
-
   }
 
-  private Stream<AnnotationDto> getAnnotations(Content content){
-    return content.getAnnotations()
-        .getAll()
-        .map(a -> getAnnotation(a, content));
+  private Stream<AnnotationDto> getAnnotations(Content content) {
+    return content.getAnnotations().getAll().map(a -> getAnnotation(a, content));
   }
 
-  private AnnotationDto getAnnotation(Annotation annotation, Content content){
+  private AnnotationDto getAnnotation(Annotation annotation, Content content) {
     Object data = null;
     Optional optionalData = annotation.getBounds().getData(content);
-    if(optionalData.isPresent()){
+    if (optionalData.isPresent()) {
       data = optionalData.get();
     }
-    return new AnnotationDto(annotation.getId(), annotation.getType(), annotation.getBounds(),
-        data, annotation.getProperties().getAll(), content.getId());
+    return new AnnotationDto(
+        annotation.getId(),
+        annotation.getType(),
+        annotation.getBounds(),
+        data,
+        annotation.getProperties().getAll(),
+        content.getId());
   }
 
   @Override
@@ -88,6 +103,4 @@ public class FlatMongoSink extends AbstractMongoSink {
     contentsCollection = database.getCollection(CONTENT);
     annotationsCollection = database.getCollection(ANNOTATION);
   }
-
-
 }
