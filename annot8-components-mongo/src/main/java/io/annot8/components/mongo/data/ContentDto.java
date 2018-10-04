@@ -48,10 +48,6 @@ public class ContentDto {
     return annotations;
   }
 
-  public void setAnnotations(Collection<AnnotationDto> annotations) {
-    this.annotations = annotations;
-  }
-
   public String getItemId() {
     return itemId;
   }

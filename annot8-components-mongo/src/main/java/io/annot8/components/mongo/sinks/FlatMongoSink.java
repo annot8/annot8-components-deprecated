@@ -1,7 +1,9 @@
 /* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.mongo.sinks;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -54,18 +56,27 @@ public class FlatMongoSink extends AbstractMongoSink {
     Collection<AnnotationDto> annotations =
         item.getContents().flatMap(this::getAnnotations).collect(Collectors.toList());
 
+    Document itemDocument = null;
+    List<Document> contentDocuments = null;
+    List<Document> annotationDocuments = null;
     try {
-      itemCollection.insertOne(toMongoDocument(itemDto));
+      itemDocument = toMongoDocument(itemDto);
+      contentDocuments = new ArrayList<>();
+      annotationDocuments = new ArrayList<>();
       for (ContentDto content : contents) {
-        contentsCollection.insertOne(toMongoDocument(content));
+        contentDocuments.add(toMongoDocument(content));
       }
       for (AnnotationDto annotation : annotations) {
-        annotationsCollection.insertOne(toMongoDocument(annotation));
+        annotationDocuments.add(toMongoDocument(annotation));
       }
     } catch (JsonProcessingException e) {
       log().error("Error converting object to document", e);
       throw new Annot8Exception("Error storing item", e);
     }
+
+    itemCollection.insertOne(itemDocument);
+    contentsCollection.insertMany(contentDocuments);
+    annotationsCollection.insertMany(annotationDocuments);
   }
 
   private Stream<AnnotationDto> getAnnotations(Content content) {
