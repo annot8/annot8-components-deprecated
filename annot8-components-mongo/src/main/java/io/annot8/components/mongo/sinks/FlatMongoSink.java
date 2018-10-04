@@ -75,8 +75,12 @@ public class FlatMongoSink extends AbstractMongoSink {
     }
 
     itemCollection.insertOne(itemDocument);
-    contentsCollection.insertMany(contentDocuments);
-    annotationsCollection.insertMany(annotationDocuments);
+    if (!contentDocuments.isEmpty()) {
+      contentsCollection.insertMany(contentDocuments);
+    }
+    if (!annotationDocuments.isEmpty()) {
+      annotationsCollection.insertMany(annotationDocuments);
+    }
   }
 
   private Stream<AnnotationDto> getAnnotations(Content content) {

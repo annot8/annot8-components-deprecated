@@ -1,8 +1,11 @@
 /* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.mongo.sinks;
 
-import static org.assertj.core.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
@@ -11,68 +14,59 @@ import java.util.Collections;
 import java.util.List;
 
 import org.bson.Document;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatcher;
 import org.mockito.Mockito;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
-import io.annot8.common.data.bounds.SpanBounds;
-import io.annot8.common.data.content.Text;
 import io.annot8.components.mongo.resources.MongoConnection;
 import io.annot8.core.annotations.Annotation;
 import io.annot8.core.components.responses.ProcessorResponse;
 import io.annot8.core.components.responses.ProcessorResponse.Status;
 import io.annot8.core.data.Content;
 import io.annot8.core.data.Item;
-import io.annot8.core.exceptions.IncompleteException;
-import io.annot8.core.exceptions.UnsupportedContentException;
 import io.annot8.testing.testimpl.TestAnnotationStore;
 import io.annot8.testing.testimpl.TestContext;
 import io.annot8.testing.testimpl.TestItem;
 import io.annot8.testing.testimpl.TestProperties;
 
-public class FlatItemSinkTest {
+public class FlatItemSinkTest extends AbstractSinkTest {
 
-  @Test
-  public void testStore() {
-    MongoConnection connection = Mockito.mock(MongoConnection.class);
-    MongoDatabase database = Mockito.mock(MongoDatabase.class);
-    MongoCollection itemStore = Mockito.mock(MongoCollection.class);
-    MongoCollection contentStore = Mockito.mock(MongoCollection.class);
-    MongoCollection annotationStore = Mockito.mock(MongoCollection.class);
+  private MongoConnection connection;
+  private MongoDatabase database;
+  private MongoCollection itemStore;
+  private MongoCollection contentStore;
+  private MongoCollection annotationStore;
+
+  @BeforeEach
+  public void beforeEach() {
+    connection = mock(MongoConnection.class);
+    database = mock(MongoDatabase.class);
+    itemStore = mock(MongoCollection.class);
+    contentStore = mock(MongoCollection.class);
+    annotationStore = mock(MongoCollection.class);
 
     when(connection.getDatabase()).thenReturn(database);
     when(database.getCollection(Mockito.eq("item"))).thenReturn(itemStore);
     when(database.getCollection(Mockito.eq("content"))).thenReturn(contentStore);
     when(database.getCollection(Mockito.eq("annotation"))).thenReturn(annotationStore);
+  }
+
+  @Test
+  public void testStore() {
+    when(connection.getDatabase()).thenReturn(database);
+    when(database.getCollection(eq("item"))).thenReturn(itemStore);
+    when(database.getCollection(eq("content"))).thenReturn(contentStore);
+    when(database.getCollection(eq("annotation"))).thenReturn(annotationStore);
 
     FlatMongoSink store = new FlatMongoSink();
     store.configure(new TestContext(), connection);
     Item item = new TestItem();
-    Content content = null;
-    Annotation ann1 = null;
-    Annotation ann2 = null;
-    try {
-      content = item.create(Text.class).withName("test").withData("testing").save();
-      ann1 =
-          content
-              .getAnnotations()
-              .create()
-              .withBounds(new SpanBounds(0, 1))
-              .withType("test")
-              .save();
-      ann2 =
-          content
-              .getAnnotations()
-              .create()
-              .withBounds(new SpanBounds(1, 2))
-              .withType("test2")
-              .save();
-    } catch (UnsupportedContentException | IncompleteException e) {
-      fail("Test should not error here", e);
-    }
+    Content content = addContent(item, "test", "testing");
+    Annotation ann1 = addAnnotation(content, "test", 0, 1);
+    Annotation ann2 = addAnnotation(content, "test2", 1, 2);
 
     ProcessorResponse response = store.process(item);
     assertEquals(ProcessorResponse.Status.OK, response.getStatus());
@@ -86,32 +80,25 @@ public class FlatItemSinkTest {
     List<Document> expectedAnnotations = new ArrayList<>();
     expectedAnnotations.add(expectedAnn1);
     expectedAnnotations.add(expectedAnn2);
-    ListArgumentMatcher matchesDocs = new ListArgumentMatcher(expectedAnnotations);
+    DocumentListArgMatcher matchesDocs = new DocumentListArgMatcher(expectedAnnotations);
 
-    Mockito.verify(itemStore, Mockito.times(1)).insertOne(expectedItem);
-    Mockito.verify(contentStore, Mockito.times(1))
-        .insertMany(Collections.singletonList(expectedContent));
-    Mockito.verify(annotationStore, Mockito.times(1)).insertMany(Mockito.argThat(matchesDocs));
+    Mockito.verify(itemStore, times(1)).insertOne(expectedItem);
+    Mockito.verify(contentStore, times(1)).insertMany(Collections.singletonList(expectedContent));
+    Mockito.verify(annotationStore, times(1)).insertMany(argThat(matchesDocs));
   }
 
   @Test
   public void testProcessNonSerializableData() {
-    MongoConnection connection = Mockito.mock(MongoConnection.class);
-    MongoDatabase database = Mockito.mock(MongoDatabase.class);
-    MongoCollection itemStore = Mockito.mock(MongoCollection.class);
-    MongoCollection contentStore = Mockito.mock(MongoCollection.class);
-    MongoCollection annotationStore = Mockito.mock(MongoCollection.class);
-
     when(connection.getDatabase()).thenReturn(database);
-    when(database.getCollection(Mockito.eq("item"))).thenReturn(itemStore);
-    when(database.getCollection(Mockito.eq("content"))).thenReturn(contentStore);
-    when(database.getCollection(Mockito.eq("annotation"))).thenReturn(annotationStore);
+    when(database.getCollection(eq("item"))).thenReturn(itemStore);
+    when(database.getCollection(eq("content"))).thenReturn(contentStore);
+    when(database.getCollection(eq("annotation"))).thenReturn(annotationStore);
 
     FlatMongoSink store = new FlatMongoSink();
     store.configure(new TestContext(), connection);
 
     TestItem item = new TestItem();
-    Content content = Mockito.mock(Content.class);
+    Content content = mock(Content.class);
     when(content.getId()).thenReturn("test");
     when(content.getName()).thenReturn("test");
     when(content.getAnnotations()).thenReturn(new TestAnnotationStore());
@@ -121,9 +108,28 @@ public class FlatItemSinkTest {
 
     ProcessorResponse response = store.process(item);
     assertEquals(Status.ITEM_ERROR, response.getStatus());
-    Mockito.verify(itemStore, times(0)).insertOne(Mockito.any());
-    Mockito.verify(contentStore, times(0)).insertMany(Mockito.any());
-    Mockito.verify(annotationStore, times(0)).insertMany(Mockito.any());
+    Mockito.verify(itemStore, times(0)).insertOne(any());
+    Mockito.verify(contentStore, times(0)).insertMany(any());
+    Mockito.verify(annotationStore, times(0)).insertMany(any());
+  }
+
+  @Test
+  public void testProcessNoContent() {
+    when(connection.getDatabase()).thenReturn(database);
+    when(database.getCollection(eq("item"))).thenReturn(itemStore);
+    when(database.getCollection(eq("content"))).thenReturn(contentStore);
+    when(database.getCollection(eq("annotation"))).thenReturn(annotationStore);
+
+    FlatMongoSink store = new FlatMongoSink();
+    store.configure(new TestContext(), connection);
+
+    TestItem item = new TestItem();
+    Document expectedItem = getExpecetedItem(item.getId());
+    ProcessorResponse processorResponse = store.process(item);
+    assertEquals(Status.OK, processorResponse.getStatus());
+    Mockito.verify(itemStore, times(1)).insertOne(expectedItem);
+    Mockito.verify(contentStore, times(0)).insertMany(any());
+    Mockito.verify(annotationStore, times(0)).insertMany(any());
   }
 
   private Document getExpecetedItem(String itemId) {
@@ -180,31 +186,5 @@ public class FlatItemSinkTest {
             + "\""
             + "}";
     return Document.parse(json);
-  }
-
-  private class ListArgumentMatcher implements ArgumentMatcher<List<Document>> {
-
-    private List<Document> documents;
-
-    public ListArgumentMatcher(List<Document> documents) {
-      this.documents = documents;
-    }
-
-    @Override
-    public boolean matches(List<Document> argument) {
-      if (argument == null) {
-        return false;
-      }
-      if (documents.size() != argument.size()) {
-        return false;
-      }
-      for (Document doc : argument) {
-        if (!documents.contains(doc)) {
-          return false;
-        }
-      }
-
-      return true;
-    }
   }
 }
