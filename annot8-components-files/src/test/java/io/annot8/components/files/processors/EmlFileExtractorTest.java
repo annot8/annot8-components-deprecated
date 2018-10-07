@@ -42,7 +42,7 @@ public class EmlFileExtractorTest {
 
     try (Processor p = new EmlFileExtractor()) {
       NotifyingItemFactory itemFactory = new NotifyingItemFactory(new TestItemFactory());
-      itemFactory.registerListener(newItems::add);
+      itemFactory.register(newItems::add);
 
       Logging logging = Logging.useLoggerFactory();
       Map<String, Resource> resources = new HashMap<>();
