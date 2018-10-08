@@ -8,7 +8,6 @@ import org.bson.Document;
 import io.annot8.common.implementations.content.AbstractContentBuilder;
 import io.annot8.common.implementations.content.AbstractContentBuilderFactory;
 import io.annot8.common.implementations.stores.AnnotationStoreFactory;
-import io.annot8.common.implementations.stores.SaveCallback;
 import io.annot8.core.data.BaseItem;
 import io.annot8.core.data.Content;
 import io.annot8.core.properties.ImmutableProperties;
@@ -74,10 +73,7 @@ public class MongoDocument implements Content<Document> {
 
     private AnnotationStoreFactory factory;
 
-    public Builder(
-        AnnotationStoreFactory annotationStoreFactory,
-        SaveCallback<MongoDocument, MongoDocument> saver) {
-      super(saver);
+    public Builder(AnnotationStoreFactory annotationStoreFactory) {
       this.factory = annotationStoreFactory;
     }
 
@@ -99,9 +95,8 @@ public class MongoDocument implements Content<Document> {
     }
 
     @Override
-    public Content.Builder<MongoDocument, Document> create(
-        BaseItem item, SaveCallback<MongoDocument, MongoDocument> saver) {
-      return new Builder(annotationStoreFactory, saver);
+    public Content.Builder<MongoDocument, Document> create(BaseItem item) {
+      return new Builder(annotationStoreFactory);
     }
   }
 }
