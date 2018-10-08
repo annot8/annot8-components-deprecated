@@ -34,10 +34,10 @@ public class ChromeHistoryFileExtractorTest {
 
   @Test
   public void testProcess() throws BadConfigurationException, MissingResourceException {
-    final TestItemFactory itemFactory = new TestItemFactory();
-    final TestContext testContext = new TestContext(itemFactory);
+    final TestContext testContext = new TestContext();
 
-    Item item = new TestItem(new TestGroupStore());
+    TestItem item = new TestItem(new TestGroupStore());
+    TestItemFactory itemFactory = (TestItemFactory) item.getItemFactory();
     FileContent fileContent = mockFileContent("ChromeHistory");
     ((TestItem) item).setContent(Collections.singletonMap("file", fileContent));
 
