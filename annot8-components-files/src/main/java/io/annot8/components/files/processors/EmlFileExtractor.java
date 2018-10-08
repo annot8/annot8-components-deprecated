@@ -29,26 +29,13 @@ import io.annot8.core.capabilities.CreatesContent;
 import io.annot8.core.capabilities.ProcessesContent;
 import io.annot8.core.components.Processor;
 import io.annot8.core.components.responses.ProcessorResponse;
-import io.annot8.core.context.Context;
 import io.annot8.core.data.Content.Builder;
 import io.annot8.core.data.Item;
-import io.annot8.core.data.ItemFactory;
-import io.annot8.core.exceptions.BadConfigurationException;
-import io.annot8.core.exceptions.MissingResourceException;
 
 @ProcessesContent(FileContent.class)
 @CreatesContent(Text.class)
 @CreatesContent(InputStreamContent.class)
 public class EmlFileExtractor extends AbstractComponent implements Processor {
-
-  private ItemFactory itemFactory;
-
-  @Override
-  public void configure(Context context)
-      throws BadConfigurationException, MissingResourceException {
-    super.configure(context);
-    itemFactory = context.getItemFactory();
-  }
 
   @Override
   public ProcessorResponse process(Item item) {
@@ -170,8 +157,7 @@ public class EmlFileExtractor extends AbstractComponent implements Processor {
       }
 
       Builder<InputStreamContent, InputStream> builder =
-          itemFactory
-              .create(item)
+          item.create()
               .create(InputStreamContent.class)
               .withData(createSupplier(inputStream))
               .withName(name);

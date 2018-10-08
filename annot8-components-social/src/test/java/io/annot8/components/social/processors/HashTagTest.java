@@ -31,7 +31,7 @@ public class HashTagTest {
     //    SimpleContentBuilderFactoryRegistry contentBuilderFactoryRegistry = new
     // SimpleContentBuilderFactoryRegistry();
     //    contentBuilderFactoryRegistry.register(Text.class, new SimpleText.BuilderFactory());
-    //    ItemFactory itemFactory = new SimpleItemFactory(contentBuilderFactoryRegistry);
+    //    BaseItemFactory itemFactory = new SimpleItemFactory(contentBuilderFactoryRegistry);
     //    Context context = new SimpleContext(itemFactory, EmptySettings.getInstance());
 
     Item item = new TestItem();

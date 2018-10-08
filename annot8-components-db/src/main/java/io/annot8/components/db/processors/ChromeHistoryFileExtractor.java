@@ -1,9 +1,8 @@
 /* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.db.processors;
 
-import io.annot8.core.exceptions.Annot8RuntimeException;
+import io.annot8.core.data.BaseItemFactory;
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -11,7 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import io.annot8.common.data.content.FileContent;
 import io.annot8.common.data.content.URLContent;
@@ -21,12 +19,9 @@ import io.annot8.core.components.Processor;
 import io.annot8.core.components.responses.ProcessorResponse;
 import io.annot8.core.context.Context;
 import io.annot8.core.data.Item;
-import io.annot8.core.data.ItemFactory;
 import io.annot8.core.exceptions.Annot8Exception;
 import io.annot8.core.exceptions.BadConfigurationException;
-import io.annot8.core.exceptions.IncompleteException;
 import io.annot8.core.exceptions.MissingResourceException;
-import io.annot8.core.exceptions.UnsupportedContentException;
 
 /** FileContent processor that will use */
 @ProcessesContent(FileContent.class)
@@ -34,14 +29,7 @@ import io.annot8.core.exceptions.UnsupportedContentException;
 public class ChromeHistoryFileExtractor extends AbstractJDBCComponent<URL> implements Processor {
 
   private static final String HISTORY_QUERY = "SELECT * FROM urls";
-  private ItemFactory itemFactory;
-
-  @Override
-  public void configure(Context context)
-      throws BadConfigurationException, MissingResourceException {
-    super.configure(context);
-    itemFactory = context.getItemFactory();
-  }
+  private BaseItemFactory itemFactory;
 
 
   @Override
@@ -129,7 +117,7 @@ public class ChromeHistoryFileExtractor extends AbstractJDBCComponent<URL> imple
   }
 
   private boolean createChildItem(Item item, URL url) {
-    Item child = itemFactory.create(item);
+    Item child = item.create();
 
     try {
       child.create(URLContent.class).withData(() -> url).withName("url").save();
