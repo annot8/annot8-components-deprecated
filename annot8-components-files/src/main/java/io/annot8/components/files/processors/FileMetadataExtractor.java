@@ -90,9 +90,10 @@ public class FileMetadataExtractor extends AbstractComponent implements Processo
   }
 
   private String getFileExtension(File file) {
-    int index = file.getAbsolutePath().lastIndexOf('.');
-    if (index > 0 && index != file.getAbsolutePath().length()) {
-      return file.getAbsolutePath().substring(index + 1);
+    String name = file.getName();
+    int index = name.lastIndexOf('.');
+    if (index > 0 && index != name.length()) {
+      return name.substring(index + 1);
     }
     return null;
   }

@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
@@ -34,28 +35,12 @@ public class FileMetadataExtractorTest {
   @Test
   public void testProcess() {
     Item item = Mockito.mock(Item.class);
-    FileContent fileContent = Mockito.mock(FileContent.class);
     AnnotationStore store = new TestAnnotationStore();
 
-    URL resource = FileMetadataExtractorTest.class.getResource("testfilemetadata.txt");
-    File file = null;
-    try {
-      file = new File(resource.toURI());
-    } catch (URISyntaxException e) {
-      fail("Error not expected when finding test file");
-    }
-    when(fileContent.getData()).thenReturn(file);
-    when(fileContent.getAnnotations()).thenReturn(store);
+    FileContent fileContent = getFileContent("testfilemetadata.txt");
+    File file = fileContent.getData();
 
-    doAnswer(
-            new Answer<Stream<FileContent>>() {
-              @Override
-              public Stream<FileContent> answer(InvocationOnMock invocation) {
-                return Stream.of(fileContent);
-              }
-            })
-        .when(item)
-        .getContents(Mockito.eq(FileContent.class));
+    doAnswer(getStreamAnswer(fileContent)).when(item).getContents(eq(FileContent.class));
 
     FileMetadataExtractor extractor = new FileMetadataExtractor();
 
@@ -79,25 +64,32 @@ public class FileMetadataExtractorTest {
     annotations.forEach(a -> assertEquals(FileMetadataExtractor.FILE_METADATA, a.getType()));
   }
 
-  private Object getKeyValue(List<Annotation> annotations, String key) {
-    for (Annotation annotation : annotations) {
-      if (annotation.getProperties().has(key)) {
-        return annotation.getProperties().get(key).get();
-      }
-    }
-    fail("Key: " + key + " not found in the provided list");
-    return null;
-  }
-
   @Test
   public void testProcessNoFileContent() {
     Item item = Mockito.mock(Item.class);
-    when(item.getContents(Mockito.eq(FileContent.class))).thenReturn(Stream.empty());
+    when(item.getContents(eq(FileContent.class))).thenReturn(Stream.empty());
 
     FileMetadataExtractor extractor = new FileMetadataExtractor();
     ProcessorResponse processResponse = extractor.process(item);
 
     assertEquals(Status.OK, processResponse.getStatus());
+  }
+
+  @Test
+  public void testProcessNoFileExtension() {
+    Item item = Mockito.mock(Item.class);
+    FileContent content = getFileContent("noExtension");
+    doAnswer(getStreamAnswer(content)).when(item).getContents(eq(FileContent.class));
+    FileMetadataExtractor extractor = new FileMetadataExtractor();
+    ProcessorResponse response = extractor.process(item);
+    assertEquals(Status.OK, response.getStatus());
+
+    List<Annotation> annotations = content.getAnnotations().getAll().collect(Collectors.toList());
+    for (Annotation annotation : annotations) {
+      if (annotation.getProperties().has(FileMetadata.EXTENSION)) {
+        fail("No annotation with a file extension property is expected");
+      }
+    }
   }
 
   @Test
@@ -113,11 +105,45 @@ public class FileMetadataExtractorTest {
               }
             })
         .when(item)
-        .getContents(Mockito.eq(FileContent.class));
+        .getContents(eq(FileContent.class));
 
     FileMetadataExtractor extractor = new FileMetadataExtractor();
     ProcessorResponse response = extractor.process(item);
 
     assertEquals(Status.ITEM_ERROR, response.getStatus());
+  }
+
+  private FileContent getFileContent(String fileName) {
+    AnnotationStore store = new TestAnnotationStore();
+    FileContent fileContent = Mockito.mock(FileContent.class);
+    URL resource = FileMetadataExtractorTest.class.getResource(fileName);
+    File file = null;
+    try {
+      file = new File(resource.toURI());
+    } catch (URISyntaxException e) {
+      fail("Error not expected when finding test file");
+    }
+    when(fileContent.getData()).thenReturn(file);
+    when(fileContent.getAnnotations()).thenReturn(store);
+    return fileContent;
+  }
+
+  private Object getKeyValue(List<Annotation> annotations, String key) {
+    for (Annotation annotation : annotations) {
+      if (annotation.getProperties().has(key)) {
+        return annotation.getProperties().get(key).get();
+      }
+    }
+    fail("Key: " + key + " not found in the provided list");
+    return null;
+  }
+
+  private <T> Answer<Stream<T>> getStreamAnswer(T... contents) {
+    return new Answer<Stream<T>>() {
+      @Override
+      public Stream<T> answer(InvocationOnMock invocation) throws Throwable {
+        return Stream.of(contents);
+      }
+    };
   }
 }
