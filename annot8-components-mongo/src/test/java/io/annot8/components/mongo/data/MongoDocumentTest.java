@@ -9,7 +9,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 import org.bson.Document;
 import org.junit.jupiter.api.Test;
 
-import io.annot8.common.implementations.stores.NoOpSaveCallback;
 import io.annot8.components.mongo.data.MongoDocument.BuilderFactory;
 import io.annot8.core.data.Content.Builder;
 import io.annot8.core.exceptions.IncompleteException;
@@ -22,8 +21,7 @@ public class MongoDocumentTest {
   public void testBuilderFactory() {
     BuilderFactory factory =
         new MongoDocument.BuilderFactory(c -> new TestAnnotationStore(c.getId()));
-    Builder<MongoDocument, Document> mongoDocumentBuilder =
-        factory.create(new TestItem(), new NoOpSaveCallback<>());
+    Builder<MongoDocument, Document> mongoDocumentBuilder = factory.create(new TestItem());
 
     assertNotNull(mongoDocumentBuilder);
   }
@@ -32,8 +30,7 @@ public class MongoDocumentTest {
   public void testBuilder() {
     BuilderFactory factory =
         new MongoDocument.BuilderFactory(c -> new TestAnnotationStore(c.getId()));
-    Builder<MongoDocument, Document> mongoDocumentBuilder =
-        factory.create(new TestItem(), new NoOpSaveCallback<>());
+    Builder<MongoDocument, Document> mongoDocumentBuilder = factory.create(new TestItem());
 
     Document document = Document.parse("{}");
 
