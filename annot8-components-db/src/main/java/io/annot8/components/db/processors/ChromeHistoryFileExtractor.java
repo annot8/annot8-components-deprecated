@@ -1,7 +1,7 @@
 /* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.db.processors;
 
-import io.annot8.core.data.BaseItemFactory;
+import io.annot8.common.implementations.data.BaseItemFactory;
 import java.io.File;
 import java.net.URL;
 import java.sql.Connection;
@@ -17,11 +17,8 @@ import io.annot8.core.capabilities.CreatesContent;
 import io.annot8.core.capabilities.ProcessesContent;
 import io.annot8.core.components.Processor;
 import io.annot8.core.components.responses.ProcessorResponse;
-import io.annot8.core.context.Context;
 import io.annot8.core.data.Item;
 import io.annot8.core.exceptions.Annot8Exception;
-import io.annot8.core.exceptions.BadConfigurationException;
-import io.annot8.core.exceptions.MissingResourceException;
 
 /** FileContent processor that will use */
 @ProcessesContent(FileContent.class)
