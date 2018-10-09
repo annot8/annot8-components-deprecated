@@ -1,5 +1,5 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.db.processors;
-
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,5 +22,4 @@ class JDBCSettingsTest {
 
     assertThat(settings.validate()).isTrue();
   }
-
 }
