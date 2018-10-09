@@ -2,6 +2,7 @@
 package io.annot8.components.db.processors;
 
 import com.google.common.base.Strings;
+
 import io.annot8.core.settings.Settings;
 
 public class JDBCSettings implements Settings {

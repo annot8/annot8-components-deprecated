@@ -9,16 +9,15 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 import io.annot8.components.base.components.AbstractComponent;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 public abstract class AbstractJDBCComponent<T> extends AbstractComponent {
 
   private static final int TIMEOUT = 1000;
 
-  protected Connection openConnection(JDBCSettings settings) throws SQLException{
+  protected Connection openConnection(JDBCSettings settings) throws SQLException {
     String user = settings.getUser();
     String jdbcUrl = settings.getJdbcUrl();
     String password = settings.getPassword();
@@ -32,7 +31,7 @@ public abstract class AbstractJDBCComponent<T> extends AbstractComponent {
 
   protected boolean testConnection(Connection connection) {
     try {
-      if(connection == null) {
+      if (connection == null) {
         return false;
       }
 
@@ -45,7 +44,7 @@ public abstract class AbstractJDBCComponent<T> extends AbstractComponent {
 
   protected void closeConnection(Connection connection) {
     try {
-      if(connection != null) {
+      if (connection != null) {
         connection.close();
       }
     } catch (Exception e) {
@@ -54,9 +53,9 @@ public abstract class AbstractJDBCComponent<T> extends AbstractComponent {
   }
 
   protected boolean runInConnection(JDBCSettings settings, Function<Connection, Boolean> consumer) {
-    try( Connection connection = openConnection(settings) ) {
+    try (Connection connection = openConnection(settings)) {
 
-      if(connection == null || !testConnection(connection)) {
+      if (connection == null || !testConnection(connection)) {
         return false;
       }
 
@@ -68,11 +67,11 @@ public abstract class AbstractJDBCComponent<T> extends AbstractComponent {
     }
   }
 
-
-  protected List<T> executeQuery(Connection connection, String query, Function<ResultSet, Optional<T>> mapper) {
+  protected List<T> executeQuery(
+      Connection connection, String query, Function<ResultSet, Optional<T>> mapper) {
     List<T> resultList = new ArrayList<>();
-    try(Statement s = connection.createStatement()) {
-      try(ResultSet results = s.executeQuery(query)) {
+    try (Statement s = connection.createStatement()) {
+      try (ResultSet results = s.executeQuery(query)) {
         while (results.next()) {
           Optional<T> value = mapper.apply(results);
           if (value.isPresent()) {

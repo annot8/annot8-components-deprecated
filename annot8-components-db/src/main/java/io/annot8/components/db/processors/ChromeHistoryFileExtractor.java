@@ -1,7 +1,6 @@
 /* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.db.processors;
 
-import io.annot8.common.implementations.data.BaseItemFactory;
 import java.io.File;
 import java.net.URL;
 import java.sql.Connection;
@@ -13,6 +12,7 @@ import java.util.Optional;
 
 import io.annot8.common.data.content.FileContent;
 import io.annot8.common.data.content.URLContent;
+import io.annot8.common.implementations.data.BaseItemFactory;
 import io.annot8.core.capabilities.CreatesContent;
 import io.annot8.core.capabilities.ProcessesContent;
 import io.annot8.core.components.Processor;
@@ -27,7 +27,6 @@ public class ChromeHistoryFileExtractor extends AbstractJDBCComponent<URL> imple
 
   private static final String HISTORY_QUERY = "SELECT * FROM urls";
   private BaseItemFactory itemFactory;
-
 
   @Override
   public ProcessorResponse process(Item item) throws Annot8Exception {
@@ -54,10 +53,10 @@ public class ChromeHistoryFileExtractor extends AbstractJDBCComponent<URL> imple
     return runInConnection(settings, connection -> extractHistory(connection, item));
   }
 
-  private boolean extractHistory(Connection connection, Item item)  {
+  private boolean extractHistory(Connection connection, Item item) {
 
     // If it's not sqlite its still ok
-    if(!isSqlite(connection)) {
+    if (!isSqlite(connection)) {
       return true;
     }
 
@@ -86,7 +85,7 @@ public class ChromeHistoryFileExtractor extends AbstractJDBCComponent<URL> imple
     }
   }
 
-  private boolean isSqlite(Connection connection)  {
+  private boolean isSqlite(Connection connection) {
 
     // The parent class uses basic JDBC connection checks
     // The following check ensures DB file is an sqlite db
