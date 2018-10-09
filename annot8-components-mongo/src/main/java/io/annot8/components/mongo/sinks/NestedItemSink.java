@@ -40,10 +40,7 @@ public class NestedItemSink extends AbstractMongoSink {
   }
 
   private ItemDto toDto(Item item) {
-    String parentId = null;
-    if (item.getParent().isPresent()) {
-      parentId = item.getParent().get();
-    }
+    String parentId = item.getParent().orElse(null);
     return new ItemDto(item.getId(), parentId, item.getProperties().getAll(), getContents(item));
   }
 
