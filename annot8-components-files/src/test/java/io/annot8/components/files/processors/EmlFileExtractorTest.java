@@ -9,11 +9,8 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
@@ -23,35 +20,26 @@ import com.google.common.io.CharStreams;
 import io.annot8.common.data.content.FileContent;
 import io.annot8.common.data.content.InputStreamContent;
 import io.annot8.common.data.content.Text;
-import io.annot8.common.implementations.context.SimpleContext;
-import io.annot8.common.implementations.factories.NotifyingItemFactory;
-import io.annot8.components.monitor.resources.Logging;
 import io.annot8.core.components.Processor;
-import io.annot8.core.components.Resource;
 import io.annot8.core.context.Context;
+import io.annot8.core.data.BaseItem;
 import io.annot8.core.data.Item;
+import io.annot8.testing.testimpl.TestContext;
 import io.annot8.testing.testimpl.TestItem;
-import io.annot8.testing.testimpl.TestItemCreator;
+import io.annot8.testing.testimpl.TestItemFactory;
 
 public class EmlFileExtractorTest {
 
   @Test
   public void test() throws Exception {
 
-    List<Item> newItems = new ArrayList<>();
-
     try (Processor p = new EmlFileExtractor()) {
-      NotifyingItemFactory itemFactory = new NotifyingItemFactory(new TestItemCreator());
-      itemFactory.registerListener(newItems::add);
 
-      Logging logging = Logging.useLoggerFactory();
-      Map<String, Resource> resources = new HashMap<>();
-      resources.put("logging", logging);
-
-      Context context = new SimpleContext(resources);
+      Context context = new TestContext();
       p.configure(context);
 
-      Item item = new TestItem(itemFactory);
+      TestItem item = new TestItem();
+      TestItemFactory itemFactory = (TestItemFactory) item.getItemFactory();
 
       URL resource = EmlFileExtractorTest.class.getResource("test_sample_message.eml"); // Based on
       // https://www.phpclasses.org/browse/file/14672.html
@@ -89,15 +77,16 @@ public class EmlFileExtractorTest {
               .contains(
                   "Testing Manuel Lemos' MIME E-mail composing and sending PHP class: HTML message"));
 
+      final List<Item> newItems = itemFactory.getCreatedItems();
       assertEquals(3, newItems.size());
 
-      Item logoItem = newItems.get(0);
+      BaseItem logoItem = newItems.get(0);
       assertTrue(logoItem.hasContentOfName("logo.gif"));
 
-      Item backgroundItem = newItems.get(1);
+      BaseItem backgroundItem = newItems.get(1);
       assertTrue(backgroundItem.hasContentOfName("background.gif"));
 
-      Item attachmentItem = newItems.get(2);
+      BaseItem attachmentItem = newItems.get(2);
       InputStreamContent inputStreamContent =
           (InputStreamContent) attachmentItem.getContentByName("attachment.txt").findFirst().get();
       assertNotNull(inputStreamContent);
