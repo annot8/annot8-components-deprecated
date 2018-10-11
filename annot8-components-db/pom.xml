@@ -8,7 +8,10 @@
     <groupId>io.annot8</groupId>
     <version>0.2.0-SNAPSHOT</version>
   </parent>
+
   <artifactId>annot8-components-db</artifactId>
+  <name>Annot8 DB Components</name>
+  <description>Components to deal with databases (primarily JDBC)</description>
 
   <dependencies>
     <dependency>
