@@ -65,7 +65,7 @@ public class DatabaseTableIterator implements Iterator<Row> {
   }
 
   private Row resultSetToRow(ResultSet resultSet) throws SQLException {
-    int index = resultSet.getRow();
+    int index = resultSet.getRow() - 1;
     List<Object> data = new ArrayList<>();
     for (int i = 1; i < metadata.getColumns().size() + 1; i++) {
       data.add(resultSet.getObject(i));
