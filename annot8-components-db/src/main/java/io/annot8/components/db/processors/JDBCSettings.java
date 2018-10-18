@@ -1,19 +1,15 @@
 /* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.db.processors;
 
-import com.google.common.base.Strings;
-
 import io.annot8.core.settings.Settings;
 
 public class JDBCSettings implements Settings {
 
-  private String jdbcUrl;
-  private String user;
-  private String password;
+  public static final int TIMEOUT = 1000;
 
-  public JDBCSettings() {
-    this(null);
-  }
+  private final String jdbcUrl;
+  private final String user;
+  private final String password;
 
   public JDBCSettings(String jdbcUrl) {
     this(jdbcUrl, null, null);
@@ -25,32 +21,20 @@ public class JDBCSettings implements Settings {
     this.password = password;
   }
 
-  public void setJdbcUrl(String jdbcUrl) {
-    this.jdbcUrl = jdbcUrl;
-  }
-
-  public void setUser(String user) {
-    this.user = user;
-  }
-
-  public void setPassword(String password) {
-    this.password = password;
+  @Override
+  public boolean validate() {
+    return jdbcUrl != null && !jdbcUrl.isEmpty();
   }
 
   public String getJdbcUrl() {
     return jdbcUrl;
   }
 
-  public String getPassword() {
-    return password;
-  }
-
   public String getUser() {
     return user;
   }
 
-  @Override
-  public boolean validate() {
-    return !Strings.isNullOrEmpty(jdbcUrl);
+  public String getPassword() {
+    return password;
   }
 }

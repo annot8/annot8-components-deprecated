@@ -38,15 +38,15 @@ public abstract class AbstractMongoComponent extends AbstractComponent {
       throws BadConfigurationException, MissingResourceException {
     super.configure(context);
 
-    Optional<MongoSettings> optionalMongoResource = context.getSettings(MongoSettings.class);
-    Optional<MongoConnectionSettings> optionalMongoConnection =
+    Optional<MongoSettings> optionalMongoSettings = context.getSettings(MongoSettings.class);
+    Optional<MongoConnectionSettings> optionalMongoConnectionSettings =
         context.getSettings(MongoConnectionSettings.class);
 
-    if (optionalMongoResource.isPresent()
-        && !Strings.isNullOrEmpty(optionalMongoResource.get().getMongo())) {
+    if (optionalMongoSettings.isPresent()
+        && !Strings.isNullOrEmpty(optionalMongoSettings.get().getMongo())) {
       // Use the resource first
 
-      String key = optionalMongoResource.get().getMongo();
+      String key = optionalMongoSettings.get().getMongo();
       Optional<Mongo> optionalConnection = context.getResource(key, Mongo.class);
 
       if (!optionalConnection.isPresent()) {
@@ -55,7 +55,7 @@ public abstract class AbstractMongoComponent extends AbstractComponent {
 
       connection = optionalConnection.get();
 
-    } else if (optionalMongoConnection.isPresent()) {
+    } else if (optionalMongoConnectionSettings.isPresent()) {
       // Create a new connection
 
       Optional<MongoFactory> mongoFactory = context.getResource(MongoFactory.class);
@@ -65,7 +65,7 @@ public abstract class AbstractMongoComponent extends AbstractComponent {
       }
 
       MongoConnectionSettings mergedSettings =
-          mongoFactory.get().mergeWithDefaultSettings(optionalMongoConnection);
+          mongoFactory.get().mergeWithDefaultSettings(optionalMongoConnectionSettings);
       Optional<MongoConnection> optionalConnection =
           mongoFactory.get().buildMongo(Optional.of(mergedSettings));
 
@@ -76,13 +76,13 @@ public abstract class AbstractMongoComponent extends AbstractComponent {
       connection = optionalConnection.get();
     } else {
       // Fall back to default Mongo
-      Optional<Mongo> optionalConnection = context.getResource(Mongo.class);
+      Optional<Mongo> optionalMongo = context.getResource(Mongo.class);
 
-      if (!optionalConnection.isPresent()) {
+      if (!optionalMongo.isPresent()) {
         throw new MissingResourceException("No Mongo resource available");
       }
 
-      connection = optionalConnection.get();
+      connection = optionalMongo.get();
     }
 
     if (connection != null) {
