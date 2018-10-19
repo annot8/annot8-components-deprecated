@@ -61,7 +61,7 @@ public class NestedItemSink extends AbstractMongoSink {
         content.getId(),
         content.getName(),
         content.getData(),
-        content.getProperties().getAll(),
+        sanitiseKeys(content.getProperties()),
         getAnnotations(content),
         itemId);
   }
@@ -77,7 +77,7 @@ public class NestedItemSink extends AbstractMongoSink {
         annotation.getType(),
         annotation.getBounds(),
         data,
-        annotation.getProperties().getAll(),
+        sanitiseKeys(annotation.getProperties()),
         content.getId());
   }
 }
