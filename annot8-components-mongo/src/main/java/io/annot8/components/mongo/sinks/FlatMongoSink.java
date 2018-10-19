@@ -48,7 +48,7 @@ public class FlatMongoSink extends AbstractMongoSink {
                         c.getId(),
                         c.getName(),
                         c.getData(),
-                        c.getProperties().getAll(),
+                        sanitiseKeys(c.getProperties()),
                         null,
                         item.getId()))
             .collect(Collectors.toList());
@@ -93,12 +93,13 @@ public class FlatMongoSink extends AbstractMongoSink {
     if (optionalData.isPresent()) {
       data = optionalData.get();
     }
+
     return new AnnotationDto(
         annotation.getId(),
         annotation.getType(),
         annotation.getBounds(),
         data,
-        annotation.getProperties().getAll(),
+        sanitiseKeys(annotation.getProperties()),
         content.getId());
   }
 

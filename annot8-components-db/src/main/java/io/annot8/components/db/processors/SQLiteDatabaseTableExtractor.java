@@ -90,7 +90,7 @@ public class SQLiteDatabaseTableExtractor extends AbstractComponent implements P
         return true;
       }
     } catch (SQLException e) {
-      log().info("File is not SQLite DB", e);
+      // Indicates that this file is not SQLite DB
       return false;
     }
 
