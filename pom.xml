@@ -45,6 +45,7 @@
     <module>annot8-components-types</module>
     <module>annot8-components-image</module>
     <module>annot8-components-db</module>
+    <module>annot8-components-translation</module>
   </modules>
 
   <profiles>
