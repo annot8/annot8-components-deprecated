@@ -49,9 +49,9 @@ public class RemediTranslation extends AbstractTextProcessor {
       String trans = client.translateText(source, target, content.getData()).get();
 
       item.create(Text.class)
-          .withName(content.getName() + "_en")
+          .withName(content.getName() + "_" + target)
           .withData(trans)
-          .withProperty(PropertyKeys.PROPERTY_KEY_LANGUAGE, "English")
+          .withProperty(PropertyKeys.PROPERTY_KEY_LANGUAGE, target)
           .save();
     } catch (Exception e) {
       log().error("Unable to translate text", e);
