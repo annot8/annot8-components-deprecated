@@ -21,8 +21,8 @@ import uk.gov.nca.remedi4j.client.RemediClient;
 public class RemediTranslation extends AbstractTextProcessor {
 
   private RemediClient client = null;
-  private String source = "auto";
-  private String target = "English";
+  private String source = null;
+  private String target = null;
 
   @Override
   public void configure(Context context)
