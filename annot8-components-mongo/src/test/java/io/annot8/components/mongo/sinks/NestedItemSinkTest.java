@@ -2,10 +2,12 @@
 package io.annot8.components.mongo.sinks;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
+import io.annot8.common.data.content.Text;
 import java.util.Collections;
 
 import org.bson.Document;
@@ -66,6 +68,7 @@ public class NestedItemSinkTest extends AbstractSinkTest {
     when(content.getAnnotations()).thenReturn(new TestAnnotationStore());
     when(content.getData()).thenReturn(new NonSerializableTestData("test"));
     when(content.getProperties()).thenReturn(new TestProperties());
+    doReturn(Text.class).when(content).getContentClass();
     item.setContent(Collections.singletonMap("content", content));
 
     ProcessorResponse processResponse = store.process(item);
@@ -89,6 +92,7 @@ public class NestedItemSinkTest extends AbstractSinkTest {
         + itemId
         + "\""
         + "\"name\":\"test\","
+        + "\"type\":\"Text\","
         + "\"data\":\"testing\","
         + "\"properties\":{},"
         + "\"annotations\":["
@@ -100,8 +104,8 @@ public class NestedItemSinkTest extends AbstractSinkTest {
         + "\"properties\":{},"
         + "\"bounds\":{\"begin\":0, \"end\":1},"
         + "\"data\":\"t\","
-        + "\"contentId\":\""
-        + contentId
+        + "\"contentId\":\"" + contentId + "\","
+        + "\"itemId\":\"" + itemId
         + "\"}]}]}";
   }
 }
