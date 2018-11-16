@@ -7,7 +7,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
-import io.annot8.common.data.content.Text;
 import java.util.Collections;
 
 import org.bson.Document;
@@ -17,6 +16,7 @@ import org.mockito.Mockito;
 
 import com.mongodb.client.MongoCollection;
 
+import io.annot8.common.data.content.Text;
 import io.annot8.components.mongo.resources.MongoConnection;
 import io.annot8.core.annotations.Annotation;
 import io.annot8.core.components.responses.ProcessorResponse;
@@ -104,8 +104,11 @@ public class NestedItemSinkTest extends AbstractSinkTest {
         + "\"properties\":{},"
         + "\"bounds\":{\"begin\":0, \"end\":1},"
         + "\"data\":\"t\","
-        + "\"contentId\":\"" + contentId + "\","
-        + "\"itemId\":\"" + itemId
+        + "\"contentId\":\""
+        + contentId
+        + "\","
+        + "\"itemId\":\""
+        + itemId
         + "\"}]}]}";
   }
 }

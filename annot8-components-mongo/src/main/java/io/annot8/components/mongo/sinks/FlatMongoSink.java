@@ -90,7 +90,7 @@ public class FlatMongoSink extends AbstractMongoSink {
 
   private AnnotationDto getAnnotation(Annotation annotation, Content content, Item item) {
     Object data = null;
-    Optional optionalData = annotation.getBounds().getData(content);
+    Optional optionalData = annotation.getBounds().getData(content, Object.class);
     if (optionalData.isPresent()) {
       data = optionalData.get();
     }

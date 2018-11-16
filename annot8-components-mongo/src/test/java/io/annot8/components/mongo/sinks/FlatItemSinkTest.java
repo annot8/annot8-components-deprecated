@@ -10,8 +10,18 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.bson.Document;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+
 import io.annot8.common.data.content.Text;
 import io.annot8.components.mongo.resources.MongoConnection;
 import io.annot8.core.annotations.Annotation;
@@ -23,13 +33,6 @@ import io.annot8.testing.testimpl.TestAnnotationStore;
 import io.annot8.testing.testimpl.TestContext;
 import io.annot8.testing.testimpl.TestItem;
 import io.annot8.testing.testimpl.TestProperties;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import org.bson.Document;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 public class FlatItemSinkTest extends AbstractSinkTest {
 
@@ -73,9 +76,11 @@ public class FlatItemSinkTest extends AbstractSinkTest {
     Document expectedItem = getExpecetedItem(item.getId());
     Document expectedContent = getExpectedContent(content.getId(), item.getId());
     Document expectedAnn1 =
-        getExpectedAnnotation(ann1.getId(), content.getId(), ann1.getType(), "t", 0, 1, item.getId());
+        getExpectedAnnotation(
+            ann1.getId(), content.getId(), ann1.getType(), "t", 0, 1, item.getId());
     Document expectedAnn2 =
-        getExpectedAnnotation(ann2.getId(), content.getId(), ann2.getType(), "e", 1, 2, item.getId());
+        getExpectedAnnotation(
+            ann2.getId(), content.getId(), ann2.getType(), "e", 1, 2, item.getId());
     List<Document> expectedAnnotations = new ArrayList<>();
     expectedAnnotations.add(expectedAnn1);
     expectedAnnotations.add(expectedAnn2);
@@ -164,7 +169,13 @@ public class FlatItemSinkTest extends AbstractSinkTest {
   }
 
   private Document getExpectedAnnotation(
-      String annotationId, String contentId, String type, String data, int begin, int end, String itemId) {
+      String annotationId,
+      String contentId,
+      String type,
+      String data,
+      int begin,
+      int end,
+      String itemId) {
     String json =
         "{"
             + "\"id\":\""
