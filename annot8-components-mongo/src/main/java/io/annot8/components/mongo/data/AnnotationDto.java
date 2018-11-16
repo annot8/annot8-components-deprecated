@@ -8,11 +8,12 @@ import io.annot8.core.bounds.Bounds;
 public class AnnotationDto {
 
   private String id;
+  private String contentId;
+  private String itemId;
   private String type;
   private Map<String, Object> properties;
   private Bounds bounds;
   private Object data;
-  private String contentId;
 
   public AnnotationDto(
       String id,
@@ -20,13 +21,17 @@ public class AnnotationDto {
       Bounds bounds,
       Object data,
       Map<String, Object> properties,
-      String contentId) {
+      String contentId,
+      String itemId) {
     this.id = id;
+    this.contentId = contentId;
+
     this.type = type;
     this.properties = properties;
     this.bounds = bounds;
     this.data = data;
     this.contentId = contentId;
+    this.itemId = itemId;
   }
 
   public String getId() {
@@ -51,5 +56,9 @@ public class AnnotationDto {
 
   public String getContentId() {
     return contentId;
+  }
+
+  public String getItemId() {
+    return itemId;
   }
 }

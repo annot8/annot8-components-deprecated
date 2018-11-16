@@ -48,11 +48,11 @@ public class NestedItemSink extends AbstractMongoSink {
     return item.getContents().map(c -> toDto(c, item.getId())).collect(Collectors.toList());
   }
 
-  private Collection<AnnotationDto> getAnnotations(Content content) {
+  private Collection<AnnotationDto> getAnnotations(Content content, String itemId) {
     return content
         .getAnnotations()
         .getAll()
-        .map((a) -> toDto(a, content))
+        .map((a) -> toDto(a, content, itemId))
         .collect(Collectors.toList());
   }
 
@@ -62,11 +62,12 @@ public class NestedItemSink extends AbstractMongoSink {
         content.getName(),
         content.getData(),
         sanitiseKeys(content.getProperties()),
-        getAnnotations(content),
-        itemId);
+        getAnnotations(content, itemId),
+        itemId,
+        content.getContentClass().getSimpleName());
   }
 
-  private AnnotationDto toDto(Annotation annotation, Content content) {
+  private AnnotationDto toDto(Annotation annotation, Content content, String itemId) {
     Object data = null;
     Optional<Object> optional = annotation.getBounds().getData(content);
     if (optional.isPresent()) {
@@ -78,6 +79,7 @@ public class NestedItemSink extends AbstractMongoSink {
         annotation.getBounds(),
         data,
         sanitiseKeys(annotation.getProperties()),
-        content.getId());
+        content.getId(),
+        itemId);
   }
 }

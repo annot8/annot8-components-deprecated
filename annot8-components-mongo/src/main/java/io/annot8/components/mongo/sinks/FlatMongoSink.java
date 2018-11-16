@@ -50,11 +50,12 @@ public class FlatMongoSink extends AbstractMongoSink {
                         c.getData(),
                         sanitiseKeys(c.getProperties()),
                         null,
-                        item.getId()))
+                        item.getId(),
+                        c.getContentClass().getSimpleName()))
             .collect(Collectors.toList());
 
     Collection<AnnotationDto> annotations =
-        item.getContents().flatMap(this::getAnnotations).collect(Collectors.toList());
+        item.getContents().flatMap(c -> this.getAnnotations(c, item)).collect(Collectors.toList());
 
     Document itemDocument = null;
     List<Document> contentDocuments = null;
@@ -83,13 +84,13 @@ public class FlatMongoSink extends AbstractMongoSink {
     }
   }
 
-  private Stream<AnnotationDto> getAnnotations(Content content) {
-    return content.getAnnotations().getAll().map(a -> getAnnotation(a, content));
+  private Stream<AnnotationDto> getAnnotations(Content content, Item item) {
+    return content.getAnnotations().getAll().map(a -> getAnnotation(a, content, item));
   }
 
-  private AnnotationDto getAnnotation(Annotation annotation, Content content) {
+  private AnnotationDto getAnnotation(Annotation annotation, Content content, Item item) {
     Object data = null;
-    Optional optionalData = annotation.getBounds().getData(content);
+    Optional optionalData = annotation.getBounds().getData(content, Object.class);
     if (optionalData.isPresent()) {
       data = optionalData.get();
     }
@@ -100,7 +101,8 @@ public class FlatMongoSink extends AbstractMongoSink {
         annotation.getBounds(),
         data,
         sanitiseKeys(annotation.getProperties()),
-        content.getId());
+        content.getId(),
+        item.getId());
   }
 
   @Override

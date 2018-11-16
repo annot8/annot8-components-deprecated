@@ -9,6 +9,7 @@ public class ContentDto {
   private String id;
   private String itemId;
   private String name;
+  private String type;
   private Object data;
   private Map<String, Object> properties;
   private Collection<AnnotationDto> annotations;
@@ -19,13 +20,15 @@ public class ContentDto {
       Object data,
       Map<String, Object> properties,
       Collection<AnnotationDto> annotations,
-      String itemId) {
+      String itemId,
+      String type) {
     this.id = id;
     this.name = name;
     this.data = data;
     this.properties = properties;
     this.annotations = annotations;
     this.itemId = itemId;
+    this.type = type;
   }
 
   public String getId() {
@@ -50,5 +53,9 @@ public class ContentDto {
 
   public String getItemId() {
     return itemId;
+  }
+
+  public String getType() {
+    return type;
   }
 }
