@@ -20,6 +20,12 @@
     </dependency>
 
     <dependency>
+      <groupId>com.optimaize.languagedetector</groupId>
+      <artifactId>language-detector</artifactId>
+      <version>0.6</version>
+    </dependency>
+
+    <dependency>
       <groupId>io.annot8</groupId>
       <artifactId>annot8-test-impl</artifactId>
       <scope>test</scope>
