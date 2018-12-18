@@ -12,17 +12,14 @@ import io.annot8.common.data.content.Text;
 import io.annot8.components.base.components.AbstractComponent;
 import io.annot8.components.text.processors.settings.DetectLanguageSettings;
 import io.annot8.conventions.AnnotationTypes;
-import io.annot8.core.annotations.Annotation;
 import io.annot8.core.capabilities.CreatesAnnotation;
 import io.annot8.core.capabilities.ProcessesContent;
 import io.annot8.core.components.Processor;
 import io.annot8.core.components.responses.ProcessorResponse;
 import io.annot8.core.context.Context;
 import io.annot8.core.data.Item;
-import io.annot8.core.exceptions.Annot8Exception;
 import io.annot8.core.exceptions.BadConfigurationException;
 import io.annot8.core.exceptions.MissingResourceException;
-import io.annot8.core.stores.AnnotationStore;
 import java.util.Optional;
 
 /**
@@ -60,18 +57,11 @@ public class DetectLanguage extends AbstractComponent implements Processor {
           Optional<LdLocale> lang = languageDetector.detect(textObject).toJavaUtil();
 
           if(lang.isPresent()){
-            AnnotationStore annotationStore = t.getAnnotations();
-
-            Annotation.Builder builder = annotationStore.create();
-
-            try {
-              builder.withType(AnnotationTypes.ANNOTATION_TYPE_LANGUAGE)
-                  .withBounds(ContentBounds.getInstance())
-                  .withProperty(PROPERTY_KEY_LANGUAGE, lang.get().getLanguage())
-                  .save();
-            }catch (Annot8Exception e){
-              log().error("Could not create annotation", e);
-            }
+            t.getAnnotations().create()
+                .withType(AnnotationTypes.ANNOTATION_TYPE_LANGUAGE)
+                .withBounds(ContentBounds.getInstance())
+                .withProperty(PROPERTY_KEY_LANGUAGE, lang.get().getLanguage())
+                .save();
           }
         });
 
