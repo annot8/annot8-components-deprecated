@@ -1,9 +1,6 @@
 /* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.image.processors;
 
-import java.io.IOException;
-import java.util.Date;
-
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.lang.Rational;
@@ -12,7 +9,6 @@ import com.drew.metadata.StringValue;
 import com.drew.metadata.Tag;
 import com.drew.metadata.exif.ExifDirectoryBase;
 import com.drew.metadata.exif.GpsDirectory;
-
 import io.annot8.common.data.bounds.NoBounds;
 import io.annot8.common.data.content.FileContent;
 import io.annot8.components.base.components.AbstractComponent;
@@ -21,15 +17,16 @@ import io.annot8.core.capabilities.ProcessesContent;
 import io.annot8.core.components.Processor;
 import io.annot8.core.components.responses.ProcessorResponse;
 import io.annot8.core.data.Item;
-import io.annot8.core.exceptions.Annot8Exception;
 import io.annot8.core.exceptions.IncompleteException;
+import java.io.IOException;
+import java.util.Date;
 
 @ProcessesContent(FileContent.class)
 @CreatesAnnotation(value = "ExifMetadata", bounds = NoBounds.class)
 public class ExifMetadataProcessor extends AbstractComponent implements Processor {
 
   @Override
-  public ProcessorResponse process(Item item) throws Annot8Exception {
+  public ProcessorResponse process(Item item) {
     boolean withoutError =
         item.getContents(FileContent.class)
             .map(this::extractExifMetadata)
@@ -43,15 +40,13 @@ public class ExifMetadataProcessor extends AbstractComponent implements Processo
   }
 
   private boolean extractExifMetadata(FileContent content) {
-    Metadata metadata = null;
+    Metadata metadata;
     try {
       metadata = ImageMetadataReader.readMetadata(content.getData());
     } catch (IOException | ImageProcessingException e) {
       log().error("Failed to read the file for Exif extraction", e);
       return false;
     }
-
-    boolean withoutError = true;
 
     for (ExifDirectoryBase directory : metadata.getDirectoriesOfType(ExifDirectoryBase.class)) {
       try {
@@ -69,18 +64,16 @@ public class ExifMetadataProcessor extends AbstractComponent implements Processo
     return true;
   }
 
-  private void handleGpsDirectory(GpsDirectory directory, FileContent content)
-      throws IncompleteException {
+  private void handleGpsDirectory(GpsDirectory directory, FileContent content) {
     directory.getGpsDate();
     createAnnotation(content, "Geo Location", directory.getGeoLocation());
     createAnnotation(content, "Gps Date", directory.getGpsDate().getTime());
   }
 
-  private void handleDirectory(ExifDirectoryBase directory, FileContent content)
-      throws IncompleteException {
+  private void handleDirectory(ExifDirectoryBase directory, FileContent content) {
     for (Tag tag : directory.getTags()) {
       Date date = directory.getDate(tag.getTagType());
-      Object value = null;
+      Object value;
       if (date == null) {
         Object object = directory.getObject(tag.getTagType());
         if (object instanceof Rational) {
@@ -97,8 +90,7 @@ public class ExifMetadataProcessor extends AbstractComponent implements Processo
     }
   }
 
-  private void createAnnotation(FileContent content, String key, Object value)
-      throws IncompleteException {
+  private void createAnnotation(FileContent content, String key, Object value) {
     content
         .getAnnotations()
         .create()
