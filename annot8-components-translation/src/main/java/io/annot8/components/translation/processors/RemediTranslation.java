@@ -6,8 +6,10 @@ import io.annot8.conventions.PropertyKeys;
 import io.annot8.core.capabilities.CreatesContent;
 import io.annot8.core.context.Context;
 import io.annot8.core.data.Item;
+import io.annot8.core.exceptions.Annot8Exception;
 import io.annot8.core.exceptions.BadConfigurationException;
 import io.annot8.core.exceptions.MissingResourceException;
+import io.annot8.core.exceptions.ProcessingException;
 import io.annot8.core.settings.SettingsClass;
 import java.util.Optional;
 import uk.gov.nca.remedi4j.client.RemediClient;
@@ -44,7 +46,7 @@ public class RemediTranslation extends AbstractTextProcessor {
   }
 
   @Override
-  protected void process(Item item, Text content) {
+  protected void process(Item item, Text content) throws Annot8Exception {
     try {
       String trans = client.translateText(source, target, content.getData()).get();
 
@@ -54,7 +56,7 @@ public class RemediTranslation extends AbstractTextProcessor {
           .withProperty(PropertyKeys.PROPERTY_KEY_LANGUAGE, target)
           .save();
     } catch (Exception e) {
-      log().error("Unable to translate text", e);
+      throw new ProcessingException("Unable to translate text", e);
     }
 
   }

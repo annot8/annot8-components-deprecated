@@ -8,6 +8,14 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
+import com.drew.lang.GeoLocation;
+import io.annot8.common.data.content.FileContent;
+import io.annot8.core.annotations.Annotation;
+import io.annot8.core.components.responses.ProcessorResponse;
+import io.annot8.core.components.responses.ProcessorResponse.Status;
+import io.annot8.core.data.Item;
+import io.annot8.core.stores.AnnotationStore;
+import io.annot8.testing.testimpl.TestAnnotationStore;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -15,22 +23,10 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-
-import com.drew.lang.GeoLocation;
-
-import io.annot8.common.data.content.FileContent;
-import io.annot8.core.annotations.Annotation;
-import io.annot8.core.components.responses.ProcessorResponse;
-import io.annot8.core.components.responses.ProcessorResponse.Status;
-import io.annot8.core.data.Item;
-import io.annot8.core.exceptions.Annot8Exception;
-import io.annot8.core.stores.AnnotationStore;
-import io.annot8.testing.testimpl.TestAnnotationStore;
 
 public class ExifMetadataProcessorTest {
 
@@ -62,12 +58,7 @@ public class ExifMetadataProcessorTest {
 
     ExifMetadataProcessor processor = new ExifMetadataProcessor();
 
-    ProcessorResponse response = null;
-    try {
-      response = processor.process(item);
-    } catch (Annot8Exception e) {
-      fail("The test should not fail here.", e);
-    }
+    ProcessorResponse response = processor.process(item);
 
     assertNotNull(response);
     assertEquals(Status.OK, response.getStatus());

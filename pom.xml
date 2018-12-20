@@ -48,6 +48,19 @@
     <module>annot8-components-translation</module>
   </modules>
 
+  <!-- For components, enable parameters option so that Jackson can map to settings objects -->
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <parameters>true</parameters>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
   <profiles>
     <profile>
       <id>travis</id>
