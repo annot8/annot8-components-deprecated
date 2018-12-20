@@ -27,8 +27,7 @@ public class IPv6 extends AbstractRegex {
   }
 
   @Override
-  protected void addProperties(Builder builder) {
-    super.addProperties(builder);
+  protected void addProperties(Builder builder, Matcher m) {
     builder.withProperty(PropertyKeys.PROPERTY_KEY_VERSION, 6);
   }
 }

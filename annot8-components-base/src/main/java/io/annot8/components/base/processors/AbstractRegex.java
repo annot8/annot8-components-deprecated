@@ -55,7 +55,7 @@ public class AbstractRegex extends AbstractTextProcessor {
       try {
 
         Annotation.Builder builder = annotationStore.create();
-        addProperties(builder);
+        addProperties(builder, m);
 
         builder.withType(type).withBounds(new SpanBounds(m.start(group), m.end(group))).save();
       } catch (IndexOutOfBoundsException e) {
@@ -64,7 +64,7 @@ public class AbstractRegex extends AbstractTextProcessor {
     }
   }
 
-  protected void addProperties(Annotation.Builder builder) {
+  protected void addProperties(Annotation.Builder builder, Matcher m) {
     // Do nothing
   }
 

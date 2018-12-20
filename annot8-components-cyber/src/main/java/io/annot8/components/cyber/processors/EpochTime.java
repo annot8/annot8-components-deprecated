@@ -57,7 +57,7 @@ public class EpochTime extends AbstractRegex {
   }
 
   @Override
-  protected void addProperties(Builder builder) {
+  protected void addProperties(Builder builder, Matcher m) {
 
     if (settings.isMilliseconds()) {
       builder.withProperty(PropertyKeys.PROPERTY_KEY_UNIT, "ms");
