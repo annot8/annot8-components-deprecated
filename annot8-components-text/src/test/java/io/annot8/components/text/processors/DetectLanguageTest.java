@@ -4,6 +4,12 @@ package io.annot8.components.text.processors;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.junit.jupiter.api.Test;
+
 import io.annot8.common.data.bounds.ContentBounds;
 import io.annot8.common.data.content.Text;
 import io.annot8.conventions.AnnotationTypes;
@@ -17,32 +23,30 @@ import io.annot8.core.stores.AnnotationStore;
 import io.annot8.testing.testimpl.TestContext;
 import io.annot8.testing.testimpl.TestItem;
 import io.annot8.testing.testimpl.content.TestStringContent;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import org.junit.jupiter.api.Test;
 
 public class DetectLanguageTest {
 
   @Test
   public void testDetectLanguageEnglish() throws Annot8Exception {
-    //Taken from Pride and Prejudice
-    doTest("It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife.\n"
-        + "However little known the feelings or views of such a man may be on his first entering a neighbourhood, this truth is so "
-        + "well fixed in the minds of the surrounding families, that he is considered the rightful property of some one or other of their daughters.",
+    // Taken from Pride and Prejudice
+    doTest(
+        "It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife.\n"
+            + "However little known the feelings or views of such a man may be on his first entering a neighbourhood, this truth is so "
+            + "well fixed in the minds of the surrounding families, that he is considered the rightful property of some one or other of their daughters.",
         "en");
   }
 
   @Test
   public void testDetectLanguageGerman() throws Annot8Exception {
-    //Taken from Der Mord an der Jungfrau
-    doTest("Immerzu traurig, Amaryllis! sollten dich die jungen Herrn im Stich\n"
+    // Taken from Der Mord an der Jungfrau
+    doTest(
+        "Immerzu traurig, Amaryllis! sollten dich die jungen Herrn im Stich\n"
             + "gelassen haben, deine Blüten welk, deine Wohlgerüche ausgehaucht sein? Ließ\n"
             + "Atys, das göttliche Kind, von dir mit seinen eitlen Liebkosungen?",
         "de");
   }
 
-  private void doTest(String sourceText, String expectedLanguage) throws Annot8Exception{
+  private void doTest(String sourceText, String expectedLanguage) throws Annot8Exception {
     try (Processor p = new DetectLanguage()) {
       Item item = new TestItem();
       Context context = new TestContext();
@@ -50,10 +54,7 @@ public class DetectLanguageTest {
       p.configure(context);
 
       Text content =
-          item.create(TestStringContent.class)
-              .withName("test")
-              .withData(sourceText)
-              .save();
+          item.create(TestStringContent.class).withName("test").withData(sourceText).save();
 
       p.process(item);
 

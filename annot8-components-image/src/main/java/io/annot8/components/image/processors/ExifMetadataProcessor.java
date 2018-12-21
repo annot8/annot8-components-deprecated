@@ -1,6 +1,9 @@
 /* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.image.processors;
 
+import java.io.IOException;
+import java.util.Date;
+
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.lang.Rational;
@@ -9,6 +12,7 @@ import com.drew.metadata.StringValue;
 import com.drew.metadata.Tag;
 import com.drew.metadata.exif.ExifDirectoryBase;
 import com.drew.metadata.exif.GpsDirectory;
+
 import io.annot8.common.data.bounds.NoBounds;
 import io.annot8.common.data.content.FileContent;
 import io.annot8.components.base.components.AbstractComponent;
@@ -18,8 +22,6 @@ import io.annot8.core.components.Processor;
 import io.annot8.core.components.responses.ProcessorResponse;
 import io.annot8.core.data.Item;
 import io.annot8.core.exceptions.IncompleteException;
-import java.io.IOException;
-import java.util.Date;
 
 @ProcessesContent(FileContent.class)
 @CreatesAnnotation(value = "ExifMetadata", bounds = NoBounds.class)

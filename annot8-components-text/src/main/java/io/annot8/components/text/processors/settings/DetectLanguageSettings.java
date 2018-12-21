@@ -1,4 +1,10 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.text.processors.settings;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 import com.optimaize.langdetect.ngram.NgramExtractor;
 import com.optimaize.langdetect.ngram.NgramExtractors;
@@ -6,11 +12,8 @@ import com.optimaize.langdetect.profiles.LanguageProfile;
 import com.optimaize.langdetect.profiles.LanguageProfileReader;
 import com.optimaize.langdetect.text.CommonTextObjectFactories;
 import com.optimaize.langdetect.text.TextObjectFactory;
+
 import io.annot8.core.settings.Settings;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
 
 public class DetectLanguageSettings implements Settings {
 
@@ -24,13 +27,13 @@ public class DetectLanguageSettings implements Settings {
   }
 
   public List<LanguageProfile> getLanguageProfiles() {
-    if(languageProfiles.isPresent()){
+    if (languageProfiles.isPresent()) {
       return languageProfiles.get();
-    }else{
-      try{
+    } else {
+      try {
         return new LanguageProfileReader().readAllBuiltIn();
-      }catch (IOException ioe){
-        //TODO: Log an error here
+      } catch (IOException ioe) {
+        // TODO: Log an error here
         return Collections.emptyList();
       }
     }

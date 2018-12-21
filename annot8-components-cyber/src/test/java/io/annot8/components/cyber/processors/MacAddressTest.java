@@ -5,7 +5,14 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.junit.jupiter.api.Test;
+
 import com.google.common.io.BaseEncoding;
+
 import io.annot8.common.data.content.Text;
 import io.annot8.conventions.AnnotationTypes;
 import io.annot8.conventions.PropertyKeys;
@@ -18,10 +25,6 @@ import io.annot8.core.stores.AnnotationStore;
 import io.annot8.testing.testimpl.TestContext;
 import io.annot8.testing.testimpl.TestItem;
 import io.annot8.testing.testimpl.content.TestStringContent;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import org.junit.jupiter.api.Test;
 
 public class MacAddressTest {
 
@@ -40,7 +43,7 @@ public class MacAddressTest {
     test("0123.4567.89AB");
   }
 
-  private void test(String macAddress) throws Annot8Exception{
+  private void test(String macAddress) throws Annot8Exception {
     try (Processor p = new MacAddress()) {
       Item item = new TestItem();
       Context context = new TestContext();
@@ -50,7 +53,7 @@ public class MacAddressTest {
       Text content =
           item.create(TestStringContent.class)
               .withName("test")
-              .withData("The machine's MAC address was "+macAddress)
+              .withData("The machine's MAC address was " + macAddress)
               .save();
 
       p.process(item);
@@ -69,7 +72,7 @@ public class MacAddressTest {
       Optional<Object> optProp = a.getProperties().get(PropertyKeys.PROPERTY_KEY_VALUE);
 
       assertTrue(optProp.isPresent());
-      assertArrayEquals(BaseEncoding.base16().decode("0123456789AB"), (byte[])optProp.get());
+      assertArrayEquals(BaseEncoding.base16().decode("0123456789AB"), (byte[]) optProp.get());
     }
   }
 }

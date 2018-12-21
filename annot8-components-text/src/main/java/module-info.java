@@ -3,7 +3,6 @@ open module io.annot8.components.text {
   requires io.annot8.common.data;
   requires io.annot8.components.base;
   requires io.annot8.conventions;
-
   requires language.detector;
 
   exports io.annot8.components.text.processors;

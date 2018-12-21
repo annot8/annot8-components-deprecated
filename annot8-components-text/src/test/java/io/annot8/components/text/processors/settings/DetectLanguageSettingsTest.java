@@ -1,7 +1,12 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.text.processors.settings;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.util.Arrays;
+
+import org.junit.jupiter.api.Test;
 
 import com.optimaize.langdetect.i18n.LdLocale;
 import com.optimaize.langdetect.ngram.NgramExtractors;
@@ -10,12 +15,10 @@ import com.optimaize.langdetect.profiles.LanguageProfile;
 import com.optimaize.langdetect.profiles.LanguageProfileBuilder;
 import com.optimaize.langdetect.text.CommonTextObjectFactories;
 import com.optimaize.langdetect.text.TextObjectFactory;
-import java.util.Arrays;
-import org.junit.jupiter.api.Test;
 
 public class DetectLanguageSettingsTest {
   @Test
-  public void testLanguageProfiles(){
+  public void testLanguageProfiles() {
     DetectLanguageSettings dls = new DetectLanguageSettings();
 
     assertNotNull(dls.getLanguageProfiles());
@@ -30,7 +33,7 @@ public class DetectLanguageSettingsTest {
   }
 
   @Test
-  public void testNgramExtractor(){
+  public void testNgramExtractor() {
     DetectLanguageSettings dls = new DetectLanguageSettings();
 
     assertEquals(NgramExtractors.standard(), dls.getNgramExtractor());
@@ -40,7 +43,7 @@ public class DetectLanguageSettingsTest {
   }
 
   @Test
-  public void testTextObjectFactory(){
+  public void testTextObjectFactory() {
     DetectLanguageSettings dls = new DetectLanguageSettings();
 
     TextObjectFactory tof = CommonTextObjectFactories.forDetectingShortCleanText();

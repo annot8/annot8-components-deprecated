@@ -1,4 +1,8 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.geo.processors;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import io.annot8.common.data.bounds.SpanBounds;
 import io.annot8.common.data.content.Text;
@@ -10,12 +14,8 @@ import io.annot8.core.data.Item;
 import io.annot8.core.exceptions.BadConfigurationException;
 import io.annot8.core.exceptions.MissingResourceException;
 import io.annot8.core.settings.Settings;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-/**
- * Extract MGRS coordinates, optionally ignoring MGRS coordinates that could be dates
- */
+/** Extract MGRS coordinates, optionally ignoring MGRS coordinates that could be dates */
 public class Mgrs extends AbstractTextProcessor {
   private static final Pattern mgrsPattern =
       Pattern.compile(
@@ -27,7 +27,8 @@ public class Mgrs extends AbstractTextProcessor {
   private MgrsSettings settings;
 
   @Override
-  public void configure(Context context) throws BadConfigurationException, MissingResourceException {
+  public void configure(Context context)
+      throws BadConfigurationException, MissingResourceException {
     super.configure(context);
 
     settings = context.getSettings(MgrsSettings.class, new MgrsSettings(false));
@@ -37,17 +38,19 @@ public class Mgrs extends AbstractTextProcessor {
   protected void process(Item item, Text content) {
     Matcher m = mgrsPattern.matcher(content.getData());
 
-    while (m.find()){
+    while (m.find()) {
       String coordinates = m.group();
-      if(settings.isIgnoreDates()){
+      if (settings.isIgnoreDates()) {
         Matcher mDates = datesPattern.matcher(coordinates);
-        if(mDates.matches()) {
+        if (mDates.matches()) {
           log().info("Discarding possible MGRS coordinate {} as it resembles a date", coordinates);
           continue;
         }
       }
 
-      content.getAnnotations().create()
+      content
+          .getAnnotations()
+          .create()
           .withBounds(new SpanBounds(m.start(), m.end()))
           .withType(AnnotationTypes.ANNOTATION_TYPE_COORDINATE)
           .withProperty(PropertyKeys.PROPERTY_KEY_COORDINATETYPE, "MGRS")
@@ -56,7 +59,7 @@ public class Mgrs extends AbstractTextProcessor {
     }
   }
 
-  public static class MgrsSettings implements Settings{
+  public static class MgrsSettings implements Settings {
     private final boolean ignoreDates;
 
     public MgrsSettings(boolean ignoreDates) {

@@ -1,6 +1,15 @@
+/* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.geo.processors;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import com.google.openlocationcode.OpenLocationCode.CodeArea;
+
 import io.annot8.common.data.content.Text;
 import io.annot8.conventions.AnnotationTypes;
 import io.annot8.conventions.PropertyKeys;
@@ -13,11 +22,6 @@ import io.annot8.core.stores.AnnotationStore;
 import io.annot8.testing.testimpl.TestContext;
 import io.annot8.testing.testimpl.TestItem;
 import io.annot8.testing.testimpl.content.TestStringContent;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 public class PlusCodeTest {
   @Test
@@ -50,8 +54,9 @@ public class PlusCodeTest {
       Optional<Object> optValue = a.getProperties().get(PropertyKeys.PROPERTY_KEY_VALUE);
 
       Assertions.assertTrue(optValue.isPresent());
-      Assertions.assertEquals(-13.5751875, ((CodeArea)optValue.get()).getCenterLatitude(), 0.0005);
-      Assertions.assertEquals(-72.8880625, ((CodeArea)optValue.get()).getCenterLongitude(), 0.0005);
+      Assertions.assertEquals(-13.5751875, ((CodeArea) optValue.get()).getCenterLatitude(), 0.0005);
+      Assertions.assertEquals(
+          -72.8880625, ((CodeArea) optValue.get()).getCenterLongitude(), 0.0005);
 
       Optional<Object> optType = a.getProperties().get(PropertyKeys.PROPERTY_KEY_COORDINATETYPE);
       Assertions.assertTrue(optType.isPresent());
