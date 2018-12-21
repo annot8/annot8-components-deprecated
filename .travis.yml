@@ -7,7 +7,7 @@ addons:
     token:
       secure: IOGNNINQDJfrnFjHgrTepAjAVLCKqJ5Vikc2dq9++PEJz8veRw0vPAs1fVK8zfb5xQMEkLhVqctEtSZI+m63VOa2lOc8OM3REEQ+4MVErfMviFnrCIXhbnS4fCuVppphhtId0Komc+OEifPxHz2620d2Ri0wfMHL+wzfrgwzXhVPtCK7/wLvmLxrkMcqkyT0CaR4VJSqICO12w6kvPDkFrlgy/KukzQmY9cUOwGU6oMERyFWOyBFlyl/CO5ETGXpDe9nf7rR6o/zS2AUE8fAKcDU++uBePeCKETSGtI2PIHi/kym+GNmTb/EPkQOThSVxpFOFLgyRXPie05jkxw9rUPzgc6uRc0GWiRi8+qnvFMyv/KzXvmS1+e50BsvuU3fM9KiMKvoAVPRfXbY9JLooRZORXpdwiWM/F/Jxz5NP3QlxX/NQ54shlk4JarLfW14Cfq6ThYCELDilOn+MRv/xh3EvXbFOHm1KUtQZoUGcZrZqDZTwj/kyuygdAWp1zhyNS62OO7a6bLmJml+yhA2rPu/yI1AmAW7bdHA3OnbHIk0lPAPvVnE2u5dFXv4DAynKCqa3Njr3AyG1sS/n+0ID1KqMo2fI2Nr7kTcR8iEAidIfMMCeR80ODQ7fstshfhYZ1AIRwbKKxYgDxZzk0oqGuVNIZhMvcG2eVlIh5jmiN0=
 jdk:
-- openjdk10
+- openjdk11
 script:
 - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package -P travis
 - mvn spotless:check
