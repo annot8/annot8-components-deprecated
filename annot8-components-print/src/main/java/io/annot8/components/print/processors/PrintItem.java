@@ -26,10 +26,10 @@ public class PrintItem extends AbstractComponent implements Processor {
 
   private void print(Content<?> content) {
     println(content.getName(), 1);
-    println("Properties:", 1);
-    print(content.getProperties(), 2);
-    println("Annotations:", 1);
-    print(content.getAnnotations(), 2);
+    println("Properties:", 2);
+    print(content.getProperties(), 3);
+    println("Annotations:", 2);
+    print(content.getAnnotations(), 3);
   }
 
   private void print(Properties properties, int indent) {
