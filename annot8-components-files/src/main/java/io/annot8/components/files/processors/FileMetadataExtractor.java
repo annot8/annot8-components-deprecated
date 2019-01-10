@@ -9,6 +9,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import io.annot8.common.data.bounds.NoBounds;
 import io.annot8.common.data.content.FileContent;
 import io.annot8.components.base.components.AbstractComponent;
+import io.annot8.conventions.PathUtils;
 import io.annot8.core.capabilities.ProcessesContent;
 import io.annot8.core.components.Processor;
 import io.annot8.core.components.responses.ProcessorResponse;
@@ -19,7 +20,7 @@ import io.annot8.core.stores.AnnotationStore;
 @ProcessesContent(FileContent.class)
 public class FileMetadataExtractor extends AbstractComponent implements Processor {
 
-  public static final String FILE_METADATA = "FILE_METADATA";
+  public static final String FILE_METADATA = PathUtils.join("file", "metadata");
 
   @Override
   public ProcessorResponse process(Item item) {
