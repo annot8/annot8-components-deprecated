@@ -111,5 +111,13 @@ public class FlatMongoSink extends AbstractMongoSink {
     itemCollection = database.getCollection(ITEM);
     contentsCollection = database.getCollection(CONTENT);
     annotationsCollection = database.getCollection(ANNOTATION);
+
+    itemCollection.createIndex(new Document("id", 1));
+    contentsCollection.createIndex(new Document("id", 1));
+    contentsCollection.createIndex(new Document("itemId", 1));
+    annotationsCollection.createIndex(new Document("type", 1));
+    annotationsCollection.createIndex(new Document("id", 1));
+    annotationsCollection.createIndex(new Document("type", 1));
+    annotationsCollection.createIndex(new Document("itemId", 1));
   }
 }
