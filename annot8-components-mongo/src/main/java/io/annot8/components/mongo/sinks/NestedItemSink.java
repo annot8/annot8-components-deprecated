@@ -37,6 +37,8 @@ public class NestedItemSink extends AbstractMongoSink {
   @Override
   protected void configureMongo(MongoConnection connection) {
     itemCollection = connection.getCollection();
+
+    itemCollection.createIndex(new Document("id", 1));
   }
 
   private ItemDto toDto(Item item) {
