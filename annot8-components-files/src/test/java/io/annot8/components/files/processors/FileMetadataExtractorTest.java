@@ -23,6 +23,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import io.annot8.common.data.content.FileContent;
+import io.annot8.conventions.FileMetadataKeys;
 import io.annot8.core.annotations.Annotation;
 import io.annot8.core.components.responses.ProcessorResponse;
 import io.annot8.core.components.responses.ProcessorResponse.Status;
@@ -50,17 +51,17 @@ public class FileMetadataExtractorTest {
 
     List<Annotation> annotations =
         fileContent.getAnnotations().getAll().collect(Collectors.toList());
-    assertEquals(file.getAbsolutePath(), getKeyValue(annotations, FileMetadata.PATH));
-    assertEquals("txt", getKeyValue(annotations, FileMetadata.EXTENSION));
-    assertFalse((boolean) getKeyValue(annotations, FileMetadata.HIDDEN));
-    assertTrue((boolean) getKeyValue(annotations, FileMetadata.REGULAR));
-    assertFalse((boolean) getKeyValue(annotations, FileMetadata.SYM_LINK));
-    assertNotNull(getKeyValue(annotations, FileMetadata.DATE_CREATED));
-    assertNotNull(getKeyValue(annotations, FileMetadata.LAST_MODIFIED));
-    assertNotNull(getKeyValue(annotations, FileMetadata.LAST_ACCESS_DATE));
-    assertEquals(60L, getKeyValue(annotations, FileMetadata.FILE_SIZE));
-    assertNotNull(getKeyValue(annotations, FileMetadata.OWNER));
-    assertFalse((boolean) getKeyValue(annotations, FileMetadata.DIRECTORY));
+    assertEquals(file.getAbsolutePath(), getKeyValue(annotations, FileMetadataKeys.PATH));
+    assertEquals("txt", getKeyValue(annotations, FileMetadataKeys.EXTENSION));
+    assertFalse((boolean) getKeyValue(annotations, FileMetadataKeys.HIDDEN));
+    assertTrue((boolean) getKeyValue(annotations, FileMetadataKeys.REGULAR));
+    assertFalse((boolean) getKeyValue(annotations, FileMetadataKeys.SYM_LINK));
+    assertNotNull(getKeyValue(annotations, FileMetadataKeys.DATE_CREATED));
+    assertNotNull(getKeyValue(annotations, FileMetadataKeys.LAST_MODIFIED));
+    assertNotNull(getKeyValue(annotations, FileMetadataKeys.LAST_ACCESS_DATE));
+    assertEquals(60L, getKeyValue(annotations, FileMetadataKeys.FILE_SIZE));
+    assertNotNull(getKeyValue(annotations, FileMetadataKeys.OWNER));
+    assertFalse((boolean) getKeyValue(annotations, FileMetadataKeys.DIRECTORY));
     annotations.forEach(a -> assertEquals(FileMetadataExtractor.FILE_METADATA, a.getType()));
   }
 
@@ -86,7 +87,7 @@ public class FileMetadataExtractorTest {
 
     List<Annotation> annotations = content.getAnnotations().getAll().collect(Collectors.toList());
     for (Annotation annotation : annotations) {
-      if (annotation.getProperties().has(FileMetadata.EXTENSION)) {
+      if (annotation.getProperties().has(FileMetadataKeys.EXTENSION)) {
         fail("No annotation with a file extension property is expected");
       }
     }
