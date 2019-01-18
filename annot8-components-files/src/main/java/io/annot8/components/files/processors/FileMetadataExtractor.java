@@ -9,6 +9,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import io.annot8.common.data.bounds.NoBounds;
 import io.annot8.common.data.content.FileContent;
 import io.annot8.components.base.components.AbstractComponent;
+import io.annot8.conventions.FileMetadataKeys;
 import io.annot8.conventions.PathUtils;
 import io.annot8.core.capabilities.ProcessesContent;
 import io.annot8.core.components.Processor;
@@ -69,23 +70,23 @@ public class FileMetadataExtractor extends AbstractComponent implements Processo
 
     if (attr != null) {
       createMetadataAnnotation(
-          fileContent, FileMetadata.DATE_CREATED, attr.creationTime().toMillis());
+          fileContent, FileMetadataKeys.DATE_CREATED, attr.creationTime().toMillis());
       createMetadataAnnotation(
-          fileContent, FileMetadata.LAST_MODIFIED, attr.lastModifiedTime().toMillis());
+          fileContent, FileMetadataKeys.LAST_MODIFIED, attr.lastModifiedTime().toMillis());
       createMetadataAnnotation(
-          fileContent, FileMetadata.LAST_ACCESS_DATE, attr.lastAccessTime().toMillis());
-      createMetadataAnnotation(fileContent, FileMetadata.FILE_SIZE, attr.size());
+          fileContent, FileMetadataKeys.LAST_ACCESS_DATE, attr.lastAccessTime().toMillis());
+      createMetadataAnnotation(fileContent, FileMetadataKeys.FILE_SIZE, attr.size());
     }
-    createMetadataAnnotation(fileContent, FileMetadata.PATH, file.getAbsolutePath());
-    createMetadataAnnotation(fileContent, FileMetadata.HIDDEN, isHidden);
-    createMetadataAnnotation(fileContent, FileMetadata.REGULAR, isRegular);
-    createMetadataAnnotation(fileContent, FileMetadata.DIRECTORY, isDir);
-    createMetadataAnnotation(fileContent, FileMetadata.SYM_LINK, isSym);
-    createMetadataAnnotation(fileContent, FileMetadata.OWNER, owner);
+    createMetadataAnnotation(fileContent, FileMetadataKeys.PATH, file.getAbsolutePath());
+    createMetadataAnnotation(fileContent, FileMetadataKeys.HIDDEN, isHidden);
+    createMetadataAnnotation(fileContent, FileMetadataKeys.REGULAR, isRegular);
+    createMetadataAnnotation(fileContent, FileMetadataKeys.DIRECTORY, isDir);
+    createMetadataAnnotation(fileContent, FileMetadataKeys.SYM_LINK, isSym);
+    createMetadataAnnotation(fileContent, FileMetadataKeys.OWNER, owner);
 
     String extension = getFileExtension(file);
     if (extension != null) {
-      createMetadataAnnotation(fileContent, FileMetadata.EXTENSION, extension);
+      createMetadataAnnotation(fileContent, FileMetadataKeys.EXTENSION, extension);
     }
     return true;
   }
