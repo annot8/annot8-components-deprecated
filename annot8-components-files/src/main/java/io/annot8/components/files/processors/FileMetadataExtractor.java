@@ -83,6 +83,7 @@ public class FileMetadataExtractor extends AbstractComponent implements Processo
     createMetadataAnnotation(fileContent, FileMetadataKeys.DIRECTORY, isDir);
     createMetadataAnnotation(fileContent, FileMetadataKeys.SYM_LINK, isSym);
     createMetadataAnnotation(fileContent, FileMetadataKeys.OWNER, owner);
+    createMetadataAnnotation(fileContent, FileMetadataKeys.FILENAME, file.getName());
 
     String extension = getFileExtension(file);
     if (extension != null) {
