@@ -17,7 +17,6 @@ import io.annot8.core.components.Source;
 import io.annot8.core.context.Context;
 import io.annot8.core.data.Item;
 import io.annot8.core.data.ItemFactory;
-import io.annot8.core.exceptions.Annot8Exception;
 import io.annot8.core.exceptions.BadConfigurationException;
 import io.annot8.core.exceptions.MissingResourceException;
 
@@ -75,8 +74,8 @@ public abstract class AbstractFileSystemSource extends AbstractComponent impleme
         item.create(FileContent.class).withName("file").withData(path.toFile()).save();
 
         return true;
-      } catch (Annot8Exception e) {
-        log().error("Unable to create item, discarding", e);
+      } catch (Throwable t) {
+        log().error("Unable to create item, discarding", t);
         item.discard();
       }
     }

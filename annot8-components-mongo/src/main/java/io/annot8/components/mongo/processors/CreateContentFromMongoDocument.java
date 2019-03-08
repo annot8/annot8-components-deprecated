@@ -9,7 +9,6 @@ import io.annot8.components.mongo.data.MongoDocument;
 import io.annot8.core.components.Processor;
 import io.annot8.core.components.responses.ProcessorResponse;
 import io.annot8.core.data.Item;
-import io.annot8.core.exceptions.Annot8Exception;
 
 public class CreateContentFromMongoDocument extends AbstractComponent implements Processor {
 
@@ -22,11 +21,7 @@ public class CreateContentFromMongoDocument extends AbstractComponent implements
               for (String key : doc.keySet()) {
                 Object o = doc.get(key);
                 if (o instanceof String) {
-                  try {
-                    item.create(Text.class).withName(key).withData(o.toString()).save();
-                  } catch (Annot8Exception e) {
-                    log().warn("Couldn't create content for field {}", key, e);
-                  }
+                  item.create(Text.class).withName(key).withData(o.toString()).save();
                 }
 
                 // TODO: Handle other types - e.g. nested objects, numbers, booleans, etc.
