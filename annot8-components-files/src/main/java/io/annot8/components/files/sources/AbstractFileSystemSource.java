@@ -1,6 +1,14 @@
 /* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.files.sources;
 
+import java.nio.file.Path;
+import java.time.Instant;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import io.annot8.common.data.content.FileContent;
 import io.annot8.components.base.components.AbstractComponent;
 import io.annot8.conventions.PropertyKeys;
@@ -11,13 +19,6 @@ import io.annot8.core.data.Item;
 import io.annot8.core.data.ItemFactory;
 import io.annot8.core.exceptions.BadConfigurationException;
 import io.annot8.core.exceptions.MissingResourceException;
-import java.nio.file.Path;
-import java.time.Instant;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @CreatesContent(FileContent.class)
 public abstract class AbstractFileSystemSource extends AbstractComponent implements Source {
