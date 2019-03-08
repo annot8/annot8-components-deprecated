@@ -1,7 +1,6 @@
 /* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.grouping.processors;
 
-import io.annot8.core.exceptions.IncompleteException;
 import java.util.Optional;
 
 import com.google.common.collect.HashMultimap;
@@ -13,6 +12,7 @@ import io.annot8.core.annotations.Annotation;
 import io.annot8.core.annotations.Group;
 import io.annot8.core.capabilities.CreatesGroup;
 import io.annot8.core.data.Item;
+import io.annot8.core.exceptions.IncompleteException;
 import io.annot8.core.stores.GroupStore;
 
 @CreatesGroup(GroupByTypeAndValueAnnotator.TYPE)
@@ -54,7 +54,7 @@ public class GroupByTypeAndValueAnnotator extends AbstractTextProcessor {
 
               try {
                 builder.save();
-              } catch(IncompleteException e) {
+              } catch (IncompleteException e) {
                 log().info("Unable to save group", e);
               }
             });
