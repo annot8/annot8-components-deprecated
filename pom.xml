@@ -45,7 +45,6 @@
     <module>annot8-components-types</module>
     <module>annot8-components-image</module>
     <module>annot8-components-db</module>
-    <module>annot8-components-translation</module>
     <module>annot8-components-geo</module>
   </modules>
 
@@ -63,6 +62,15 @@
   </build>
 
   <profiles>
+    <profile>
+      <id>java-11+</id>
+      <activation>
+        <jdk>[11,)</jdk>
+      </activation>
+      <modules>
+        <module>annot8-components-translation</module>
+      </modules>
+    </profile>
     <profile>
       <id>travis</id>
       <repositories>
