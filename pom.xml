@@ -46,6 +46,7 @@
     <module>annot8-components-image</module>
     <module>annot8-components-db</module>
     <module>annot8-components-geo</module>
+    <module>annot8-components-opennlp</module>
   </modules>
 
   <!-- For components, enable parameters option so that Jackson can map to settings objects -->
