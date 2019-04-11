@@ -1,4 +1,4 @@
-open module io.annot8.components.opennlp {
+module io.annot8.components.opennlp {
   requires transitive io.annot8.core;
   requires io.annot8.common.data;
   requires io.annot8.components.base;
