@@ -79,8 +79,6 @@ public class OCR extends AbstractComponent implements Processor {
     private final List<String> extensions;
     private final String suffix;
 
-    // TODO: Support for other Tesseract settings
-
     public static final List<String> DEFAULT_EXTENSIONS =
         Arrays.asList("bmp", "gif", "jpg", "jpeg", "pdf", "tif", "tiff");
     public static final String DEFAULT_SUFFIX = "_tesseract";
