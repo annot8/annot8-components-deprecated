@@ -10,6 +10,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>annot8-components-tesseract</artifactId>
+    <name>Annot8 Tesseract Components</name>
+    <description>Components that use Tesseract to perform OCR on images</description>
 
     <dependencies>
         <dependency>
