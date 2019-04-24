@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.File;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.annot8.common.data.content.FileContent;
@@ -17,8 +16,6 @@ import io.annot8.testing.testimpl.TestItem;
 public class OCRTest {
 
   @Test
-  @Disabled // Requires Tesseract to be correctly installed, so disable the test so build doesn't
-  // fail on machines where this isn't the case
   public void test() throws Exception {
     OCR ocr = new OCR();
     ocr.configure(new TestContext());
