@@ -6,10 +6,12 @@ import org.bson.Document;
 import io.annot8.common.data.content.Text;
 import io.annot8.components.base.components.AbstractComponent;
 import io.annot8.components.mongo.data.MongoDocument;
+import io.annot8.core.capabilities.CreatesContent;
 import io.annot8.core.components.Processor;
 import io.annot8.core.components.responses.ProcessorResponse;
 import io.annot8.core.data.Item;
 
+@CreatesContent(Text.class)
 public class CreateContentFromMongoDocument extends AbstractComponent implements Processor {
 
   @Override

@@ -48,6 +48,7 @@
     <module>annot8-components-geo</module>
     <module>annot8-components-opennlp</module>
     <module>annot8-components-tika</module>
+      <module>annot8-components-tesseract</module>
   </modules>
 
   <!-- For components, enable parameters option so that Jackson can map to settings objects -->

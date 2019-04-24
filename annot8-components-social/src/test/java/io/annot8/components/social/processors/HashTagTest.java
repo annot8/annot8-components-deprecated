@@ -26,14 +26,6 @@ public class HashTagTest {
   public void testHashtag() throws Annot8Exception {
     Processor p = new HashTag();
 
-    // TODO: These should be replaced by Test* rather than using Simple*
-    // TODO: Provide some abstract test base classes that provide this common functionality
-    //    SimpleContentBuilderFactoryRegistry contentBuilderFactoryRegistry = new
-    // SimpleContentBuilderFactoryRegistry();
-    //    contentBuilderFactoryRegistry.register(Text.class, new SimpleText.BuilderFactory());
-    //    BaseItemFactory itemFactory = new SimpleItemFactory(contentBuilderFactoryRegistry);
-    //    Context context = new SimpleContext(itemFactory, EmptySettings.getInstance());
-
     Item item = new TestItem();
     Context context = new TestContext();
 
