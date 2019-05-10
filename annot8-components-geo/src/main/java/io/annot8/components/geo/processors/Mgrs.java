@@ -1,8 +1,11 @@
 /* Annot8 (annot8.io) - Licensed under Apache-2.0. */
 package io.annot8.components.geo.processors;
 
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.opensextant.geodesy.MGRS;
 
 import io.annot8.common.data.bounds.SpanBounds;
 import io.annot8.common.data.content.Text;
@@ -55,8 +58,46 @@ public class Mgrs extends AbstractTextProcessor {
           .withType(AnnotationTypes.ANNOTATION_TYPE_COORDINATE)
           .withProperty(PropertyKeys.PROPERTY_KEY_COORDINATETYPE, "MGRS")
           .withProperty(PropertyKeys.PROPERTY_KEY_VALUE, coordinates.replaceAll("\\h+", ""))
+          .withPropertyIfPresent(PropertyKeys.PROPERTY_KEY_GEOJSON, getGeoJson(coordinates))
           .save();
     }
+  }
+
+  private Optional<String> getGeoJson(String coordinate) {
+    try {
+      MGRS mgrs = new MGRS(coordinate);
+      return Optional.of(
+          "{\"type\":\"Polygon\",\"coordinates\":[["
+              + "["
+              + mgrs.getBoundingBox().getEastLon().inDegrees()
+              + ","
+              + mgrs.getBoundingBox().getNorthLat().inDegrees()
+              + "],"
+              + "["
+              + mgrs.getBoundingBox().getWestLon().inDegrees()
+              + ","
+              + mgrs.getBoundingBox().getNorthLat().inDegrees()
+              + "],"
+              + "["
+              + mgrs.getBoundingBox().getWestLon().inDegrees()
+              + ","
+              + mgrs.getBoundingBox().getSouthLat().inDegrees()
+              + "],"
+              + "["
+              + mgrs.getBoundingBox().getEastLon().inDegrees()
+              + ","
+              + mgrs.getBoundingBox().getSouthLat().inDegrees()
+              + "],"
+              + "["
+              + mgrs.getBoundingBox().getEastLon().inDegrees()
+              + ","
+              + mgrs.getBoundingBox().getNorthLat().inDegrees()
+              + "]]]}");
+    } catch (IllegalArgumentException e) {
+      log().warn("Couldn't parse MGRS co-ordinate", e);
+    }
+
+    return Optional.empty();
   }
 
   public static class MgrsSettings implements Settings {

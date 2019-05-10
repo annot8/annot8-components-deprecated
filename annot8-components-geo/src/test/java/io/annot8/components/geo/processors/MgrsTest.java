@@ -49,7 +49,7 @@ public class MgrsTest {
       Assertions.assertEquals(content.getId(), a.getContentId());
       Assertions.assertEquals("4QFJ 1 5", a.getBounds().getData(content).get());
 
-      Assertions.assertEquals(2, a.getProperties().getAll().size());
+      Assertions.assertEquals(3, a.getProperties().getAll().size());
 
       Optional<Object> optValue = a.getProperties().get(PropertyKeys.PROPERTY_KEY_VALUE);
       Assertions.assertTrue(optValue.isPresent());
@@ -58,6 +58,9 @@ public class MgrsTest {
       Optional<Object> optType = a.getProperties().get(PropertyKeys.PROPERTY_KEY_COORDINATETYPE);
       Assertions.assertTrue(optType.isPresent());
       Assertions.assertEquals("MGRS", optType.get());
+
+      Optional<Object> optGeojson = a.getProperties().get(PropertyKeys.PROPERTY_KEY_GEOJSON);
+      Assertions.assertTrue(optGeojson.isPresent());
     }
   }
 

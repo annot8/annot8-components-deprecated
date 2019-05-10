@@ -4,6 +4,7 @@ open module io.annot8.components.geo {
   requires io.annot8.components.base;
   requires io.annot8.conventions;
   requires openlocationcode;
+  requires geodesy;
 
   exports io.annot8.components.geo.processors;
 }
