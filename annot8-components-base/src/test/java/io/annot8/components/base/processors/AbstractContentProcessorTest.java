@@ -112,8 +112,8 @@ public class AbstractContentProcessorTest {
   }
 
   @SafeVarargs
-  private <T> Answer<Stream<T>> getAnswer(T... content) {
-    return new Answer<>() {
+  private final <T> Answer<Stream<T>> getAnswer(final T... content) {
+    return new Answer<Stream<T>>() {
       @Override
       public Stream<T> answer(InvocationOnMock invocation) {
         return Stream.of(content);
