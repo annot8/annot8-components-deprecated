@@ -53,7 +53,7 @@ public class FileSystemSource extends AbstractFileSystemSource {
       if (getSettings().isRecursive()) {
         Files.walkFileTree(
             p,
-            new SimpleFileVisitor<>() {
+            new SimpleFileVisitor<Path>() {
               @Override
               public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attr)
                   throws IOException {
