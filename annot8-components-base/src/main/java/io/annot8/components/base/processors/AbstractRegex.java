@@ -15,7 +15,7 @@ import io.annot8.core.exceptions.ProcessingException;
 import io.annot8.core.stores.AnnotationStore;
 
 /** Base class for regex annotators */
-public class AbstractRegex extends AbstractTextProcessor {
+public abstract class AbstractRegex extends AbstractTextProcessor {
 
   protected Pattern pattern = null; // TODO: Should we provide a default Pattern to avoid NPEs?
   protected int group = 0;
