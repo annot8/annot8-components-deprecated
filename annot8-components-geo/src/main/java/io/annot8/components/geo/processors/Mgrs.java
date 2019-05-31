@@ -12,13 +12,17 @@ import io.annot8.common.data.content.Text;
 import io.annot8.components.base.processors.AbstractTextProcessor;
 import io.annot8.conventions.AnnotationTypes;
 import io.annot8.conventions.PropertyKeys;
+import io.annot8.core.capabilities.CreatesAnnotation;
 import io.annot8.core.context.Context;
 import io.annot8.core.data.Item;
 import io.annot8.core.exceptions.BadConfigurationException;
 import io.annot8.core.exceptions.MissingResourceException;
 import io.annot8.core.settings.Settings;
+import io.annot8.core.settings.SettingsClass;
 
 /** Extract MGRS coordinates, optionally ignoring MGRS coordinates that could be dates */
+@CreatesAnnotation(value = AnnotationTypes.ANNOTATION_TYPE_COORDINATE, bounds = SpanBounds.class)
+@SettingsClass(Mgrs.MgrsSettings.class)
 public class Mgrs extends AbstractTextProcessor {
   private static final Pattern mgrsPattern =
       Pattern.compile(
@@ -102,6 +106,10 @@ public class Mgrs extends AbstractTextProcessor {
 
   public static class MgrsSettings implements Settings {
     private final boolean ignoreDates;
+
+    public MgrsSettings() {
+      this.ignoreDates = false;
+    }
 
     public MgrsSettings(boolean ignoreDates) {
       this.ignoreDates = ignoreDates;

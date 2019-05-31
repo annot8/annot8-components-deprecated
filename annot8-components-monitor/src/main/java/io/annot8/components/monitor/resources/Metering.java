@@ -16,7 +16,7 @@ public final class Metering implements Resource {
   private final MeterRegistry meterRegistry;
 
   protected Metering(boolean useGlobalMetrics, MeterRegistry meterRegistry) {
-    // Ensure that we have at least something to create a logger with
+    // Ensure that we have at least something to create a registry with
 
     if (useGlobalMetrics) {
       this.meterRegistry = io.micrometer.core.instrument.Metrics.globalRegistry;
